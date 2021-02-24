@@ -1,0 +1,17 @@
+concurrency: 10
+base: 'http://localhost:8888'
+iterations: 1000
+rampup: 0
+
+plan:
+  - name: Home
+    request:
+      url: /v1/home/fabien
+  
+  - name: Users
+    request:
+      url: /v1/users
+  
+  - name: Json Stream
+    request:
+      url: /v1/json-stream

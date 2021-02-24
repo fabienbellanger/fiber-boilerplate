@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: fiber-boilerplate-api
+    build: .
+    ports: 
+      - 9900:8888
+    volumes:
+      - ./:/build:delegated
+    restart: always
+    depends_on:
+      - mysql
+    networks:
+      - fiber-boilerplate-bridge
+
+  mysql:
+    container_name: fiber-boilerplate-mysql
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always # "no" | on-failure
+    volumes:
+      - fiber-boilerplate-data_mysql:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_DATABASE=fiber-boilerplate
+      - MYSQL_USER=fiber
+      - MYSQL_PASSWORD=fiber
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    networks:
+      - fiber-boilerplate-bridge
+
+networks:
+  fiber-boilerplate-bridge:
+
+volumes:
+  fiber-boilerplate-data_mysql:

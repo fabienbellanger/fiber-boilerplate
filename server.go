@@ -169,11 +169,9 @@ func initHTTPServer(s *fiber.App) {
 		s.Use(limiter.New(limiter.Config{
 			Next: func(c *fiber.Ctx) bool {
 				excludedIP := viper.GetStringSlice("LIMITER_EXCLUDE_IP")
-				log.Printf("EX=%#v - %#v\n", excludedIP, c.IP())
 				if len(excludedIP) == 0 {
 					return false
 				}
-				log.Printf("OK=%v\n", goutils.StringInSlice(c.IP(), excludedIP))
 				return goutils.StringInSlice(c.IP(), excludedIP)
 			},
 			Max:        viper.GetInt("LIMITER_MAX"),

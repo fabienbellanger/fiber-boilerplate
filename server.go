@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"strings"
 	"time"
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
+	"github.com/fabienbellanger/fiber-boilerplate/routes"
 	"github.com/fabienbellanger/goutils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
@@ -34,13 +36,22 @@ func Run() {
 	initHTTPServer(app)
 	initTools(app)
 
-	// Public routes
-	app.Get("/health_check", func(c *fiber.Ctx) error {
-		return c.SendString("")
-	})
+	// Routes
+	// ------
+	web := app.Group("")
+	api := app.Group("api")
+	apiV1 := api.Group("v1")
 
-	initJWT(app)
+	// Public routes
+	// -------------
+	routes.RegisterPublicWebRoutes(web)
+	routes.RegisterPublicAPIRoutes(apiV1)
+
 	// Protected routes
+	// ----------------
+	initJWT(app)
+	routes.RegisterProtectedWebRoutes(web)
+	routes.RegisterProtectedAPIRoutes(apiV1)
 
 	// Custom 404 (after all routes)
 	// -----------------------------
@@ -51,7 +62,18 @@ func Run() {
 		})
 	})
 
-	log.Fatal(app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT"))))
+	// Close any connections on interrupt signal
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		app.Shutdown()
+	}()
+
+	err := app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
+	if err != nil {
+		app.Shutdown()
+	}
 }
 
 func initConfig() fiber.Config {
@@ -137,7 +159,7 @@ func initHTTPServer(s *fiber.App) {
 	// Timer
 	// -----
 	s.Use(timer.New(timer.Config{
-		DisplayMilliseconds: true,
+		DisplayMilliseconds: false,
 		DisplaySeconds:      true,
 	}))
 
@@ -147,14 +169,16 @@ func initHTTPServer(s *fiber.App) {
 		s.Use(limiter.New(limiter.Config{
 			Next: func(c *fiber.Ctx) bool {
 				excludedIP := viper.GetStringSlice("LIMITER_EXCLUDE_IP")
+				log.Printf("EX=%#v - %#v\n", excludedIP, c.IP())
 				if len(excludedIP) == 0 {
 					return false
 				}
+				log.Printf("OK=%v\n", goutils.StringInSlice(c.IP(), excludedIP))
 				return goutils.StringInSlice(c.IP(), excludedIP)
 			},
-			Max:      viper.GetInt("LIMITER_MAX"),
-			Duration: viper.GetDuration("LIMITER_DURATION") * time.Second,
-			Key: func(c *fiber.Ctx) string {
+			Max:        viper.GetInt("LIMITER_MAX"),
+			Expiration: viper.GetDuration("LIMITER_EXPIRATION") * time.Second,
+			KeyGenerator: func(c *fiber.Ctx) string {
 				return c.IP()
 			},
 			LimitReached: func(c *fiber.Ctx) error {

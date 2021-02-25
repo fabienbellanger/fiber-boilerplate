@@ -8,7 +8,7 @@ import (
 
 // RegisterPublicWebRoutes lists all public Web routes.
 func RegisterPublicWebRoutes(r fiber.Router, db *db.DB) {
-	r.Get("/health_check", web.HealthCheckHandler())
+	r.Get("/health_check", web.HealthCheck())
 }
 
 // RegisterProtectedWebRoutes lists all protected Web routes.

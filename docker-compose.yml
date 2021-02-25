@@ -22,7 +22,7 @@ services:
     volumes:
       - fiber-boilerplate-data_mysql:/var/lib/mysql:delegated
     environment:
-      - MYSQL_DATABASE=fiber-boilerplate
+      - MYSQL_DATABASE=boilerplate
       - MYSQL_USER=fiber
       - MYSQL_PASSWORD=fiber
       - MYSQL_RANDOM_ROOT_PASSWORD=yes

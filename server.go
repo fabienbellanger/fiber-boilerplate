@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ansrivas/fiberprometheus/v2"
+	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
 	"github.com/fabienbellanger/fiber-boilerplate/routes"
 	"github.com/fabienbellanger/goutils"
@@ -30,7 +31,7 @@ import (
 )
 
 // Run starts Fiber server.
-func Run() {
+func Run(db *db.DB) {
 	app := fiber.New(initConfig())
 
 	initHTTPServer(app)
@@ -44,14 +45,14 @@ func Run() {
 
 	// Public routes
 	// -------------
-	routes.RegisterPublicWebRoutes(web)
-	routes.RegisterPublicAPIRoutes(apiV1)
+	routes.RegisterPublicWebRoutes(web, db)
+	routes.RegisterPublicAPIRoutes(apiV1, db)
 
 	// Protected routes
 	// ----------------
 	initJWT(app)
-	routes.RegisterProtectedWebRoutes(web)
-	routes.RegisterProtectedAPIRoutes(apiV1)
+	routes.RegisterProtectedWebRoutes(web, db)
+	routes.RegisterProtectedAPIRoutes(apiV1, db)
 
 	// Custom 404 (after all routes)
 	// -----------------------------
@@ -63,6 +64,7 @@ func Run() {
 	})
 
 	// Close any connections on interrupt signal
+	// -----------------------------------------
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	go func() {
@@ -70,6 +72,8 @@ func Run() {
 		app.Shutdown()
 	}()
 
+	// Run fiber server
+	// ----------------
 	err := app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
 	if err != nil {
 		app.Shutdown()

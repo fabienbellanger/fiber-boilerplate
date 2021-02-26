@@ -1,10 +1,11 @@
 package api
 
 import (
-	"crypto/sha512"
-	"encoding/hex"
+	"strconv"
+
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/repositories"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,8 +19,8 @@ type userForm struct {
 // GetAllUsers lists all users.
 func GetAllUsers(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var users []models.User
-		if response := db.Find(&users); response.Error != nil {
+		users, err := repositories.ListAllUsers(db)
+		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"code":    fiber.StatusInternalServerError,
 				"message": "Error during users list",
@@ -27,6 +28,35 @@ func GetAllUsers(db *db.DB) fiber.Handler {
 		}
 
 		return c.JSON(users)
+	}
+}
+
+// GetUser return a user.
+func GetUser(db *db.DB) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id, err := strconv.Atoi(c.Params("id"))
+		if err != nil || id <= 0 {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"code":    fiber.StatusBadRequest,
+				"message": "Bad ID",
+			})
+		}
+
+		user, err := repositories.GetUser(db, uint(id))
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code":    fiber.StatusInternalServerError,
+				"message": "Error when retrieving user",
+			})
+		}
+		if user.ID == 0 {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"code":    fiber.StatusNotFound,
+				"message": "No user found",
+			})
+		}
+
+		return c.JSON(user)
 	}
 }
 
@@ -50,21 +80,16 @@ func CreateUser(db *db.DB) fiber.Handler {
 			})
 		}
 
-		// Hash password
-		// -------------
-		passwordBytes := sha512.Sum512([]byte(user.Password))
-		hashPassword := hex.EncodeToString(passwordBytes[:])
-
 		// Database insertion
 		// ------------------
 		newUser := models.User{
 			Lastname:  user.Lastname,
 			Firstname: user.Firstname,
-			Password:  hashPassword,
+			Password:  user.Password,
 			Username:  user.Username,
 		}
 
-		if result := db.Create(&newUser); result.Error != nil {
+		if err := repositories.CreateUser(db, &newUser); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"code":    fiber.StatusInternalServerError,
 				"message": "Error during user creation",
@@ -72,5 +97,31 @@ func CreateUser(db *db.DB) fiber.Handler {
 		}
 
 		return c.JSON(newUser)
+	}
+}
+
+// DeleteUser return a user.
+func DeleteUser(db *db.DB) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id, err := strconv.Atoi(c.Params("id"))
+		if err != nil || id <= 0 {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"code":    fiber.StatusBadRequest,
+				"message": "Bad ID",
+			})
+		}
+
+		err = repositories.DeleteUser(db, uint(id))
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code":    fiber.StatusInternalServerError,
+				"message": "Error when deleting user",
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"code":    fiber.StatusOK,
+			"message": "User deleted",
+		})
 	}
 }

@@ -9,6 +9,19 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/models"
 )
 
+// Login gets user from username and password.
+func Login(db *db.DB, username, password string) (user models.User, err error) {
+	// Hash password
+	// -------------
+	passwordBytes := sha512.Sum512([]byte(password))
+	password = hex.EncodeToString(passwordBytes[:])
+
+	if result := db.Where(&models.User{Username: username, Password: password}).First(&user); result.Error != nil {
+		return user, result.Error
+	}
+	return user, err
+}
+
 // ListAllUsers gets all users in database.
 func ListAllUsers(db *db.DB) ([]models.User, error) {
 	var users []models.User
@@ -16,7 +29,6 @@ func ListAllUsers(db *db.DB) ([]models.User, error) {
 	if response := db.Find(&users); response.Error != nil {
 		return users, response.Error
 	}
-
 	return users, nil
 }
 

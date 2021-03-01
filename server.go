@@ -9,9 +9,6 @@ import (
 	"time"
 
 	"github.com/ansrivas/fiberprometheus/v2"
-	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
-	"github.com/fabienbellanger/fiber-boilerplate/routes"
 	"github.com/fabienbellanger/goutils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
@@ -28,6 +25,10 @@ import (
 	"github.com/gofiber/template/django"
 	"github.com/markbates/pkger"
 	"github.com/spf13/viper"
+
+	"github.com/fabienbellanger/fiber-boilerplate/db"
+	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
+	"github.com/fabienbellanger/fiber-boilerplate/routes"
 )
 
 // Run starts Fiber server.
@@ -41,18 +42,17 @@ func Run(db *db.DB) {
 	// ------
 	web := app.Group("")
 	api := app.Group("api")
-	apiV1 := api.Group("v1")
 
 	// Public routes
 	// -------------
 	routes.RegisterPublicWebRoutes(web, db)
-	routes.RegisterPublicAPIRoutes(apiV1, db)
+	routes.RegisterPublicAPIRoutes(api, db)
 
 	// Protected routes
 	// ----------------
 	initJWT(app)
 	routes.RegisterProtectedWebRoutes(web, db)
-	routes.RegisterProtectedAPIRoutes(apiV1, db)
+	routes.RegisterProtectedAPIRoutes(api, db)
 
 	// Custom 404 (after all routes)
 	// -----------------------------

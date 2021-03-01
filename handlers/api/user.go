@@ -2,11 +2,15 @@ package api
 
 import (
 	"strconv"
+	"time"
+
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gofiber/fiber/v2"
+	"github.com/spf13/viper"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/models"
+	models "github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/fabienbellanger/fiber-boilerplate/repositories"
-	"github.com/gofiber/fiber/v2"
 )
 
 type userForm struct {
@@ -14,6 +18,61 @@ type userForm struct {
 	Password  string `json:"password" xml:"password" form:"password"`
 	Lastname  string `json:"lastname" xml:"lastname" form:"lastname"`
 	Firstname string `json:"firstname" xml:"firstname" form:"firstname"`
+}
+
+type userLogin struct {
+	models.User
+	Token string `json:"token" xml:"token" form:"token"`
+}
+
+func Login(db *db.DB) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		type userAuth struct {
+			Username string
+			Password string
+		}
+		u := new(userAuth)
+		if err := c.BodyParser(u); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"code":    fiber.StatusBadRequest,
+				"message": "Bad Request",
+			})
+		}
+
+		user, err := repositories.Login(db, u.Username, u.Password)
+		if err != nil {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"code":    fiber.StatusUnauthorized,
+				"message": "Unauthorized",
+			})
+		}
+
+		// Create token
+		token := jwt.New(jwt.SigningMethodHS512)
+
+		// Set claims
+		claims := token.Claims.(jwt.MapClaims)
+		claims["id"] = user.ID
+		claims["username"] = user.Username
+		claims["lastname"] = user.Lastname
+		claims["firstname"] = user.Firstname
+		claims["createdAt"] = user.CreatedAt
+		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+
+		// Generate encoded token and send it as response.
+		t, err := token.SignedString([]byte(viper.GetString("jwt.secret")))
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code":    fiber.StatusInternalServerError,
+				"message": "Error during token generation",
+			})
+		}
+
+		return c.JSON(userLogin{
+			Token: t,
+			User:  user,
+		})
+	}
 }
 
 // GetAllUsers lists all users.

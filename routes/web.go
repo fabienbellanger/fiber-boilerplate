@@ -1,9 +1,10 @@
 package routes
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/handlers/web"
-	"github.com/gofiber/fiber/v2"
 )
 
 // RegisterPublicWebRoutes lists all public Web routes.

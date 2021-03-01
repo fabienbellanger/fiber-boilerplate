@@ -2,11 +2,25 @@
 A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 ## Sommaire
+-  [Makefile commands](#Makefile-commands)
 -  [Golang web server in production](#golang-web-server-in-production)
 -  [Mesure et performance](#mesure-et-performance)
     -  [pprof](#pprof)
     -  [trace](#trace)
     -  [cover](#cover)
+-  [TODO](#TODO)
+
+
+## Makefile commands
+
+| Makefile command | Go command | Description |
+|---|---|---|
+| `make update` | `go get -u && go mod tidy` | Update Go dependencies |
+| `make serve` | `go run cmd/main.go` | Start the Web server |
+| `make serve-race` | `go run --race cmd/main.go` | Start the Web server with data races option |
+| `make serve-pkger` | `pkger && go run cmd/main.go` | Run Pkger and start the Web server |
+| `make build` | `go build -o coucou -v cmd/main.go` | Build application with pkger |
+| `make test` | `go test -cover -v ./...` | Launch unit tests |
 
 
 ## Golang web server in production
@@ -37,11 +51,11 @@ WantedBy=multi-user.target
 
 | Commande | Description |
 |---|---|
-| `service <service name> start` | To launch |
-| `service <service name> enable` | To enable on boot |
-| `service <service name> disable` | To disable on boot |
-| `service <service name> status` | To show status |
-| `service <service name> stop` | To stop |
+| `systemctl start <service name>.service` | To launch |
+| `systemctl enable <service name>.service` | To enable on boot |
+| `systemctl disable <service name>.service` | To disable on boot |
+| `systemctl status <service name>.service` | To show status |
+| `systemctl stop <service name>.service` | To stop |
 
 
 ## Mesure et performance
@@ -84,3 +98,8 @@ Puis :
 ```bash
 go tool cover -html=<fichier à analyser>
 ```
+
+## TODO
+-  [ ] Créer une structure pour les erreurs (factoriser dans goutils)
+-  [ ] Utiliser Zap
+-  [ ] Mettre en place la stack Prometheus + Grafana pour la télémétrie

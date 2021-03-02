@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/ansrivas/fiberprometheus/v2 v2.1.1
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fabienbellanger/goutils v1.0.15
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

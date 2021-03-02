@@ -22,9 +22,11 @@ type userForm struct {
 
 type userLogin struct {
 	models.User
-	Token string `json:"token" xml:"token" form:"token"`
+	Token     string `json:"token" xml:"token" form:"token"`
+	ExpiresAt string `json:"expires_at" xml:"expires_at" form:"expires_at"`
 }
 
+// Login authenticates a user.
 func Login(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		type userAuth struct {
@@ -50,6 +52,9 @@ func Login(db *db.DB) fiber.Handler {
 		// Create token
 		token := jwt.New(jwt.SigningMethodHS512)
 
+		// Expiration time
+		expiresAt := time.Now().Add(time.Hour * viper.GetDuration("JWT_LIFETIME"))
+
 		// Set claims
 		claims := token.Claims.(jwt.MapClaims)
 		claims["id"] = user.ID
@@ -57,10 +62,10 @@ func Login(db *db.DB) fiber.Handler {
 		claims["lastname"] = user.Lastname
 		claims["firstname"] = user.Firstname
 		claims["createdAt"] = user.CreatedAt
-		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+		claims["exp"] = expiresAt.Unix()
 
 		// Generate encoded token and send it as response.
-		t, err := token.SignedString([]byte(viper.GetString("jwt.secret")))
+		t, err := token.SignedString([]byte(viper.GetString("JWT_SECRET")))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"code":    fiber.StatusInternalServerError,
@@ -69,8 +74,9 @@ func Login(db *db.DB) fiber.Handler {
 		}
 
 		return c.JSON(userLogin{
-			Token: t,
-			User:  user,
+			User:      user,
+			Token:     t,
+			ExpiresAt: expiresAt.Format("2006-01-02T15:04:05.000Z"),
 		})
 	}
 }

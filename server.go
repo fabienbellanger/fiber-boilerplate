@@ -144,7 +144,7 @@ func initHTTPServer(s *fiber.App) {
 	if viper.GetString("APP_ENV") != "production" {
 		s.Use(logger.New(logger.Config{
 			Next:         nil,
-			Format:       "[${time}] ${status} - ${latency} - ${method} ${path}\n",
+			Format:       "[${time}] [${locals:requestid}] ${status} - ${latency} - ${method} ${path}\n",
 			TimeFormat:   "2006-01-02 15:04:05",
 			TimeZone:     "Local",
 			TimeInterval: 500 * time.Millisecond,

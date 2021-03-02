@@ -1,6 +1,8 @@
 package web
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 // HealthCheck returns status code 200.
 func HealthCheck() fiber.Handler {

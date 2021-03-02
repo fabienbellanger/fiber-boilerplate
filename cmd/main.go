@@ -6,6 +6,7 @@ import (
 
 	server "github.com/fabienbellanger/fiber-boilerplate"
 	"github.com/fabienbellanger/fiber-boilerplate/db"
+	"github.com/fabienbellanger/fiber-boilerplate/logger"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/spf13/viper"
 )
@@ -16,6 +17,14 @@ func main() {
 	if err := initConfig(); err != nil {
 		log.Fatalln(err)
 	}
+
+	// Logger initialization
+	// ---------------------
+	logger, err := logger.Init()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer logger.Sync()
 
 	// Database connection
 	// -------------------
@@ -40,7 +49,7 @@ func main() {
 
 	// Start server
 	// ------------
-	server.Run(db)
+	server.Run(db, logger)
 }
 
 // initConfig initializes configuration from config file.

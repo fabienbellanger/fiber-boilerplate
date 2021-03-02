@@ -25,6 +25,7 @@ import (
 	"github.com/gofiber/template/django"
 	"github.com/markbates/pkger"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
@@ -32,7 +33,7 @@ import (
 )
 
 // Run starts Fiber server.
-func Run(db *db.DB) {
+func Run(db *db.DB, logger *zap.Logger) {
 	app := fiber.New(initConfig())
 
 	initHTTPServer(app)
@@ -57,6 +58,7 @@ func Run(db *db.DB) {
 	// Custom 404 (after all routes)
 	// -----------------------------
 	app.Use(func(ctx *fiber.Ctx) error {
+		logger.Debug("Test Zag", zap.Int("int", 23))
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"code":    fiber.StatusNotFound,
 			"message": "Resource Not Found",
@@ -238,7 +240,6 @@ func initJWT(s *fiber.App) {
 		SigningMethod: "HS512",
 		SigningKey:    []byte(viper.GetString("JWT_SECRET")),
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			log.Printf("err=%v\n", err)
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"code":    fiber.StatusUnauthorized,
 				"message": "Invalid or expired JWT",

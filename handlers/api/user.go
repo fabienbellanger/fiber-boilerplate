@@ -53,7 +53,8 @@ func Login(db *db.DB) fiber.Handler {
 		token := jwt.New(jwt.SigningMethodHS512)
 
 		// Expiration time
-		expiresAt := time.Now().Add(time.Hour * viper.GetDuration("JWT_LIFETIME"))
+		now := time.Now()
+		expiresAt := now.Add(time.Hour * viper.GetDuration("JWT_LIFETIME"))
 
 		// Set claims
 		claims := token.Claims.(jwt.MapClaims)
@@ -63,6 +64,8 @@ func Login(db *db.DB) fiber.Handler {
 		claims["firstname"] = user.Firstname
 		claims["createdAt"] = user.CreatedAt
 		claims["exp"] = expiresAt.Unix()
+		claims["iat"] = now.Unix()
+		claims["nbf"] = now.Unix()
 
 		// Generate encoded token and send it as response.
 		t, err := token.SignedString([]byte(viper.GetString("JWT_SECRET")))

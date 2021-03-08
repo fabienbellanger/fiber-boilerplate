@@ -1,17 +1,17 @@
 concurrency: 10
-base: 'http://localhost:8888'
-iterations: 1000
+base: 'http://localhost:3000'
+iterations: 100
 rampup: 0
 
 plan:
-  - name: Home
+  - name: Health Check
     request:
-      url: /v1/home/fabien
+      url: /health-check
   
-  - name: Users
+  - name: Login
     request:
-      url: /v1/users
-  
-  - name: Json Stream
-    request:
-      url: /v1/json-stream
+      url: /api/login
+      method: POST
+      body: '{"username": "valentil@gmail.com", "password": "0000"}'
+      headers:
+        Content-Type: 'application/json'

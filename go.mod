@@ -26,9 +26,9 @@ require (
 	github.com/valyala/fasthttp v1.22.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/sys v0.0.0-20210305230114-8fe3ee5dd75b // indirect
+	golang.org/x/sys v0.0.0-20210308170721-88b6017d0656 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/mysql v1.0.4
-	gorm.io/gorm v1.21.2
+	gorm.io/gorm v1.21.3
 )

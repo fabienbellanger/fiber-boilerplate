@@ -8,6 +8,13 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// TODO: Pour rappel
+// _, file, line, ok := runtime.Caller(1)
+// if ok {
+// file = goutils.SubPath(file, viper.GetString("APP_NAME"))
+// }
+// log.Printf("file=%v, line=%v\n", file, line)
+
 // Init initializes custom Zap logger.
 func Init() (*zap.Logger, error) {
 	cfg := zap.Config{

@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -34,7 +33,7 @@ import (
 
 // Run starts Fiber server.
 func Run(db *db.DB, logger *zap.Logger) {
-	app := fiber.New(initConfig())
+	app := fiber.New(initConfig(logger))
 
 	initHTTPServer(app)
 	initTools(app)
@@ -46,13 +45,12 @@ func Run(db *db.DB, logger *zap.Logger) {
 
 	// Public routes
 	// -------------
-	routes.RegisterPublicWebRoutes(web, db)
+	routes.RegisterPublicWebRoutes(web)
 	routes.RegisterPublicAPIRoutes(api, db)
 
 	// Protected routes
 	// ----------------
 	initJWT(app)
-	routes.RegisterProtectedWebRoutes(web, db)
 	routes.RegisterProtectedAPIRoutes(api, db)
 
 	// Custom 404 (after all routes)
@@ -82,38 +80,45 @@ func Run(db *db.DB, logger *zap.Logger) {
 	}
 }
 
-func initConfig() fiber.Config {
+func initConfig(logger *zap.Logger) fiber.Config {
 	// Initialize standard Go html template engine
 	engine := django.NewFileSystem(pkger.Dir("/public/templates"), ".django")
 
 	return fiber.Config{
-		// Gestion des erreurs
-		// -------------------
+		// Errors handling
+		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			code := fiber.StatusInternalServerError
 
-			log.Printf("%+v\n", err)
-
-			// Retreive the custom statuscode if it's an fiber.*Error
+			// Fiber error?
+			// ------------
 			e, ok := err.(*fiber.Error)
 			if ok {
 				code = e.Code
 			}
 
+			// Request ID
+			// ----------
+			requestId := c.Locals("requestid")
+
+			// Custom Fiber error
+			// ------------------
 			if e != nil {
-				return c.JSON(e)
+				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(e), zap.String("requestId", fmt.Sprintf("%v", requestId)))
+
+				return c.Status(code).JSON(e)
 			}
 
+			// Internal Server Error
+			// ---------------------
 			if code == fiber.StatusInternalServerError {
-				// TODO: Logger l'erreur
-				log.Printf("Error: %v\n", err)
+				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(err), zap.String("requestId", fmt.Sprintf("%v", requestId)))
 
 				return c.Status(code).JSON(fiber.Map{
 					"code":    code,
 					"message": "Internal Server Error",
 				})
 			}
-
 			return nil
 		},
 		Prefork:               viper.GetBool("SERVER_PREFORK"),

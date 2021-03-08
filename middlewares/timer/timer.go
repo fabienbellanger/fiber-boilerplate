@@ -49,7 +49,7 @@ func New(config ...Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		now := time.Now()
 
-		c.Next()
+		err := c.Next()
 
 		duration := time.Since(now)
 		if cfg.DisplayMilliseconds {
@@ -59,6 +59,6 @@ func New(config ...Config) func(*fiber.Ctx) error {
 			c.Set(cfg.Prefix+"-sec", fmt.Sprintf("%.6f", duration.Seconds()))
 		}
 
-		return nil
+		return err
 	}
 }

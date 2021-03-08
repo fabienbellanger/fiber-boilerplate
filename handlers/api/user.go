@@ -67,10 +67,7 @@ func Login(db *db.DB) fiber.Handler {
 		// Generate encoded token and send it as response.
 		t, err := token.SignedString([]byte(viper.GetString("JWT_SECRET")))
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"code":    fiber.StatusInternalServerError,
-				"message": "Error during token generation",
-			})
+			return fiber.NewError(fiber.StatusInternalServerError, "Error during token generation")
 		}
 
 		return c.JSON(userLogin{

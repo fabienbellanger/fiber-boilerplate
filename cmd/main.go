@@ -45,7 +45,9 @@ func main() {
 
 	// Database migrations
 	// -------------------
-	db.AutoMigrate(&models.User{})
+	if viper.GetBool("DB_USE_AUTOMIGRATIONS") {
+		db.AutoMigrate(&models.User{})
+	}
 
 	// Start server
 	// ------------

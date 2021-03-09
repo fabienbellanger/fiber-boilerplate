@@ -8,7 +8,7 @@ import (
 
 // User represents a user in database.
 type User struct {
-	ID        uint           `json:"id" xml:"id" form:"id" gorm:"primaryKey;autoIncrement"`
+	ID        string         `json:"id" xml:"id" form:"id" gorm:"primaryKey"`
 	Username  string         `json:"username" xml:"username" form:"username" gorm:"unique;size:127"`
 	Password  string         `json:"-" xml:"-" form:"password" gorm:"index;size=128"` // SHA512
 	Lastname  string         `json:"lastname" xml:"lastname" form:"lastname" gorm:"size=63"`

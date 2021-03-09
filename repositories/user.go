@@ -7,6 +7,7 @@ import (
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/google/uuid"
 )
 
 // Login gets user from username and password.
@@ -34,6 +35,10 @@ func ListAllUsers(db *db.DB) ([]models.User, error) {
 
 // CreateUser adds user in database.
 func CreateUser(db *db.DB, user *models.User) error {
+	// UUID
+	// ----
+	user.ID = uuid.New().String()
+
 	// Hash password
 	// -------------
 	passwordBytes := sha512.Sum512([]byte(user.Password))
@@ -46,16 +51,16 @@ func CreateUser(db *db.DB, user *models.User) error {
 }
 
 // GetUser returns a user from its ID.
-func GetUser(db *db.DB, id uint) (user models.User, err error) {
-	if result := db.Find(&user, id); result.Error != nil {
+func GetUser(db *db.DB, id string) (user models.User, err error) {
+	if result := db.Find(&user, "id = ?", id); result.Error != nil {
 		return user, result.Error
 	}
 	return user, err
 }
 
 // DeleteUser deletes a user from database.
-func DeleteUser(db *db.DB, id uint) error {
-	result := db.Delete(&models.User{}, id)
+func DeleteUser(db *db.DB, id string) error {
+	result := db.Delete(&models.User{}, "id = ?", id)
 	if result.Error != nil {
 		return result.Error
 	}

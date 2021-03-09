@@ -62,12 +62,12 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     Response:
     ```json
     {
-        "id": 1,
+        "id": "cb13cc29-13bb-4b84-bf30-17da00ec7400",
         "username": "valentil@gmail.com",
         "lastname": "Bellanger",
         "firstname": "Fabien",
-        "created_at": "2021-03-08T21:45:51.160909+01:00",
-        "updated_at": "2021-03-08T21:45:51.160909+01:00"
+        "created_at": "2021-03-09T21:05:35.564747+01:00",
+        "updated_at": "2021-03-09T21:05:35.564747+01:00"
     }
     ```
 

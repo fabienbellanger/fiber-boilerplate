@@ -1,7 +1,6 @@
 package api
 
 import (
-	"strconv"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -99,22 +98,22 @@ func GetAllUsers(db *db.DB) fiber.Handler {
 // GetUser return a user.
 func GetUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		id, err := strconv.Atoi(c.Params("id"))
-		if err != nil || id <= 0 {
+		id := c.Params("id")
+		if id == "" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"code":    fiber.StatusBadRequest,
 				"message": "Bad ID",
 			})
 		}
 
-		user, err := repositories.GetUser(db, uint(id))
+		user, err := repositories.GetUser(db, id)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"code":    fiber.StatusInternalServerError,
 				"message": "Error when retrieving user",
 			})
 		}
-		if user.ID == 0 {
+		if user.ID == "" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"code":    fiber.StatusNotFound,
 				"message": "No user found",
@@ -168,15 +167,15 @@ func CreateUser(db *db.DB) fiber.Handler {
 // DeleteUser return a user.
 func DeleteUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		id, err := strconv.Atoi(c.Params("id"))
-		if err != nil || id <= 0 {
+		id := c.Params("id")
+		if id == "" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"code":    fiber.StatusBadRequest,
 				"message": "Bad ID",
 			})
 		}
 
-		err = repositories.DeleteUser(db, uint(id))
+		err := repositories.DeleteUser(db, id)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"code":    fiber.StatusInternalServerError,

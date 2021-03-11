@@ -90,8 +90,8 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			code := fiber.StatusInternalServerError
 
-			// Fiber error?
-			// ------------
+			// Fiber error
+			// -----------
 			e, ok := err.(*fiber.Error)
 			if ok {
 				code = e.Code

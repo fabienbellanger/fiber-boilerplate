@@ -29,4 +29,5 @@ func registerUser(r fiber.Router, db *db.DB) {
 	users.Get("/", api.GetAllUsers(db))
 	users.Get("/:id", api.GetUser(db))
 	users.Delete("/:id", api.DeleteUser(db))
+	users.Put("/:id", api.UpdateUser(db))
 }

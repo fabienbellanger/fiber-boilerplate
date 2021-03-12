@@ -3,11 +3,11 @@ package repositories
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"errors"
+
+	"github.com/google/uuid"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
-	"github.com/google/uuid"
 )
 
 // Login gets user from username and password.
@@ -64,8 +64,28 @@ func DeleteUser(db *db.DB, id string) error {
 	if result.Error != nil {
 		return result.Error
 	}
-	if result.RowsAffected == 0 {
-		return errors.New("No user")
-	}
 	return nil
+}
+
+// UpdateUser updates user information.
+func UpdateUser(db *db.DB, id string, userForm *models.UserForm) (user models.User, err error) {
+	// Hash password
+	// -------------
+	hashedPassword := sha512.Sum512([]byte(userForm.Password))
+
+	result := db.Model(&models.User{}).Where("id = ?", id).Select("lastname", "firstname", "username", "password").Updates(models.User{
+		Lastname:  userForm.Lastname,
+		Firstname: userForm.Firstname,
+		Username:  userForm.Username,
+		Password:  hex.EncodeToString(hashedPassword[:]),
+	})
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	user, err = GetUser(db, id)
+	if err != nil {
+		return user, err
+	}
+	return user, err
 }

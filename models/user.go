@@ -17,3 +17,11 @@ type User struct {
 	UpdatedAt time.Time      `json:"updated_at" xml:"updated_at" form:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt gorm.DeletedAt `json:"-" xml:"-" form:"deleted_at" gorm:"index"`
 }
+
+// UserForm represents structure to create or update a user.
+type UserForm struct {
+	Username  string `json:"username" xml:"username" form:"username"`
+	Password  string `json:"password" xml:"password" form:"password"`
+	Lastname  string `json:"lastname" xml:"lastname" form:"lastname"`
+	Firstname string `json:"firstname" xml:"firstname" form:"firstname"`
+}

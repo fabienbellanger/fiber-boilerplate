@@ -8,6 +8,7 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/logger"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/ws"
 	"github.com/spf13/viper"
 )
 
@@ -49,9 +50,14 @@ func main() {
 		db.AutoMigrate(&models.User{})
 	}
 
+	// Hub for wbsockets broadcast
+	// ---------------------------
+	hub := ws.NewHub()
+	go hub.Run()
+
 	// Start server
 	// ------------
-	server.Run(db, logger)
+	server.Run(db, hub, logger)
 }
 
 // initConfig initializes configuration from config file.

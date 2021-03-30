@@ -3,7 +3,7 @@ module github.com/fabienbellanger/fiber-boilerplate
 go 1.16
 
 require (
-	github.com/ansrivas/fiberprometheus/v2 v2.1.1
+	github.com/ansrivas/fiberprometheus/v2 v2.1.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fabienbellanger/goutils v1.0.15
 	github.com/fasthttp/websocket v1.4.3 // indirect
@@ -13,7 +13,7 @@ require (
 	github.com/gofiber/jwt/v2 v2.2.0
 	github.com/gofiber/template v1.6.7
 	github.com/gofiber/websocket/v2 v2.0.3
-	github.com/golang/protobuf v1.5.1 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.2.0
 	github.com/klauspost/compress v1.11.13 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
@@ -27,7 +27,7 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.7.1
-	github.com/valyala/fasthttp v1.22.0 // indirect
+	github.com/valyala/fasthttp v1.23.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0

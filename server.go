@@ -30,10 +30,11 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
 	"github.com/fabienbellanger/fiber-boilerplate/routes"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
+	"github.com/fabienbellanger/fiber-boilerplate/ws2"
 )
 
 // Run starts Fiber server.
-func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
+func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger, hub2 *ws2.Hub) {
 	app := fiber.New(initConfig(logger))
 
 	initHTTPServer(app)
@@ -49,6 +50,10 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 	routes.RegisterPublicWebRoutes(web)
 	routes.RegisterPublicWebSocketRoutes(web, hub)
 	routes.RegisterPublicAPIRoutes(api, db)
+
+	web.Get("/ws2", func(c *fiber.Ctx) error {
+		return ws2.ServeWs(c, hub2)
+	})
 
 	// Protected routes
 	// ----------------

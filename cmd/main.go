@@ -9,7 +9,6 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/logger"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
-	"github.com/fabienbellanger/fiber-boilerplate/ws2"
 	"github.com/spf13/viper"
 )
 
@@ -56,12 +55,9 @@ func main() {
 	hub := ws.NewHub()
 	go hub.Run()
 
-	hub2 := ws2.NewHub()
-	go hub2.Run()
-
 	// Start server
 	// ------------
-	server.Run(db, hub, logger, hub2)
+	server.Run(db, hub, logger)
 }
 
 // initConfig initializes configuration from config file.

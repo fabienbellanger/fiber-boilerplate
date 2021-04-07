@@ -221,4 +221,5 @@ go tool cover -html=<fichier à analyser>
 
 ## TODO
 -  [x] Utiliser Zap
+-  [ ] **Attention** : Le middleware websocket de Fiber génère une data race avec le hub ! Voir si cela sera corrigé à l'avenir (lever une issue sur Github ?)
 -  [ ] Mettre en place la stack Prometheus + Grafana pour la télémétrie

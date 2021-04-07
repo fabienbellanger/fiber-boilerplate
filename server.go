@@ -30,11 +30,10 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
 	"github.com/fabienbellanger/fiber-boilerplate/routes"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
-	"github.com/fabienbellanger/fiber-boilerplate/ws2"
 )
 
 // Run starts Fiber server.
-func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger, hub2 *ws2.Hub) {
+func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 	app := fiber.New(initConfig(logger))
 
 	initHTTPServer(app)
@@ -51,10 +50,6 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger, hub2 *ws2.Hub) {
 	routes.RegisterPublicWebSocketRoutes(web, hub)
 	routes.RegisterPublicAPIRoutes(api, db)
 
-	web.Get("/ws2", func(c *fiber.Ctx) error {
-		return ws2.ServeWs(c, hub2)
-	})
-
 	// Protected routes
 	// ----------------
 	initJWT(app)
@@ -63,7 +58,6 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger, hub2 *ws2.Hub) {
 	// Custom 404 (after all routes)
 	// -----------------------------
 	app.Use(func(ctx *fiber.Ctx) error {
-		logger.Debug("Test Zag", zap.Int("int", 23))
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"code":    fiber.StatusNotFound,
 			"message": "Resource Not Found",

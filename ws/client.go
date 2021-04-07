@@ -5,7 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/gofiber/websocket/v2"
+	"github.com/fasthttp/websocket"
+	"github.com/gofiber/fiber/v2"
+	"github.com/valyala/fasthttp"
 )
 
 const (
@@ -27,6 +29,11 @@ var (
 	space   = []byte{' '}
 )
 
+var upgrader = websocket.FastHTTPUpgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
 	hub *Hub
@@ -39,6 +46,7 @@ type Client struct {
 }
 
 // readPump pumps messages from the websocket connection to the hub.
+// reads from this goroutine.
 func (c *Client) readPump() {
 	defer func() {
 		c.hub.unregister <- c
@@ -67,6 +75,7 @@ func (c *Client) writePump() {
 		ticker.Stop()
 		c.conn.Close()
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -103,10 +112,18 @@ func (c *Client) writePump() {
 }
 
 // ServeWs handles websocket requests from the peer.
-func ServeWs(hub *Hub, conn *websocket.Conn) {
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
-	client.hub.register <- client
+func ServeWs(c *fiber.Ctx, hub *Hub) error {
+	ctx := c.Context()
+	upgrader.CheckOrigin = func(ctx *fasthttp.RequestCtx) bool {
+		return true
+	}
+	err := upgrader.Upgrade(ctx, func(conn *websocket.Conn) {
+		client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+		client.hub.register <- client
 
-	go client.writePump()
-	client.readPump()
+		go client.writePump()
+		client.readPump()
+	})
+
+	return err
 }

@@ -46,7 +46,6 @@ type Client struct {
 }
 
 // readPump pumps messages from the websocket connection to the hub.
-// reads from this goroutine.
 func (c *Client) readPump() {
 	defer func() {
 		c.hub.unregister <- c

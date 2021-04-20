@@ -10,7 +10,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.2 // indirect
-	github.com/gofiber/fiber/v2 v2.7.1
+	github.com/gofiber/fiber/v2 v2.8.0
 	github.com/gofiber/jwt/v2 v2.2.1
 	github.com/gofiber/template v1.6.8
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -31,7 +31,7 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
+	golang.org/x/sys v0.0.0-20210420072515-93ed5bcd2bfe // indirect
 	golang.org/x/text v0.3.6 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

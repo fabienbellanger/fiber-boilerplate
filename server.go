@@ -32,11 +32,11 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
 
-// Run starts Fiber server.
+// Run starts HTTP server.
 func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 	app := fiber.New(initConfig(logger))
 
-	initHTTPServer(app)
+	initMiddlewares(app)
 	initTools(app)
 
 	// Routes
@@ -129,7 +129,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 	}
 }
 
-func initHTTPServer(s *fiber.App) {
+func initMiddlewares(s *fiber.App) {
 	// CORS
 	// ----
 	s.Use(cors.New(cors.Config{

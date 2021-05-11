@@ -149,7 +149,7 @@ func initMiddlewares(s *fiber.App) {
 
 	// Logger
 	// ------
-	if viper.GetString("APP_ENV") != "production" {
+	if viper.GetString("APP_ENV") == "development" || viper.GetBool("ENABLE_ACCESS_LOG") {
 		s.Use(logger.New(logger.Config{
 			Next:         nil,
 			Format:       "[${time}] [${locals:requestid}] ${status} - ${latency} - ${method} ${path}\n",

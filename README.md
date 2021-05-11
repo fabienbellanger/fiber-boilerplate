@@ -22,7 +22,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 | `make serve` | `go run cmd/main.go` | Start the Web server |
 | `make serve-race` | `go run --race cmd/main.go` | Start the Web server with data races option |
 | `make serve-pkger` | `pkger && go run cmd/main.go` | Run Pkger and start the Web server |
-| `make build` | `go build -o coucou -v cmd/main.go` | Build application with pkger |
+| `make build` | `go build -o fiber-boilerplate -v cmd/main.go` | Build application with pkger |
 | `make test` | `go test -cover -v ./...` | Launch unit tests |
 
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -35,6 +36,9 @@ func New(config *DatabaseConfig) (*DB, error) {
 		config.Port,
 		config.Database)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
 
 	// Options
 	// -------
@@ -48,4 +52,8 @@ func New(config *DatabaseConfig) (*DB, error) {
 	sqlDB.SetConnMaxLifetime(config.ConnMaxLifetime)
 
 	return &DB{db}, err
+}
+
+func (db *DB) MakeMigrations() {
+	db.AutoMigrate(&models.User{})
 }

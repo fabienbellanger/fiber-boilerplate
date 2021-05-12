@@ -7,7 +7,6 @@ import (
 	server "github.com/fabienbellanger/fiber-boilerplate"
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/logger"
-	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
 	"github.com/spf13/viper"
 )
@@ -47,11 +46,11 @@ func main() {
 	// Database migrations
 	// -------------------
 	if viper.GetBool("DB_USE_AUTOMIGRATIONS") {
-		db.AutoMigrate(&models.User{})
+		db.MakeMigrations()
 	}
 
-	// Hub for wbsockets broadcast
-	// ---------------------------
+	// Hub for websockets broadcast
+	// ----------------------------
 	hub := ws.NewHub()
 	go hub.Run()
 

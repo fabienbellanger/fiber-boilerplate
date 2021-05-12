@@ -55,8 +55,8 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 	initJWT(app)
 	routes.RegisterProtectedAPIRoutes(api, db)
 
-	// Custom 404 (after all routes)
-	// -----------------------------
+	// Custom 404 (after all routes but not available because of JWT)
+	// --------------------------------------------------------------
 	app.Use(func(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"code":    fiber.StatusNotFound,
@@ -86,6 +86,10 @@ func initConfig(logger *zap.Logger) fiber.Config {
 	engine := django.NewFileSystem(pkger.Dir("/public/templates"), ".django")
 
 	return fiber.Config{
+		Prefork:               viper.GetBool("SERVER_PREFORK"),
+		DisableStartupMessage: false,
+		StrictRouting:         true,
+		Views:                 engine,
 		// Errors handling
 		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -122,10 +126,6 @@ func initConfig(logger *zap.Logger) fiber.Config {
 			}
 			return nil
 		},
-		Prefork:               viper.GetBool("SERVER_PREFORK"),
-		DisableStartupMessage: false,
-		StrictRouting:         true,
-		Views:                 engine,
 	}
 }
 

@@ -46,7 +46,7 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 
 	// Public routes
 	// -------------
-	routes.RegisterPublicWebRoutes(web)
+	routes.RegisterPublicWebRoutes(web, logger)
 	routes.RegisterPublicWebSocketRoutes(web, hub)
 	routes.RegisterPublicAPIRoutes(api, db)
 

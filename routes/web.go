@@ -2,14 +2,15 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
 
 	"github.com/fabienbellanger/fiber-boilerplate/handlers/web"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
 
 // RegisterPublicWebRoutes lists all public Web routes.
-func RegisterPublicWebRoutes(r fiber.Router) {
-	r.Get("/health-check", web.HealthCheck())
+func RegisterPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
+	r.Get("/health-check", web.HealthCheck(logger))
 }
 
 // RegisterPublicWebSocketRoutes lists all public Web Socket routes.

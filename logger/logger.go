@@ -2,6 +2,8 @@ package logger
 
 import (
 	"fmt"
+	"path"
+	"os"
 
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -17,10 +19,15 @@ import (
 
 // Init initializes custom Zap logger.
 func Init() (*zap.Logger, error) {
+	// TODO: Vérifier que "LOG_PATH" existe
 	cfg := zap.Config{
 		Encoding:         "json",
 		Level:            zap.NewAtomicLevelAt(zapcore.DebugLevel),
-		OutputPaths:      []string{"stderr", fmt.Sprintf("/tmp/%s.log", viper.GetString("APP_NAME"))},
+		OutputPaths:      []string{
+			"stderr", 
+			fmt.Sprintf("%s/%s.log", 
+				path.Clean(viper.GetString("LOG_PATH")), 
+				viper.GetString("APP_NAME"))},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig: zapcore.EncoderConfig{
 			MessageKey:   "message",

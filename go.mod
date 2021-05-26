@@ -15,6 +15,7 @@ require (
 	github.com/gofiber/template v1.6.10
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.2.0
+	github.com/klauspost/compress v1.12.3 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/markbates/pkger v0.17.1
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
@@ -28,8 +29,8 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/valyala/fasthttp v1.25.0
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.16.0
-	golang.org/x/sys v0.0.0-20210521203332-0cec03c779c1 // indirect
+	go.uber.org/zap v1.17.0
+	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/mysql v1.1.0

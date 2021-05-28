@@ -3,6 +3,7 @@ module github.com/fabienbellanger/fiber-boilerplate
 go 1.16
 
 require (
+	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/ansrivas/fiberprometheus/v2 v2.1.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fabienbellanger/goutils v1.0.16

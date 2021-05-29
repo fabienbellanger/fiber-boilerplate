@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	"os"
 	"path"
 
 	"github.com/spf13/viper"
@@ -9,23 +10,21 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// TODO: Pour rappel
-// _, file, line, ok := runtime.Caller(1)
-// if ok {
-// file = goutils.SubPath(file, viper.GetString("APP_NAME"))
-// }
-// log.Printf("file=%v, line=%v\n", file, line)
-
 // Init initializes custom Zap logger.
 func Init() (*zap.Logger, error) {
-	// TODO: Vérifier que "LOG_PATH" existe
+	logPath := path.Clean(viper.GetString("LOG_PATH"))
+	_, err := os.Stat(logPath)
+	if err != nil {
+		return nil, err
+	}
+
 	cfg := zap.Config{
 		Encoding: "json",
 		Level:    zap.NewAtomicLevelAt(zapcore.DebugLevel),
 		OutputPaths: []string{
 			"stderr",
 			fmt.Sprintf("%s/%s.log",
-				path.Clean(viper.GetString("LOG_PATH")),
+				logPath,
 				viper.GetString("APP_NAME"))},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig: zapcore.EncoderConfig{

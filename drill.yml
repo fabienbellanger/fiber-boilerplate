@@ -12,6 +12,6 @@ plan:
     request:
       url: /api/login
       method: POST
-      body: '{"username": "valentil@gmail.com", "password": "0000"}'
+      body: '{"username": "test@gmail.com", "password": "0000"}'
       headers:
         Content-Type: 'application/json'

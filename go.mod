@@ -11,7 +11,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.4 // indirect
-	github.com/gofiber/fiber/v2 v2.10.0
+	github.com/gofiber/fiber/v2 v2.11.0
 	github.com/gofiber/jwt/v2 v2.2.2
 	github.com/gofiber/template v1.6.10
 	github.com/golang/protobuf v1.5.2 // indirect

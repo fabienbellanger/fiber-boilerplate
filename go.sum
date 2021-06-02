@@ -179,8 +179,9 @@ github.com/gofiber/adaptor/v2 v2.1.4 h1:XSrQ/OcDHR/uhgVnaEPZANtHQz5IW4BGlVC7r5aG
 github.com/gofiber/adaptor/v2 v2.1.4/go.mod h1:tfXerQDcS7OslsK3+fUWnxVg9uUt2iORr3RLlGlrV6U=
 github.com/gofiber/fiber/v2 v2.2.2/go.mod h1:Aso7/M+EQOinVkWp4LUYjdlTpKTBoCk2Qo4djnMsyHE=
 github.com/gofiber/fiber/v2 v2.6.0/go.mod h1:f8BRRIMjMdRyt2qmJ/0Sea3j3rwwfufPrh9WNBRiVZ0=
-github.com/gofiber/fiber/v2 v2.10.0 h1:cYwonWaFVa7wBd/LKhgKu7mFNg2CHv5ztY6gzXtrvW8=
 github.com/gofiber/fiber/v2 v2.10.0/go.mod h1:Ah3IJikrKNRepl/HuVawppS25X7FWohwfCSRn7kJG28=
+github.com/gofiber/fiber/v2 v2.11.0 h1:97PoVZI3JLlJyfMHFhKZoEHQEfTwOXvhQs2+YoLr9jk=
+github.com/gofiber/fiber/v2 v2.11.0/go.mod h1:oZTLWqYnqpMMuF922SjGbsYZsdpE1MCfh416HNdweIM=
 github.com/gofiber/jwt/v2 v2.2.2 h1:fdGF6ag1bEUiW1DyYXy5X4EoKjPHxAM/N23w4PFbgG4=
 github.com/gofiber/jwt/v2 v2.2.2/go.mod h1:ePrxS3eQkdqbMWNejgJEGBNwYOYP3wAi9A/g+EsRntc=
 github.com/gofiber/template v1.6.10 h1:aPBqFS0uQqaXfUKamCygh+6JtGOPbBw5aeG0yOsbFjI=

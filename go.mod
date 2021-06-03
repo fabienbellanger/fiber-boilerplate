@@ -26,8 +26,7 @@ require (
 	github.com/markbates/pkger v0.17.1
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/pelletier/go-toml v1.9.1 // indirect
-	github.com/prometheus/client_golang v1.10.0 // indirect
-	github.com/prometheus/common v0.26.0 // indirect
+	github.com/prometheus/common v0.27.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20210520110740-c57c45b83e0a // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
@@ -37,7 +36,6 @@ require (
 	github.com/valyala/fasthttp v1.26.0
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.17.0
-	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
 	golang.org/x/sys v0.0.0-20210603125802-9665404d3644 // indirect
 	golang.org/x/tools v0.1.2 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect

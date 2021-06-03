@@ -1,0 +1,30 @@
+basePath: /api
+host: localhost:3000
+info:
+  contact:
+    email: valentil@gmail.com
+    name: API Support
+  description: This is a boilerplate for Fiber
+  license:
+    name: Apache 2.0
+  title: Fiber Boilerplate
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user
+      parameters:
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      summary: Authenticate user
+      tags:
+      - Authentication
+swagger: "2.0"

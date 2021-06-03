@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/ansrivas/fiberprometheus/v2"
+	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/fabienbellanger/goutils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
@@ -202,6 +203,10 @@ func initMiddlewares(s *fiber.App) {
 }
 
 func initTools(s *fiber.App) {
+	// Swagger
+	// -------
+	s.Get("/swagger/*", swagger.Handler)
+
 	// Pkger
 	// -----
 	s.Use("/assets", filesystem.New(filesystem.Config{

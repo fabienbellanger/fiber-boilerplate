@@ -19,6 +19,14 @@ type userLogin struct {
 }
 
 // Login authenticates a user.
+// @Summary Authenticate user
+// @Description Authenticate user
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param body body object true "Body"
+// @Success 200 {object} status "ok"
+// @Router /login [post]
 func Login(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		type userAuth struct {

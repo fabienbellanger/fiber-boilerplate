@@ -10,6 +10,7 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	models "github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/fabienbellanger/fiber-boilerplate/repositories"
+	"github.com/fabienbellanger/fiber-boilerplate/utils"
 )
 
 type userLogin struct {
@@ -25,7 +26,10 @@ type userLogin struct {
 // @Accept json
 // @Produce json
 // @Param body body object true "Body"
-// @Success 200 {object} status "ok"
+// @Success 200 {object} userLogin
+// @Failure 400 {object} utils.HTTPError
+// @Failure 401 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
 // @Router /login [post]
 func Login(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
@@ -35,17 +39,17 @@ func Login(db *db.DB) fiber.Handler {
 		}
 		u := new(userAuth)
 		if err := c.BodyParser(u); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad Request",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Request",
 			})
 		}
 
 		user, err := repositories.Login(db, u.Username, u.Password)
 		if err != nil {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"code":    fiber.StatusUnauthorized,
-				"message": "Unauthorized",
+			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
+				Code:    fiber.StatusUnauthorized,
+				Message: "Unauthorized",
 			})
 		}
 
@@ -82,6 +86,16 @@ func Login(db *db.DB) fiber.Handler {
 }
 
 // GetAllUsers lists all users.
+// @Summary List all users
+// @Description List all users
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.User
+// @Failure 400 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Security ApiKeyAuth
+// @Router /users [get]
 func GetAllUsers(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		users, err := repositories.ListAllUsers(db)
@@ -98,9 +112,9 @@ func GetUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		if id == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad ID",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad ID",
 			})
 		}
 
@@ -109,9 +123,9 @@ func GetUser(db *db.DB) fiber.Handler {
 			return fiber.NewError(fiber.StatusInternalServerError, "Error when retrieving user")
 		}
 		if user.ID == "" {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"code":    fiber.StatusNotFound,
-				"message": "No user found",
+			return c.Status(fiber.StatusNotFound).JSON(utils.HTTPError{
+				Code:    fiber.StatusNotFound,
+				Message: "No user found",
 			})
 		}
 
@@ -124,18 +138,18 @@ func CreateUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		user := new(models.UserForm)
 		if err := c.BodyParser(user); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad Request",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Request",
 			})
 		}
 
 		// Data validation
 		// ---------------
 		if user.Firstname == "" || user.Lastname == "" || user.Username == "" || user.Password == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad Parameters",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Parameters",
 			})
 		}
 
@@ -160,9 +174,9 @@ func DeleteUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		if id == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad ID",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad ID",
 			})
 		}
 
@@ -180,17 +194,17 @@ func UpdateUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		if id == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad ID",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad ID",
 			})
 		}
 
 		user := new(models.UserForm)
 		if err := c.BodyParser(user); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":    fiber.StatusBadRequest,
-				"message": "Bad Data",
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Data",
 			})
 		}
 

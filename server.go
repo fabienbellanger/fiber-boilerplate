@@ -203,10 +203,6 @@ func initMiddlewares(s *fiber.App) {
 }
 
 func initTools(s *fiber.App) {
-	// Swagger
-	// -------
-	s.Get("/swagger/*", swagger.Handler)
-
 	// Pkger
 	// -----
 	s.Use("/assets", filesystem.New(filesystem.Config{
@@ -220,6 +216,12 @@ func initTools(s *fiber.App) {
 			viper.GetString("SERVER_BASICAUTH_USERNAME"): viper.GetString("SERVER_BASICAUTH_PASSWORD"),
 		},
 	}
+
+	// Swagger
+	// -------
+	swaggerRoutes := s.Group("/swagger")
+	swaggerRoutes.Use(basicauth.New(cfg))
+	swaggerRoutes.Get("/*", swagger.Handler)
 
 	// Prometheus
 	// ----------

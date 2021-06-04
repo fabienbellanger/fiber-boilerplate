@@ -20,6 +20,8 @@ import (
 // @contact.name API Support
 // @contact.email valentil@gmail.com
 // @license.name Apache 2.0
+// @securityDefinitions.basic BearerAuth
+// @tokenUrl http://localhost:3000/api/login
 // @host localhost:3000
 // @BasePath /api
 func main() {

@@ -14,7 +14,7 @@ require (
 	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/gobuffalo/here v0.6.2 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.4 // indirect
+	github.com/gofiber/adaptor/v2 v2.1.5 // indirect
 	github.com/gofiber/fiber/v2 v2.11.0
 	github.com/gofiber/jwt/v2 v2.2.2
 	github.com/gofiber/template v1.6.10
@@ -25,7 +25,7 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/markbates/pkger v0.17.1
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
-	github.com/pelletier/go-toml v1.9.1 // indirect
+	github.com/pelletier/go-toml v1.9.2 // indirect
 	github.com/prometheus/common v0.27.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20210520110740-c57c45b83e0a // indirect
 	github.com/spf13/afero v1.6.0 // indirect

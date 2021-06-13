@@ -27,7 +27,7 @@ require (
 	github.com/markbates/pkger v0.17.1
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/pelletier/go-toml v1.9.2 // indirect
-	github.com/prometheus/common v0.28.0 // indirect
+	github.com/prometheus/common v0.29.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20210520110740-c57c45b83e0a // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
@@ -38,8 +38,9 @@ require (
 	go.uber.org/atomic v1.8.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.17.0
-	golang.org/x/sys v0.0.0-20210608053332-aa57babbf139 // indirect
-	golang.org/x/tools v0.1.2 // indirect
+	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b // indirect
+	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
+	golang.org/x/tools v0.1.3 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gorm.io/driver/mysql v1.1.0
 	gorm.io/gorm v1.21.10

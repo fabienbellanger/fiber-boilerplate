@@ -21,7 +21,7 @@ require (
 	github.com/gofiber/template v1.6.11
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.2.0
-	github.com/klauspost/compress v1.13.0 // indirect
+	github.com/klauspost/compress v1.13.1 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/markbates/pkger v0.17.1
@@ -38,7 +38,7 @@ require (
 	go.uber.org/atomic v1.8.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.17.0
-	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b // indirect
+	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
 	golang.org/x/tools v0.1.3 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect

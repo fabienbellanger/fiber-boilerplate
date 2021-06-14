@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  api.userAuth:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   api.userLogin:
     properties:
       created_at:
@@ -65,7 +72,7 @@ paths:
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/api.userAuth'
       produces:
       - application/json
       responses:
@@ -113,6 +120,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: List all users
+      tags:
+      - User
+  /users/{id}:
+    get:
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user by ID
       tags:
       - User
 securityDefinitions:

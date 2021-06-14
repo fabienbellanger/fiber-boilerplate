@@ -19,13 +19,18 @@ type userLogin struct {
 	ExpiresAt string `json:"expires_at" xml:"expires_at" form:"expires_at"`
 }
 
+type userAuth struct {
+	Username string `json:"username" xml:"username" form:"username"`
+	Password string `json:"password" xml:"password" form:"password"`
+}
+
 // Login authenticates a user.
 // @Summary Authenticate user
 // @Description Authenticate user
 // @Tags Authentication
 // @Accept json
 // @Produce json
-// @Param body body object true "Body"
+// @Param body body userAuth true "Body"
 // @Success 200 {object} userLogin
 // @Failure 400 {object} utils.HTTPError
 // @Failure 401 {object} utils.HTTPError
@@ -33,10 +38,6 @@ type userLogin struct {
 // @Router /login [post]
 func Login(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		type userAuth struct {
-			Username string
-			Password string
-		}
 		u := new(userAuth)
 		if err := c.BodyParser(u); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
@@ -108,6 +109,16 @@ func GetAllUsers(db *db.DB) fiber.Handler {
 }
 
 // GetUser return a user.
+// @Summary Get user by ID
+// @Description Get user by ID
+// @Tags User
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {array} models.User
+// @Failure 400 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Security ApiKeyAuth
+// @Router /users/{id} [get]
 func GetUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")

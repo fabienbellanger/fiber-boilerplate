@@ -55,5 +55,5 @@ func New(config *DatabaseConfig) (*DB, error) {
 }
 
 func (db *DB) MakeMigrations() {
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Task{})
 }

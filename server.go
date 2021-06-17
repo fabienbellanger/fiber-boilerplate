@@ -30,6 +30,7 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
 	"github.com/fabienbellanger/fiber-boilerplate/routes"
+	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
 
@@ -59,9 +60,9 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 	// Custom 404 (after all routes but not available because of JWT)
 	// --------------------------------------------------------------
 	app.Use(func(ctx *fiber.Ctx) error {
-		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"code":    fiber.StatusNotFound,
-			"message": "Resource Not Found",
+		return ctx.Status(fiber.StatusNotFound).JSON(utils.HTTPError{
+			Code:    fiber.StatusNotFound,
+			Message: "Resource Not Found",
 		})
 	})
 
@@ -120,9 +121,9 @@ func initConfig(logger *zap.Logger) fiber.Config {
 			if code == fiber.StatusInternalServerError {
 				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(err), zap.String("requestId", fmt.Sprintf("%v", requestId)))
 
-				return c.Status(code).JSON(fiber.Map{
-					"code":    code,
-					"message": "Internal Server Error",
+				return c.Status(code).JSON(utils.HTTPError{
+					Code:    code,
+					Message: "Internal Server Error",
 				})
 			}
 			return nil
@@ -153,7 +154,7 @@ func initMiddlewares(s *fiber.App) {
 	if viper.GetString("APP_ENV") == "development" || viper.GetBool("ENABLE_ACCESS_LOG") {
 		s.Use(logger.New(logger.Config{
 			Next:         nil,
-			Format:       "[${time}] [${locals:requestid}] ${status} - ${latency} - ${method} ${path}\n",
+			Format:       "${time} | ${status} | ${method} | ${path} | ${protocol}://${host}${url} | ${latency} | ${locals:requestid}\n",
 			TimeFormat:   "2006-01-02 15:04:05",
 			TimeZone:     "Local",
 			TimeInterval: 500 * time.Millisecond,
@@ -193,9 +194,9 @@ func initMiddlewares(s *fiber.App) {
 				return c.IP()
 			},
 			LimitReached: func(c *fiber.Ctx) error {
-				return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-					"code":    fiber.StatusTooManyRequests,
-					"message": "Too Many Requests",
+				return c.Status(fiber.StatusTooManyRequests).JSON(utils.HTTPError{
+					Code:    fiber.StatusTooManyRequests,
+					Message: "Too Many Requests",
 				})
 			},
 		}))
@@ -241,6 +242,7 @@ func initTools(s *fiber.App) {
 
 	// Monitor
 	// -------
+	// Consumes memory periodically
 	if viper.GetBool("SERVER_MONITOR") {
 		tools := s.Group("/tools")
 		tools.Use(basicauth.New(cfg))
@@ -253,9 +255,9 @@ func initJWT(s *fiber.App) {
 		SigningMethod: "HS512",
 		SigningKey:    []byte(viper.GetString("JWT_SECRET")),
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"code":    fiber.StatusUnauthorized,
-				"message": "Invalid or expired JWT",
+			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
+				Code:    fiber.StatusUnauthorized,
+				Message: "Invalid or expired JWT",
 			})
 		},
 	}))

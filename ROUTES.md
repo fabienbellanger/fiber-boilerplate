@@ -140,6 +140,30 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     ]
     ```
 
+- **[GET] `/v1/tasks/stream`**: Tasks list with a stream
+    ```bash
+    http GET localhost:3000/api/v1/tasks/stream
+    ```
+    Response:
+    ```json
+    [
+        {
+            "id": "72401e07-b08f-4f61-bab7-848c47703974",
+            "name": "Task 1",
+            "description": "Description 1",
+            "created_at": "2021-06-17T10:14:50.52Z",
+            "updated_at": "2021-06-17T10:14:50.52Z"
+        },
+        {
+            "id": "ea85381a-34a5-401b-8795-0695a7fe0ee5",
+            "name": "Task 2",
+            "description": "Description 2",
+            "created_at": "2021-06-17T10:15:18.142Z",
+            "updated_at": "2021-06-17T10:15:18.142Z"
+        }
+    ]
+    ```
+
 - **[POST] `/api/v1/tasks`**: Task creation
     ```bash
     http POST localhost:3000/api/v1/tasks name=Task description=Description

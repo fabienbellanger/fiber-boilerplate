@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/plugin/prometheus"
 )
 
 // DatabaseConfig represents the database configuration.
@@ -43,6 +45,19 @@ func New(config *DatabaseConfig) (*DB, error) {
 	// Options
 	// -------
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
+
+	// Prometeus
+	// ---------
+	db.Use(prometheus.New(prometheus.Config{
+		DBName:          viper.GetString("DB_DATABASE"), // Use `DBName` as metrics label
+		RefreshInterval: 15,                             // Refresh metrics interval (default 15 seconds)
+		StartServer:     false,                          // Start http server to expose metrics
+		MetricsCollector: []prometheus.MetricsCollector{
+			&prometheus.MySQL{
+				VariableNames: []string{"Threads_running"},
+			},
+		}, // user defined metrics
+	}))
 
 	// Connection Pool
 	// ---------------

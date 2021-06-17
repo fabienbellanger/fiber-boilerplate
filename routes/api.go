@@ -9,6 +9,9 @@ import (
 // RegisterPublicAPIRoutes lists all public API routes.
 func RegisterPublicAPIRoutes(r fiber.Router, db *db.DB) {
 	registerAuth(r, db)
+
+	v1 := r.Group("/v1")
+	registerTask(v1, db)
 }
 
 // RegisterProtectedAPIRoutes lists all protected API routes.
@@ -31,4 +34,12 @@ func registerUser(r fiber.Router, db *db.DB) {
 	users.Get("/:id", api.GetUser(db))
 	users.Delete("/:id", api.DeleteUser(db))
 	users.Put("/:id", api.UpdateUser(db))
+}
+
+func registerTask(r fiber.Router, db *db.DB) {
+	tasks := r.Group("/tasks")
+
+	tasks.Get("/", api.GetAllTasks(db))
+	tasks.Get("/stream", api.GetAllTasksStream(db))
+	tasks.Post("/", api.CreateTask(db))
 }

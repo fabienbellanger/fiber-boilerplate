@@ -12,16 +12,6 @@ import (
 )
 
 // GetAllTasks lists all tasks.
-// @Summary List all tasks
-// @Description List all tasks
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {array} models.Task
-// @Failure 400 {object} utils.HTTPError
-// @Failure 500 {object} utils.HTTPError
-// @Security ApiKeyAuth
-// @Router /tasks [get]
 func GetAllTasks(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		tasks, err := repositories.ListAllTasks(db)

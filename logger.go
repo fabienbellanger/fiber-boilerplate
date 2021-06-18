@@ -1,4 +1,4 @@
-package logger
+package server
 
 import (
 	"fmt"
@@ -10,8 +10,8 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// Init initializes custom Zap logger.
-func Init() (*zap.Logger, error) {
+// InitLogger initializes custom Zap logger.
+func InitLogger() (*zap.Logger, error) {
 	logPath := path.Clean(viper.GetString("LOG_PATH"))
 	_, err := os.Stat(logPath)
 	if err != nil {

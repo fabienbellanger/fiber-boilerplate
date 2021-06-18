@@ -9,8 +9,6 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 -  [Routes](#Routes)
     -  [Web](#Web)
     -  [API](#API)
--  [API documentation](#API-documentation)
-    -  [Swagger](#Swagger)
 -  [Golang web server in production](#golang-web-server-in-production)
 -  [Mesure et performance](#mesure-et-performance)
     -  [pprof](#pprof)
@@ -33,20 +31,6 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 ## Routes
 [Liste des routes](ROUTES.md)
-
-
-## API documentation
-
-### Swagger
-I must install [Swag](https://github.com/swaggo/swag/cmd/swag):
-```bash
-go get -u github.com/swaggo/swag/cmd/swag
-```
-Then run:
-```bash
-swag init -g cmd/main.go
-```
-The documentation is available in your browser at `http://localhost:3000/swagger/index.html`.
 
 
 ## Golang web server in production

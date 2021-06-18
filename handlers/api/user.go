@@ -28,17 +28,6 @@ type userAuth struct {
 }
 
 // Login authenticates a user.
-// @Summary Authenticate user
-// @Description Authenticate user
-// @Tags Authentication
-// @Accept json
-// @Produce json
-// @Param body body userAuth true "Body"
-// @Success 200 {object} userLogin
-// @Failure 400 {object} utils.HTTPError
-// @Failure 401 {object} utils.HTTPError
-// @Failure 500 {object} utils.HTTPError
-// @Router /login [post]
 func Login(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		u := new(userAuth)
@@ -90,16 +79,6 @@ func Login(db *db.DB) fiber.Handler {
 }
 
 // GetAllUsers lists all users.
-// @Summary List all users
-// @Description List all users
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {array} models.User
-// @Failure 400 {object} utils.HTTPError
-// @Failure 500 {object} utils.HTTPError
-// @Security ApiKeyAuth
-// @Router /users [get]
 func GetAllUsers(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		users, err := repositories.ListAllUsers(db)
@@ -112,16 +91,6 @@ func GetAllUsers(db *db.DB) fiber.Handler {
 }
 
 // GetUser return a user.
-// @Summary Get user by ID
-// @Description Get user by ID
-// @Tags User
-// @Produce json
-// @Param id path string true "User ID"
-// @Success 200 {array} models.User
-// @Failure 400 {object} utils.HTTPError
-// @Failure 500 {object} utils.HTTPError
-// @Security ApiKeyAuth
-// @Router /users/{id} [get]
 func GetUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")

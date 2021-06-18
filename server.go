@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/ansrivas/fiberprometheus/v2"
-	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/fabienbellanger/goutils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
@@ -215,12 +214,6 @@ func initTools(s *fiber.App) {
 			viper.GetString("SERVER_BASICAUTH_USERNAME"): viper.GetString("SERVER_BASICAUTH_PASSWORD"),
 		},
 	}
-
-	// Swagger
-	// -------
-	swaggerRoutes := s.Group("/swagger")
-	swaggerRoutes.Use(basicauth.New(cfg))
-	swaggerRoutes.Get("/*", swagger.Handler)
 
 	// Prometheus
 	// ----------

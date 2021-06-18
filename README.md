@@ -1,6 +1,9 @@
 # fiber-boilerplate
 A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/fabienbellanger/fiber-boilerplate)](https://goreportcard.com/report/github.com/fabienbellanger/fiber-boilerplate)
+[![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+
 ## Sommaire
 -  [Makefile commands](#Makefile-commands)
 -  [Routes](#Routes)

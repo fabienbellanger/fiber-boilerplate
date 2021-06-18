@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Error represents a custom error.
 type Error struct {
 	Code int
 	Err  error

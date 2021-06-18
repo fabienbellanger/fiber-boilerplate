@@ -2,12 +2,15 @@ package db
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"time"
 
 	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/plugin/prometheus"
 )
 
@@ -37,7 +40,22 @@ func New(config *DatabaseConfig) (*DB, error) {
 		config.Host,
 		config.Port,
 		config.Database)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	// Logger
+	// ------
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             200 * time.Millisecond, // Slow SQL threshold (Default: 200ms)
+			LogLevel:                  logger.Warn,            // Log level (Silent, Error, Warn, Info) (Default: Warn)
+			IgnoreRecordNotFoundError: false,                  // Ignore ErrRecordNotFound error for logger (Default: false)
+			Colorful:                  true,                   // Disable color (Default: true)
+		},
+	)
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: newLogger,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +87,7 @@ func New(config *DatabaseConfig) (*DB, error) {
 	return &DB{db}, err
 }
 
+// MakeMigrations runs GORM migrations.
 func (db *DB) MakeMigrations() {
 	db.AutoMigrate(&models.User{}, &models.Task{})
 }

@@ -106,12 +106,12 @@ func initConfig(logger *zap.Logger) fiber.Config {
 
 			// Request ID
 			// ----------
-			requestId := c.Locals("requestid")
+			requestID := c.Locals("requestid")
 
 			// Custom Fiber error
 			// ------------------
 			if e != nil {
-				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(e), zap.String("requestId", fmt.Sprintf("%v", requestId)))
+				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(e), zap.String("requestId", fmt.Sprintf("%v", requestID)))
 
 				return c.Status(code).JSON(e)
 			}
@@ -119,7 +119,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 			// Internal Server Error
 			// ---------------------
 			if code == fiber.StatusInternalServerError {
-				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(err), zap.String("requestId", fmt.Sprintf("%v", requestId)))
+				logger.Error(fmt.Sprintf("error code: %d", code), zap.Error(err), zap.String("requestId", fmt.Sprintf("%v", requestID)))
 
 				return c.Status(code).JSON(utils.HTTPError{
 					Code:    code,

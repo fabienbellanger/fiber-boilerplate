@@ -18,6 +18,7 @@ func ListAllTasks(db *db.DB) ([]models.Task, error) {
 	return tasks, nil
 }
 
+// ListAllTasksRows gets all users in database.
 func ListAllTasksRows(db *db.DB) (*sql.Rows, error) {
 	return db.Model(&models.Task{}).Where("deleted_at IS NULL").Rows()
 }

@@ -33,7 +33,7 @@ require (
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
 	golang.org/x/tools v0.1.3 // indirect
-	gorm.io/driver/mysql v1.1.0
+	gorm.io/driver/mysql v1.1.1
 	gorm.io/gorm v1.21.11
 	gorm.io/plugin/prometheus v0.0.0-20210614014227-3996fd54c851
 )

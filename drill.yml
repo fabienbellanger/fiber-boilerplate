@@ -8,6 +8,14 @@ plan:
     request:
       url: /health-check
   
+  - name: Tasks list with stream
+    request:
+      url: /api/v1/tasks/stream
+  
+  - name: Tasks list
+    request:
+      url: /api/v1/tasks
+  
   - name: Login
     request:
       url: /api/login

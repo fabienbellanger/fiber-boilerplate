@@ -1,21 +1,45 @@
-package routes
+package server
 
 import (
+	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
+
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/handlers/api"
-	"github.com/gofiber/fiber/v2"
+	"github.com/fabienbellanger/fiber-boilerplate/handlers/web"
+	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
 
-// RegisterPublicAPIRoutes lists all public API routes.
-func RegisterPublicAPIRoutes(r fiber.Router, db *db.DB) {
+// Web routes
+// ----------
+
+func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger, hub *ws.Hub) {
+	r.Get("/health-check", web.HealthCheck(logger))
+
+	registerPublicWebSocketRoutes(r, hub)
+}
+
+func registerPublicWebSocketRoutes(r fiber.Router, hub *ws.Hub) {
+	w := r.Group("/ws")
+
+	// Access the websocket server: ws://localhost:3000/ws/123?v=1.0
+	// Tests with: https://www.websocket.org/echo.html
+	w.Get("/", func(c *fiber.Ctx) error {
+		return ws.ServeWs(c, hub)
+	})
+}
+
+// API routes
+// ----------
+
+func registerPublicAPIRoutes(r fiber.Router, db *db.DB) {
 	registerAuth(r, db)
 
 	v1 := r.Group("/v1")
 	registerTask(v1, db)
 }
 
-// RegisterProtectedAPIRoutes lists all protected API routes.
-func RegisterProtectedAPIRoutes(r fiber.Router, db *db.DB) {
+func registerProtectedAPIRoutes(r fiber.Router, db *db.DB) {
 	v1 := r.Group("/v1")
 
 	registerUser(v1, db)

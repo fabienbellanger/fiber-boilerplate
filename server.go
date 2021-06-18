@@ -29,7 +29,6 @@ import (
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
-	"github.com/fabienbellanger/fiber-boilerplate/routes"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
@@ -48,14 +47,13 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 
 	// Public routes
 	// -------------
-	routes.RegisterPublicWebRoutes(web, logger)
-	routes.RegisterPublicWebSocketRoutes(web, hub)
-	routes.RegisterPublicAPIRoutes(api, db)
+	registerPublicWebRoutes(web, logger, hub)
+	registerPublicAPIRoutes(api, db)
 
 	// Protected routes
 	// ----------------
 	initJWT(app)
-	routes.RegisterProtectedAPIRoutes(api, db)
+	registerProtectedAPIRoutes(api, db)
 
 	// Custom 404 (after all routes but not available because of JWT)
 	// --------------------------------------------------------------

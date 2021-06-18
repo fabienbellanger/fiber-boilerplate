@@ -26,6 +26,7 @@ func NewHub() *Hub {
 	}
 }
 
+// Run starts the WebSockets hub.
 func (h *Hub) Run() {
 	for {
 		select {

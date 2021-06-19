@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	models "github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/fabienbellanger/fiber-boilerplate/repositories"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/gofiber/fiber/v2"

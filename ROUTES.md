@@ -18,9 +18,9 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 ### API
 
-- **[POST] `/api/login`**: Authentication
+- **[POST] `/api/v1/login`**: Authentication
     ```bash
-    http POST localhost:3000/api/login username=test@gmail.com password=0000
+    http POST localhost:3000/api/v1/login username=test@gmail.com password=0000
     ```
     Response:
     ```json
@@ -36,9 +36,9 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     }
     ```
 
-- **[POST] `/api/register`**: User creation
+- **[POST] `/api/v1/register`**: User creation
     ```bash
-    http POST localhost:3000/api/register lastname=Test firstname=Toto username=test@gmail.com password=0000
+    http POST localhost:3000/api/v1/register lastname=Test firstname=Toto username=test@gmail.com password=0000
     ```
     Response:
     ```json
@@ -52,7 +52,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     }
     ```
 
-- **[GET] `/v1/users`**: Users list
+- **[GET] `/api/v1/users`**: Users list
     ```bash
     http GET localhost:3000/api/v1/users "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA4VDIwOjQzOjI4LjM0NVoiLCJleHAiOjE2MTYxMDAyMTUsImZpcnN0bmFtZSI6IkZhYmllbiIsImlhdCI6MTYxNTIzNjIxNSwiaWQiOjEsImxhc3RuYW1lIjoiQmVsbGFuZ2VyIiwibmJmIjoxNjE1MjM2MjE1LCJ1c2VybmFtZSI6InZhbGVudGlsQGdtYWlsLmNvbSJ9.RL_1C2tYqqkXowEi8Np-y3IH1qQLl8UVdFNWswcBcIOYB6W4T-L_RAkZeVK04wtsY4Hih2JE1KPcYqXnxj2FWg"
     ```
@@ -78,7 +78,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     ]
     ```
 
-- **[GET] `/v1/users/{id}`**: Get user information
+- **[GET] `/api/v1/users/{id}`**: Get user information
     ```bash
     http GET localhost:3000/api/v1/users/2a40080f-6077-4273-9075-1c5503ac95eb "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA4VDIwOjQzOjI4LjM0NVoiLCJleHAiOjE2MTYxMDAyMTUsImZpcnN0bmFtZSI6IkZhYmllbiIsImlhdCI6MTYxNTIzNjIxNSwiaWQiOjEsImxhc3RuYW1lIjoiQmVsbGFuZ2VyIiwibmJmIjoxNjE1MjM2MjE1LCJ1c2VybmFtZSI6InZhbGVudGlsQGdtYWlsLmNvbSJ9.RL_1C2tYqqkXowEi8Np-y3IH1qQLl8UVdFNWswcBcIOYB6W4T-L_RAkZeVK04wtsY4Hih2JE1KPcYqXnxj2FWg"
     ```
@@ -94,13 +94,13 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     }
     ```
 
-- **[DELETE] `/v1/users/{id}`**: Delete user
+- **[DELETE] `/api/v1/users/{id}`**: Delete user
     ```bash
     http DELETE localhost:3000/api/v1/users/2a40080f-6077-4273-9075-1c5503ac95eb "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA4VDIwOjQzOjI4LjM0NVoiLCJleHAiOjE2MTYxMDAyMTUsImZpcnN0bmFtZSI6IkZhYmllbiIsImlhdCI6MTYxNTIzNjIxNSwiaWQiOjEsImxhc3RuYW1lIjoiQmVsbGFuZ2VyIiwibmJmIjoxNjE1MjM2MjE1LCJ1c2VybmFtZSI6InZhbGVudGlsQGdtYWlsLmNvbSJ9.RL_1C2tYqqkXowEi8Np-y3IH1qQLl8UVdFNWswcBcIOYB6W4T-L_RAkZeVK04wtsY4Hih2JE1KPcYqXnxj2FWg"
     ```
   Response code `204`
 
-- **[PUT] `/v1/users/{id}`**: Update user information
+- **[PUT] `/api/v1/users/{id}`**: Update user information
     ```bash
     http PUT localhost:3000/api/v1/users/2a40080f-6077-4273-9075-1c5503ac95eb "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA4VDIwOjQzOjI4LjM0NVoiLCJleHAiOjE2MTYxMDAyMTUsImZpcnN0bmFtZSI6IkZhYmllbiIsImlhdCI6MTYxNTIzNjIxNSwiaWQiOjEsImxhc3RuYW1lIjoiQmVsbGFuZ2VyIiwibmJmIjoxNjE1MjM2MjE1LCJ1c2VybmFtZSI6InZhbGVudGlsQGdtYWlsLmNvbSJ9.RL_1C2tYqqkXowEi8Np-y3IH1qQLl8UVdFNWswcBcIOYB6W4T-L_RAkZeVK04wtsY4Hih2JE1KPcYqXnxj2FWg"  lastname=Test firstname=Tutu username=test3@gmail.com password=2222
     ```
@@ -116,7 +116,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     }
     ```
 
-- **[GET] `/v1/tasks`**: Tasks list
+- **[GET] `/api/v1/tasks`**: Tasks list
     ```bash
     http GET localhost:3000/api/v1/tasks
     ```
@@ -140,7 +140,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     ]
     ```
 
-- **[GET] `/v1/tasks/stream`**: Tasks list with a stream
+- **[GET] `/api/v1/tasks/stream`**: Tasks list with a stream
     ```bash
     http GET localhost:3000/api/v1/tasks/stream
     ```

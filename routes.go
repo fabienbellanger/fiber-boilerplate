@@ -33,9 +33,9 @@ func registerPublicWebSocketRoutes(r fiber.Router, hub *ws.Hub) {
 // ----------
 
 func registerPublicAPIRoutes(r fiber.Router, db *db.DB) {
-	registerAuth(r, db)
-
 	v1 := r.Group("/v1")
+
+	registerAuth(v1, db)
 	registerTask(v1, db)
 }
 

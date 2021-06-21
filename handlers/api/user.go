@@ -3,13 +3,14 @@ package api
 import (
 	"bufio"
 	"encoding/json"
-	"log"
+	"errors"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
+	"gorm.io/gorm"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	models "github.com/fabienbellanger/fiber-boilerplate/models"
@@ -41,13 +42,13 @@ func Login(db *db.DB) fiber.Handler {
 
 		user, err := repositories.Login(db, u.Username, u.Password)
 		if err != nil {
-			log.Printf("Login error: %v\n", err)
-			// TODO: Gérer les cas d'erreur (par exemple si la connexion à la BDD est rompue)
-			// Différence entre "record not found" et "driver: bad connection".
-			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
-				Code:    fiber.StatusUnauthorized,
-				Message: "Unauthorized",
-			})
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
+					Code:    fiber.StatusUnauthorized,
+					Message: "Unauthorized",
+				})
+			}
+			return fiber.NewError(fiber.StatusInternalServerError, "Error during authentication")
 		}
 
 		// Create token

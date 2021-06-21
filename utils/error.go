@@ -4,12 +4,15 @@ import (
 	"fmt"
 )
 
+// TODO: Improve error handling
+
 // Error represents a custom error.
 type Error struct {
 	Code int
-	Err  error
+	Msg  string
+	Err  *error
 }
 
 func (e *Error) Error() string {
-	return fmt.Sprintf("Code: %d, Err=%v", e.Code, e.Err)
+	return fmt.Sprintf("Code: %d, Message: %s, Err=%v", e.Code, e.Msg, *e.Err)
 }

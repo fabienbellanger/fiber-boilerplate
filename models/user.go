@@ -18,7 +18,7 @@ type User struct {
 	DeletedAt gorm.DeletedAt `json:"-" xml:"-" form:"deleted_at" gorm:"index"`
 }
 
-// UserForm represents structure to create or update a user.
+// UserForm is used to create or update a user.
 type UserForm struct {
 	Username  string `json:"username" xml:"username" form:"username"`
 	Password  string `json:"password" xml:"password" form:"password"`

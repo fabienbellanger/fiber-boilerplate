@@ -88,7 +88,7 @@ func GetAllUsers(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		users, err := repositories.ListAllUsers(db)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error during users list")
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 
 		return c.JSON(users)

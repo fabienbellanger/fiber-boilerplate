@@ -8,6 +8,7 @@ import (
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/utils"
 )
 
 // Login gets user from username and password.
@@ -28,7 +29,11 @@ func ListAllUsers(db *db.DB) ([]models.User, error) {
 	var users []models.User
 
 	if response := db.Find(&users); response.Error != nil {
-		return users, response.Error
+		return users, &utils.Error{
+			Code: 500,
+			Msg:  "Error during users list",
+			Err:  &response.Error,
+		}
 	}
 	return users, nil
 }

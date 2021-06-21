@@ -3,6 +3,7 @@ package api
 import (
 	"bufio"
 	"encoding/json"
+	"log"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -40,6 +41,9 @@ func Login(db *db.DB) fiber.Handler {
 
 		user, err := repositories.Login(db, u.Username, u.Password)
 		if err != nil {
+			log.Printf("Login error: %v\n", err)
+			// TODO: Gérer les cas d'erreur (par exemple si la connexion à la BDD est rompue)
+			// Différence entre "record not found" et "driver: bad connection".
 			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
 				Code:    fiber.StatusUnauthorized,
 				Message: "Unauthorized",

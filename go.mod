@@ -22,8 +22,9 @@ require (
 	github.com/valyala/fasthttp v1.27.0
 	go.uber.org/atomic v1.8.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.17.0
+	go.uber.org/zap v1.18.1
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 	gorm.io/driver/mysql v1.1.1
 	gorm.io/gorm v1.21.11
 	gorm.io/plugin/prometheus v0.0.0-20210614014227-3996fd54c851

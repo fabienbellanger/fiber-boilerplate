@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -16,6 +17,10 @@ func InitLogger() (*zap.Logger, error) {
 	_, err := os.Stat(logPath)
 	if err != nil {
 		return nil, err
+	}
+
+	if viper.GetString("APP_NAME") == "" {
+		return nil, errors.New("no APP_NAME variable defined")
 	}
 
 	cfg := zap.Config{

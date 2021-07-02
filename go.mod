@@ -10,7 +10,7 @@ require (
 	github.com/fasthttp/websocket v1.4.3
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.7 // indirect
-	github.com/gofiber/fiber/v2 v2.13.0
+	github.com/gofiber/fiber/v2 v2.14.0
 	github.com/gofiber/jwt/v2 v2.2.3
 	github.com/gofiber/template v1.6.12
 	github.com/google/uuid v1.2.0

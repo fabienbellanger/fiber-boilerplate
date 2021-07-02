@@ -19,7 +19,8 @@ func InitLogger() (*zap.Logger, error) {
 		return nil, err
 	}
 
-	if viper.GetString("APP_NAME") == "" {
+	appName := viper.GetString("APP_NAME")
+	if appName == "" {
 		return nil, errors.New("no APP_NAME variable defined")
 	}
 
@@ -30,7 +31,7 @@ func InitLogger() (*zap.Logger, error) {
 			"stderr",
 			fmt.Sprintf("%s/%s.log",
 				logPath,
-				viper.GetString("APP_NAME"))},
+				appName)},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig: zapcore.EncoderConfig{
 			MessageKey:   "message",

@@ -25,8 +25,8 @@ type userLogin struct {
 }
 
 type userAuth struct {
-	Username string `json:"username" xml:"username" form:"username"`
-	Password string `json:"password" xml:"password" form:"password"`
+	Username string `json:"username" xml:"username" form:"username" validate:"required,email"`
+	Password string `json:"password" xml:"password" form:"password" validate:"required,min=4"`
 }
 
 // Login authenticates a user.
@@ -37,6 +37,15 @@ func Login(db *db.DB) fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 				Code:    fiber.StatusBadRequest,
 				Message: "Bad Request",
+			})
+		}
+
+		loginErrors := utils.ValidateStruct(*u)
+		if loginErrors != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Request",
+				Details: loginErrors,
 			})
 		}
 

@@ -18,6 +18,6 @@ type Task struct {
 
 // TaskForm represents structure to create or update a task.
 type TaskForm struct {
-	Name        string `json:"name" xml:"name" form:"name"`
+	Name        string `json:"name" xml:"name" form:"name" validate:"required,min=3,max=127"`
 	Description string `json:"description" xml:"description" form:"description"`
 }

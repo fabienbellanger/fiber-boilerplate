@@ -8,15 +8,19 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fabienbellanger/goutils v1.0.16
 	github.com/fasthttp/websocket v1.4.3
+	github.com/go-playground/universal-translator v0.17.0 // indirect
+	github.com/go-playground/validator v9.31.0+incompatible // indirect
 	github.com/gobuffalo/here v0.6.2 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.7 // indirect
+	github.com/gofiber/adaptor/v2 v2.1.8 // indirect
 	github.com/gofiber/fiber/v2 v2.14.0
-	github.com/gofiber/jwt/v2 v2.2.3
-	github.com/gofiber/template v1.6.12
+	github.com/gofiber/jwt/v2 v2.2.4
+	github.com/gofiber/template v1.6.13
 	github.com/google/uuid v1.2.0
 	github.com/klauspost/compress v1.13.1 // indirect
+	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/markbates/pkger v0.17.1
 	github.com/prometheus/common v0.29.0 // indirect
+	github.com/prometheus/procfs v0.7.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20210617111740-97865ed5a873 // indirect
 	github.com/spf13/viper v1.8.1
 	github.com/valyala/fasthttp v1.28.0

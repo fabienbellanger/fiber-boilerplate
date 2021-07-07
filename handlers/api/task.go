@@ -69,6 +69,15 @@ func CreateTask(db *db.DB) fiber.Handler {
 			})
 		}
 
+		errors := utils.ValidateStruct(*task)
+		if errors != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Request",
+				Details: errors,
+			})
+		}
+
 		// Data validation
 		// ---------------
 		if task.Name == "" {

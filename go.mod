@@ -9,7 +9,7 @@ require (
 	github.com/fabienbellanger/goutils v1.0.16
 	github.com/fasthttp/websocket v1.4.3
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/go-playground/validator v9.31.0+incompatible // indirect
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.8 // indirect
 	github.com/gofiber/fiber/v2 v2.14.0
@@ -29,6 +29,7 @@ require (
 	go.uber.org/zap v1.18.1
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gorm.io/driver/mysql v1.1.1
 	gorm.io/gorm v1.21.11
 	gorm.io/plugin/prometheus v0.0.0-20210614014227-3996fd54c851

@@ -20,7 +20,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 - **[POST] `/api/v1/login`**: Authentication
     ```bash
-    http POST localhost:3000/api/v1/login username=test@gmail.com password=0000
+    http POST localhost:3000/api/v1/login username=test@gmail.com password=00000000
     ```
     Response:
     ```json
@@ -38,7 +38,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 - **[POST] `/api/v1/register`**: User creation
     ```bash
-    http POST localhost:3000/api/v1/register lastname=Test firstname=Toto username=test@gmail.com password=0000
+    http POST localhost:3000/api/v1/register lastname=Test firstname=Toto username=test@gmail.com password=00000000
     ```
     Response:
     ```json
@@ -102,7 +102,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 - **[PUT] `/api/v1/users/{id}`**: Update user information
     ```bash
-    http PUT localhost:3000/api/v1/users/2a40080f-6077-4273-9075-1c5503ac95eb "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA4VDIwOjQzOjI4LjM0NVoiLCJleHAiOjE2MTYxMDAyMTUsImZpcnN0bmFtZSI6IkZhYmllbiIsImlhdCI6MTYxNTIzNjIxNSwiaWQiOjEsImxhc3RuYW1lIjoiQmVsbGFuZ2VyIiwibmJmIjoxNjE1MjM2MjE1LCJ1c2VybmFtZSI6InZhbGVudGlsQGdtYWlsLmNvbSJ9.RL_1C2tYqqkXowEi8Np-y3IH1qQLl8UVdFNWswcBcIOYB6W4T-L_RAkZeVK04wtsY4Hih2JE1KPcYqXnxj2FWg"  lastname=Test firstname=Tutu username=test3@gmail.com password=2222
+    http PUT localhost:3000/api/v1/users/2a40080f-6077-4273-9075-1c5503ac95eb "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA4VDIwOjQzOjI4LjM0NVoiLCJleHAiOjE2MTYxMDAyMTUsImZpcnN0bmFtZSI6IkZhYmllbiIsImlhdCI6MTYxNTIzNjIxNSwiaWQiOjEsImxhc3RuYW1lIjoiQmVsbGFuZ2VyIiwibmJmIjoxNjE1MjM2MjE1LCJ1c2VybmFtZSI6InZhbGVudGlsQGdtYWlsLmNvbSJ9.RL_1C2tYqqkXowEi8Np-y3IH1qQLl8UVdFNWswcBcIOYB6W4T-L_RAkZeVK04wtsY4Hih2JE1KPcYqXnxj2FWg"  lastname=Test firstname=Tutu username=test3@gmail.com password=222222222
     ```
   Response:
     ```json

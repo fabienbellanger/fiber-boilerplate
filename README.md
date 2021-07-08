@@ -121,4 +121,4 @@ go tool cover -html=<fichier à analyser>
 -  [ ] **Attention** : Le middleware websocket de Fiber génère une data race avec le hub ! Voir si cela sera corrigé à l'avenir (lever une issue sur Github ?)
 -  [ ] Mettre en place la stack Prometheus + Grafana pour la télémétrie
 -  [x] Si la connexion à la base de données est coupée, cela retourne une 401 au lieu d'une 500.
--  [ ] Validation des données avec github.com/go-playground/validator
+-  [x] Validation des données avec github.com/go-playground/validator

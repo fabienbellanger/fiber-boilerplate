@@ -114,6 +114,8 @@ func initConfig(logger *zap.Logger) fiber.Config {
 					zap.Int("code", code),
 					zap.String("method", c.Method()),
 					zap.String("path", c.Path()),
+					zap.String("url", c.OriginalURL()),
+					zap.String("ip", c.IP()),
 					zap.String("requestId", fmt.Sprintf("%v", requestID)))
 
 				return c.Status(code).JSON(e)
@@ -128,6 +130,8 @@ func initConfig(logger *zap.Logger) fiber.Config {
 					zap.Int("code", code),
 					zap.String("method", c.Method()),
 					zap.String("path", c.Path()),
+					zap.String("url", c.OriginalURL()),
+					zap.String("ip", c.IP()),
 					zap.String("requestId", fmt.Sprintf("%v", requestID)))
 
 				return c.Status(code).JSON(utils.HTTPError{

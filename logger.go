@@ -12,41 +12,21 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// InitLogger initializes custom Zap logger.
+// InitLogger initializes custom Zap logger configuration.
 func InitLogger() (*zap.Logger, error) {
 	// Logs outputs
 	// ------------
-	logOutputs := viper.GetStringSlice("LOG_OUTPUTS")
-	var outputs []string
-	if goutils.StringInSlice("file", logOutputs) {
-		logPath := path.Clean(viper.GetString("LOG_PATH"))
-		_, err := os.Stat(logPath)
-		if err != nil {
-			return nil, err
-		}
-
-		appName := viper.GetString("APP_NAME")
-		if appName == "" {
-			return nil, errors.New("no APP_NAME variable defined")
-		}
-
-		outputs = append(outputs, fmt.Sprintf("%s/%s.log",
-			logPath,
-			appName))
-	}
-	if goutils.StringInSlice("stderr", logOutputs) {
-		outputs = append(outputs, "stderr")
-	}
-	if goutils.StringInSlice("stdout", logOutputs) {
-		outputs = append(outputs, "stdout")
+	outputs, err := getLoggerOutputs(viper.GetStringSlice("LOG_OUTPUTS"), viper.GetString("APP_NAME"), viper.GetString("LOG_PATH"))
+	if err != nil {
+		return nil, err
 	}
 
 	// Level
 	// -----
-	level := getLoggerLevel(viper.GetString("LOG_LEVEL"))
+	level := getLoggerLevel(viper.GetString("LOG_LEVEL"), viper.GetString("APP_ENV"))
 
 	cfg := zap.Config{
-		Encoding:         "console",
+		Encoding:         "json",
 		Level:            zap.NewAtomicLevelAt(level),
 		OutputPaths:      outputs,
 		ErrorOutputPaths: outputs,
@@ -68,35 +48,37 @@ func InitLogger() (*zap.Logger, error) {
 	return logger, nil
 }
 
-func getLoggerOutputs(outputs []string, appName, path string) (logOutputs []string) {
-	// logOutputs := viper.GetStringSlice("LOG_OUTPUTS")
-	// var outputs []string
-	// if goutils.StringInSlice("file", logOutputs) {
-	// 	logPath := path.Clean(viper.GetString("LOG_PATH"))
-	// 	_, err := os.Stat(logPath)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
+// getLoggerOutputs returns an array with the log outputs.
+// Outputs can be stdout and/or stderr and/or file.
+func getLoggerOutputs(logOutputs []string, appName, filePath string) (outputs []string, err error) {
+	if goutils.StringInSlice("file", logOutputs) {
+		logPath := path.Clean(filePath)
+		_, err := os.Stat(logPath)
+		if err != nil {
+			return nil, err
+		}
 
-	// 	appName := viper.GetString("APP_NAME")
-	// 	if appName == "" {
-	// 		return nil, errors.New("no APP_NAME variable defined")
-	// 	}
+		if appName == "" {
+			return nil, errors.New("no APP_NAME variable defined")
+		}
 
-	// 	outputs = append(outputs, fmt.Sprintf("%s/%s.log",
-	// 		logPath,
-	// 		appName))
-	// }
-	// if goutils.StringInSlice("stderr", logOutputs) {
-	// 	outputs = append(outputs, "stderr")
-	// }
-	// if goutils.StringInSlice("stdout", logOutputs) {
-	// 	outputs = append(outputs, "stdout")
-	// }
+		outputs = append(outputs, fmt.Sprintf("%s/%s.log",
+			logPath,
+			appName))
+	}
+	if goutils.StringInSlice("stderr", logOutputs) {
+		outputs = append(outputs, "stderr")
+	}
+	if goutils.StringInSlice("stdout", logOutputs) {
+		outputs = append(outputs, "stdout")
+	}
 	return
 }
 
-func getLoggerLevel(l string) (level zapcore.Level) {
+// getLoggerLevel returns the minimum log level.
+// If nothing is specified in the environment variable LOG_LEVEL,
+// The level is DEBUG in development mode and WARN in others cases.
+func getLoggerLevel(l string, env string) (level zapcore.Level) {
 	switch l {
 	case "debug":
 		level = zapcore.DebugLevel
@@ -111,7 +93,11 @@ func getLoggerLevel(l string) (level zapcore.Level) {
 	case "fatal":
 		level = zapcore.FatalLevel
 	default:
-		level = zapcore.InfoLevel
+		if env == "development" {
+			level = zapcore.DebugLevel
+		} else {
+			level = zapcore.WarnLevel
+		}
 	}
 	return
 }

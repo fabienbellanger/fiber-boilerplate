@@ -3,6 +3,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/fabienbellanger/fiber-boilerplate)](https://goreportcard.com/report/github.com/fabienbellanger/fiber-boilerplate)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=square)](https://pkg.go.dev/github.com/fabienbellanger/fiber-boilerplate)
 
 ## Sommaire
 -  [Makefile commands](#Makefile-commands)

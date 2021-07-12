@@ -43,7 +43,6 @@ type DB struct {
 // New makes the connection to the database.
 // TODO:
 // - Mettre à jour la doc
-// - logger ORM sur une sortie au choix (.env)
 func New(config *DatabaseConfig) (*DB, error) {
 	dsn, err := config.dsn()
 	if err != nil {
@@ -52,8 +51,14 @@ func New(config *DatabaseConfig) (*DB, error) {
 
 	// GORM log configuration
 	// ----------------------
-	level := getGormLogLevel(viper.GetString("GORM_LEVEL"), viper.GetString("APP_ENV"))
-	output := setGormLogOutput(viper.GetString("GORM_OUTPUT"), viper.GetString("GORM_LOG_FILE_PATH"))
+	env := viper.GetString("APP_ENV")
+	level := getGormLogLevel(viper.GetString("GORM_LEVEL"), env)
+	output, err := getGormLogOutput(viper.GetString("GORM_LOG_OUTPUT"),
+		viper.GetString("GORM_LOG_FILE_PATH"),
+		env)
+	if err != nil {
+		return nil, err
+	}
 
 	// Logger
 	// ------
@@ -122,25 +127,32 @@ func getGormLogLevel(level, env string) logger.LogLevel {
 		return logger.Error
 	default:
 		if env == "development" {
-			return logger.Warn
+			return logger.Info
 		}
 		return logger.Error
 	}
 }
 
-// TODO: Ne fonctionne pas avec le type file.
-func setGormLogOutput(output, filePath string) (file io.Writer) {
+// getGormLogOutput returns GORM log output.
+// The default value is os.Stderr.
+// In development mode, the ouput is set to os.Stderr.
+func getGormLogOutput(output, filePath, env string) (file io.Writer, err error) {
+	if env == "development" {
+		return os.Stderr, nil
+	}
+
 	switch output {
 	case "file":
-		f, _ := os.OpenFile(path.Clean(filePath), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
-		defer f.Close()
-		file = f
+		f, err := os.OpenFile(path.Clean(filePath), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			return nil, err
+		}
+		return f, nil
 	case "stdout":
-		file = os.Stdout
+		return os.Stdout, nil
 	default:
-		file = os.Stderr
+		return os.Stderr, nil
 	}
-	return
 }
 
 // dsn returns the DSN if the configuration is OK or an error in other case.

@@ -36,6 +36,7 @@ func main() {
 		Database:        viper.GetString("DB_DATABASE"),
 		Charset:         viper.GetString("DB_CHARSET"),
 		Collation:       viper.GetString("DB_COLLATION"),
+		Location:        viper.GetString("DB_LOCATION"),
 		MaxIdleConns:    viper.GetInt("DB_MAX_IDLE_CONNS"),
 		MaxOpenConns:    viper.GetInt("DB_MAX_OPEN_CONNS"),
 		ConnMaxLifetime: viper.GetDuration("DB_CONN_MAX_LIFETIME") * time.Hour,

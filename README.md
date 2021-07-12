@@ -6,16 +6,15 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=square)](https://pkg.go.dev/github.com/fabienbellanger/fiber-boilerplate)
 
 ## Sommaire
--  [Makefile commands](#Makefile-commands)
--  [Routes](#Routes)
-    -  [Web](#Web)
-    -  [API](#API)
+-  [Makefile commands](#makefile-commands)
+-  [Routes](#routes)
 -  [Golang web server in production](#golang-web-server-in-production)
+-  [Go documentation](#go-documentation)
 -  [Mesure et performance](#mesure-et-performance)
     -  [pprof](#pprof)
     -  [trace](#trace)
     -  [cover](#cover)
--  [TODO](#TODO)
+-  [TODO](#todo)
 
 
 ## Makefile commands
@@ -76,6 +75,18 @@ $ drill --benchmark drill.yml --stats --quiet
 ```
 
 
+## Go documentation
+Installer `godoc` :
+```bash
+go get -v  golang.org/x/tools/cmd/godoc
+```
+
+Puis lancer :
+```bash
+godoc -http=localhost:6060 -play=true -index
+```
+
+
 ## Mesure et performance
 Go met à disposition de puissants outils pour mesurer les performances des programmes :
 -  pprof (graph, flamegraph, peek)
@@ -87,7 +98,7 @@ Go met à disposition de puissants outils pour mesurer les performances des prog
 ### pprof
 Lancer :
 ```bash
-curl http://localhost:8888/debug/pprof/heap?seconds=10 > <fichier à analyser>
+curl http://localhost:<port>/debug/pprof/heap?seconds=10 > <fichier à analyser>
 ```
 Puis :
 ```bash

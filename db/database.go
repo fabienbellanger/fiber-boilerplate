@@ -127,7 +127,7 @@ func getGormLogLevel(level, env string) logger.LogLevel {
 		return logger.Error
 	default:
 		if env == "development" {
-			return logger.Info
+			return logger.Warn
 		}
 		return logger.Error
 	}

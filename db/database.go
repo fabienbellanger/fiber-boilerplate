@@ -9,7 +9,6 @@ import (
 	"path"
 	"time"
 
-	"github.com/fabienbellanger/fiber-boilerplate/models"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -105,9 +104,8 @@ func New(config *DatabaseConfig) (*DB, error) {
 }
 
 // MakeMigrations runs GORM migrations.
-// TODO: Mettre la liste dans quelque chose de plus générique.
 func (db *DB) MakeMigrations() {
-	db.AutoMigrate(&models.User{}, &models.Task{})
+	db.AutoMigrate(modelsList...)
 }
 
 // getGormLogLevel returns the log level for GORM.

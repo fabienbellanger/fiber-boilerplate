@@ -27,15 +27,15 @@ update-all:
 	$(GOGET) -u all && $(GOMOD) tidy
 
 serve:
-	$(GORUN) $(MAIN_PATH)
+	$(GORUN) $(MAIN_PATH) run
 
 serve-pkger:
 	$(PKGER)
-	$(GORUN) $(MAIN_PATH)
+	$(GORUN) $(MAIN_PATH) run
 
 serve-race:
 	$(PKGER)
-	$(GORUN) -race $(MAIN_PATH)
+	$(GORUN) run -race $(MAIN_PATH)
 
 build: 
 	$(PKGER)

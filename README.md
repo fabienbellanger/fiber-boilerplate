@@ -6,6 +6,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=square)](https://pkg.go.dev/github.com/fabienbellanger/fiber-boilerplate)
 
 ## Sommaire
+-  [Commands list](#commands-list)
 -  [Makefile commands](#makefile-commands)
 -  [Routes](#routes)
 -  [Golang web server in production](#golang-web-server-in-production)
@@ -15,6 +16,16 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
     -  [trace](#trace)
     -  [cover](#cover)
 -  [TODO](#todo)
+
+
+## Commands list
+
+| Command | Description |
+|---|---|
+| `<binary> version` | Display application version |
+| `<binary> run` | Start server |
+| `<binary> log-rotate` | Log rotation |
+| `<binary> log-reader` | Log reader |
 
 
 ## Makefile commands

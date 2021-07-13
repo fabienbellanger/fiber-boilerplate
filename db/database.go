@@ -41,16 +41,14 @@ type DB struct {
 }
 
 // New makes the connection to the database.
-// TODO:
-// - Mettre à jour la doc
 func New(config *DatabaseConfig) (*DB, error) {
 	dsn, err := config.dsn()
 	if err != nil {
 		return nil, err
 	}
 
-	// GORM log configuration
-	// ----------------------
+	// GORM logger configuration
+	// -------------------------
 	env := viper.GetString("APP_ENV")
 	level := getGormLogLevel(viper.GetString("GORM_LEVEL"), env)
 	output, err := getGormLogOutput(viper.GetString("GORM_LOG_OUTPUT"),
@@ -62,7 +60,7 @@ func New(config *DatabaseConfig) (*DB, error) {
 
 	// Logger
 	// ------
-	newLogger := logger.New(
+	customLogger := logger.New(
 		log.New(output, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             200 * time.Millisecond, // Slow SQL threshold (Default: 200ms)
@@ -73,7 +71,7 @@ func New(config *DatabaseConfig) (*DB, error) {
 	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: newLogger,
+		Logger: customLogger,
 	})
 	if err != nil {
 		return nil, err
@@ -83,8 +81,8 @@ func New(config *DatabaseConfig) (*DB, error) {
 	// -------
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 
-	// Prometeus
-	// ---------
+	// Prometheus
+	// ----------
 	db.Use(prometheus.New(prometheus.Config{
 		DBName:          viper.GetString("DB_DATABASE"), // Use `DBName` as metrics label
 		RefreshInterval: 60,                             // Refresh metrics interval (default 15 seconds)
@@ -107,6 +105,7 @@ func New(config *DatabaseConfig) (*DB, error) {
 }
 
 // MakeMigrations runs GORM migrations.
+// TODO: Mettre la liste dans quelque chose de plus générique.
 func (db *DB) MakeMigrations() {
 	db.AutoMigrate(&models.User{}, &models.Task{})
 }
@@ -114,7 +113,6 @@ func (db *DB) MakeMigrations() {
 // getGormLogLevel returns the log level for GORM.
 // If APP_ENV is development, the default log level is info,
 // warn in other case.
-// TODO: Add test.
 func getGormLogLevel(level, env string) logger.LogLevel {
 	switch level {
 	case "silent":
@@ -156,7 +154,6 @@ func getGormLogOutput(output, filePath, env string) (file io.Writer, err error) 
 }
 
 // dsn returns the DSN if the configuration is OK or an error in other case.
-// TODO: Add test.
 func (c *DatabaseConfig) dsn() (dsn string, err error) {
 	if c.Driver == "" || c.Host == "" || c.Database == "" || c.Port == 0 || c.Username == "" || c.Password == "" {
 		return dsn, errors.New("error in database configuration")

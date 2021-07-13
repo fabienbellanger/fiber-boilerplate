@@ -76,9 +76,9 @@ $ drill --benchmark drill.yml --stats --quiet
 
 
 ## Go documentation
-Installer `godoc` :
+Installer `godoc` (pas dans le répertoire du projet) :
 ```bash
-go get -v  golang.org/x/tools/cmd/godoc
+go get -u golang.org/x/tools/...
 ```
 
 Puis lancer :

@@ -37,6 +37,9 @@ serve-race:
 	$(PKGER)
 	$(GORUN) run -race $(MAIN_PATH)
 
+error-reader:
+	$(GORUN) $(MAIN_PATH) log-reader --server
+
 build: 
 	$(PKGER)
 	$(GOBUILD) -o $(BINARY_NAME) -v $(MAIN_PATH)

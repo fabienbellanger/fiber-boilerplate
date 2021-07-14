@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -22,4 +23,17 @@ func Execute() error {
 func initConfig() error {
 	viper.SetConfigFile(".env")
 	return viper.ReadInConfig()
+}
+
+func displayLevel(l string) aurora.Value {
+	switch l {
+	case "DEBUG":
+		return aurora.Cyan(l)
+	case "INFO":
+		return aurora.Green(l)
+	case "WARN":
+		return aurora.Brown(l)
+	default:
+		return aurora.Red(l)
+	}
 }

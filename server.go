@@ -85,6 +85,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 	engine := django.NewFileSystem(pkger.Dir("/public/templates"), ".django")
 
 	return fiber.Config{
+		AppName:               viper.GetString("APP_NAME"),
 		Prefork:               viper.GetBool("SERVER_PREFORK"),
 		DisableStartupMessage: false,
 		StrictRouting:         true,

@@ -12,7 +12,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.8 // indirect
-	github.com/gofiber/fiber/v2 v2.14.0
+	github.com/gofiber/fiber/v2 v2.15.0
 	github.com/gofiber/jwt/v2 v2.2.4
 	github.com/gofiber/template v1.6.13
 	github.com/google/uuid v1.3.0
@@ -20,14 +20,15 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e
 	github.com/markbates/pkger v0.17.1
-	github.com/prometheus/common v0.29.0 // indirect
-	github.com/prometheus/procfs v0.7.0 // indirect
+	github.com/prometheus/common v0.30.0 // indirect
+	github.com/prometheus/procfs v0.7.1 // indirect
 	github.com/savsgio/gotils v0.0.0-20210617111740-97865ed5a873 // indirect
+	github.com/spf13/cast v1.4.0 // indirect
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/valyala/fasthttp v1.28.0
-	go.uber.org/atomic v1.8.0 // indirect
+	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.18.1
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect

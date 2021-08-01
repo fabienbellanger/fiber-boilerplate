@@ -12,9 +12,10 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.8 // indirect
-	github.com/gofiber/fiber/v2 v2.15.0
+	github.com/gofiber/fiber/v2 v2.16.0
 	github.com/gofiber/jwt/v2 v2.2.4
 	github.com/gofiber/template v1.6.13
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.3.0
 	github.com/klauspost/compress v1.13.1 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect

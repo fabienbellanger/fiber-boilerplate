@@ -5,19 +5,18 @@ go 1.16
 require (
 	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/ansrivas/fiberprometheus/v2 v2.1.2
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fabienbellanger/goutils v1.0.16
 	github.com/fasthttp/websocket v1.4.3
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gobuffalo/here v0.6.2 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.8 // indirect
+	github.com/gofiber/adaptor/v2 v2.1.9 // indirect
 	github.com/gofiber/fiber/v2 v2.16.0
-	github.com/gofiber/jwt/v2 v2.2.4
-	github.com/gofiber/template v1.6.13
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/gofiber/jwt/v2 v2.2.5
+	github.com/gofiber/template v1.6.14
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.3.0
-	github.com/klauspost/compress v1.13.1 // indirect
+	github.com/klauspost/compress v1.13.3 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e
 	github.com/markbates/pkger v0.17.1

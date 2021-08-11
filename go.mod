@@ -7,7 +7,7 @@ require (
 	github.com/ansrivas/fiberprometheus/v2 v2.1.2
 	github.com/fabienbellanger/goutils v1.0.16
 	github.com/fasthttp/websocket v1.4.3
-	github.com/go-playground/validator/v10 v10.8.0
+	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.9 // indirect
 	github.com/gofiber/fiber/v2 v2.16.0
@@ -20,7 +20,7 @@ require (
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e
 	github.com/markbates/pkger v0.17.1
 	github.com/prometheus/common v0.30.0 // indirect
-	github.com/prometheus/procfs v0.7.1 // indirect
+	github.com/prometheus/procfs v0.7.2 // indirect
 	github.com/savsgio/gotils v0.0.0-20210617111740-97865ed5a873 // indirect
 	github.com/spf13/cast v1.4.0 // indirect
 	github.com/spf13/cobra v1.2.1
@@ -29,9 +29,11 @@ require (
 	github.com/valyala/fasthttp v1.28.0
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.18.1
+	go.uber.org/zap v1.19.0
+	golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e // indirect
+	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
-	gorm.io/driver/mysql v1.1.1
-	gorm.io/gorm v1.21.12
-	gorm.io/plugin/prometheus v0.0.0-20210614014227-3996fd54c851
+	gorm.io/driver/mysql v1.1.2
+	gorm.io/gorm v1.21.13
+	gorm.io/plugin/prometheus v0.0.0-20210809060840-7012babe835b
 )

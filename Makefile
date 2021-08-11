@@ -1,3 +1,7 @@
+include .env
+
+# Read: https://kodfabrik.com/journal/a-good-makefile-for-go
+
 # Go parameters
 GOCMD=go
 GOINSTALL=$(GOCMD) install
@@ -14,6 +18,9 @@ DOCKER_COMPOSE=docker-compose
 PKGER=pkger
 PKGER_FILE=pkged.go
 MAIN_PATH=cmd/main.go
+
+name:
+	@echo Application name: $(APP_NAME)
 
 all: test build
 
@@ -45,7 +52,8 @@ build:
 	$(GOBUILD) -o $(BINARY_NAME) -v $(MAIN_PATH)
 	rm $(PKGER_FILE)
 
-test: 
+## test: Run test.
+test:
 	$(GOTEST) -cover -v ./...
 
 test-cover-count: 
@@ -82,3 +90,10 @@ clean:
 run-prod:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	./$(BINARY_NAME)
+
+help: Makefile
+	@echo
+	@echo " Choose a command run in "$(APP_NAME)":"
+	@echo
+	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@echo

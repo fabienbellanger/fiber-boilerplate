@@ -10,7 +10,7 @@ require (
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.9 // indirect
-	github.com/gofiber/fiber/v2 v2.16.0
+	github.com/gofiber/fiber/v2 v2.17.0
 	github.com/gofiber/jwt/v2 v2.2.5
 	github.com/gofiber/template v1.6.14
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect

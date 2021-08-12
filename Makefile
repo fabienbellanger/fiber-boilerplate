@@ -1,99 +1,100 @@
+.PHONY: all install update update-all serve serve-pkger serve-race error-reader build test bench clean help test-cover-count cover-count test-cover-atomic cover-atomic html-cover-count html-cover-atomic run-cover-count run-cover-atomic view-cover-count view-cover-atomic
+
+.DEFAULT_GOAL=help
+
 include .env
 
 # Read: https://kodfabrik.com/journal/a-good-makefile-for-go
 
 # Go parameters
-GOCMD=go
-GOINSTALL=$(GOCMD) install
-GORUN=$(GOCMD) run
-GOBUILD=$(GOCMD) build
-GOCLEAN=$(GOCMD) clean
-GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
-GOMOD=$(GOCMD) mod
-GOTOOL=$(GOCMD) tool
+CURRENT_PATH=$(shell pwd)
+MAIN_PATH=$(CURRENT_PATH)/cmd/main.go
+GO_CMD=go
+GO_INSTALL=$(GO_CMD) install
+GO_RUN=$(GO_CMD) run
+GO_BUILD=$(GO_CMD) build
+GO_CLEAN=$(GO_CMD) clean
+GO_TEST=$(GO_CMD) test
+GO_GET=$(GO_CMD) get
+GO_MOD=$(GO_CMD) mod
+GO_TOOL=$(GO_CMD) tool
 BINARY_NAME=fiber-boilerplate
 BINARY_UNIX=$(BINARY_NAME)_unix
 DOCKER_COMPOSE=docker-compose
 PKGER=pkger
 PKGER_FILE=pkged.go
-MAIN_PATH=cmd/main.go
-
-name:
-	@echo Application name: $(APP_NAME)
 
 all: test build
 
 install:
-	$(GOINSTALL) ./...
+	$(GO_INSTALL) ./...
 
 update:
-	$(GOGET) -u && $(GOMOD) tidy
+	$(GO_GET) -u && $(GO_MOD) tidy
 
 update-all:
-	$(GOGET) -u all && $(GOMOD) tidy
+	$(GO_GET) -u all && $(GO_MOD) tidy
 
 serve:
-	$(GORUN) $(MAIN_PATH) run
+	$(GO_RUN) $(MAIN_PATH) run
 
 serve-pkger:
 	$(PKGER)
-	$(GORUN) $(MAIN_PATH) run
+	$(GO_RUN) $(MAIN_PATH) run
+	@rm $(PKGER_FILE)
 
 serve-race:
-	$(PKGER)
-	$(GORUN) run -race $(MAIN_PATH)
+	$(GO_RUN) run -race $(MAIN_PATH)
 
+## error-reader: Display server logs
 error-reader:
-	$(GORUN) $(MAIN_PATH) log-reader --server
+	$(GO_RUN) $(MAIN_PATH) log-reader --server
 
 build: 
 	$(PKGER)
-	$(GOBUILD) -o $(BINARY_NAME) -v $(MAIN_PATH)
-	rm $(PKGER_FILE)
+	$(GO_BUILD) -o $(BINARY_NAME) -v $(MAIN_PATH)
+	@rm $(PKGER_FILE)
 
-## test: Run test.
+## test: Run test
 test:
-	$(GOTEST) -cover -v ./...
+	$(GO_TEST) -cover -v ./...
 
 test-cover-count: 
-	$(GOTEST) -covermode=count -coverprofile=cover-count.out ./...
+	$(GO_TEST) -covermode=count -coverprofile=cover-count.out ./...
 
 test-cover-atomic: 
-	$(GOTEST) -covermode=atomic -coverprofile=cover-atomic.out ./...
+	$(GO_TEST) -covermode=atomic -coverprofile=cover-atomic.out ./...
 
 cover-count:
-	$(GOTOOL) cover -func=cover-count.out
+	$(GO_TOOL) cover -func=cover-count.out
 
 cover-atomic:
-	$(GOTOOL) cover -func=cover-atomic.out
+	$(GO_TOOL) cover -func=cover-atomic.out
 
 html-cover-count:
-	$(GOTOOL) cover -html=cover-count.out
+	$(GO_TOOL) cover -html=cover-count.out
 
 html-cover-atomic:
-	$(GOTOOL) cover -html=cover-atomic.out
+	$(GO_TOOL) cover -html=cover-atomic.out
 
 run-cover-count: test-cover-count cover-count
 run-cover-atomic: test-cover-atomic cover-atomic
 view-cover-count: test-cover-count html-cover-count
 view-cover-atomic: test-cover-atomic html-cover-atomic
 
+## bench: Run benchmarks
 bench: 
-	$(GOTEST) -benchmem -bench=. ./...
+	$(GO_TEST) -benchmem -bench=. ./...
 
+## clean: Clean files
 clean: 
-	$(GOCLEAN)
+	$(GO_CLEAN)
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
 
-run-prod:
-	$(GOBUILD) -o $(BINARY_NAME) -v
-	./$(BINARY_NAME)
-
 help: Makefile
 	@echo
-	@echo " Choose a command run in "$(APP_NAME)":"
+	@echo "Choose a command run in "$(APP_NAME)":"
 	@echo
-	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@sed -n 's/^##//p' $< | column -t -s ':' | sed -e 's/^/ /'
 	@echo

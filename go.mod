@@ -16,7 +16,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.0.0
 	github.com/google/uuid v1.3.0
-	github.com/klauspost/compress v1.13.3 // indirect
+	github.com/klauspost/compress v1.13.4 // indirect
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e
 	github.com/markbates/pkger v0.17.1
 	github.com/prometheus/common v0.30.0 // indirect

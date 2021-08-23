@@ -6,7 +6,6 @@ import (
 
 	server "github.com/fabienbellanger/fiber-boilerplate"
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/ws"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -65,12 +64,7 @@ func startServer() {
 		db.MakeMigrations()
 	}
 
-	// Hub for websockets broadcast
-	// ----------------------------
-	hub := ws.NewHub()
-	go hub.Run()
-
 	// Start server
 	// ------------
-	server.Run(db, hub, logger)
+	server.Run(db, logger)
 }

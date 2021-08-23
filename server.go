@@ -29,11 +29,10 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/middlewares/timer"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
-	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
 
 // Run starts HTTP server.
-func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
+func Run(db *db.DB, logger *zap.Logger) {
 	app := fiber.New(initConfig(logger))
 
 	initMiddlewares(app)
@@ -46,7 +45,7 @@ func Run(db *db.DB, hub *ws.Hub, logger *zap.Logger) {
 
 	// Public routes
 	// -------------
-	registerPublicWebRoutes(web, logger, hub)
+	registerPublicWebRoutes(web, logger)
 	registerPublicAPIRoutes(api, db)
 
 	// Protected routes

@@ -7,26 +7,14 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/handlers/api"
 	"github.com/fabienbellanger/fiber-boilerplate/handlers/web"
-	"github.com/fabienbellanger/fiber-boilerplate/ws"
 )
 
 // Web routes
 // ----------
 
-func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger, hub *ws.Hub) {
+func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
 	r.Get("/health-check", web.HealthCheck(logger))
-
-	registerPublicWebSocketRoutes(r, hub)
-}
-
-func registerPublicWebSocketRoutes(r fiber.Router, hub *ws.Hub) {
-	w := r.Group("/ws")
-
-	// Access the websocket server: ws://localhost:3000/ws/123?v=1.0
-	// Tests with: https://www.websocket.org/echo.html
-	w.Get("/", func(c *fiber.Ctx) error {
-		return ws.ServeWs(c, hub)
-	})
+	r.Get("/hello/:name", web.Hello())
 }
 
 // API routes

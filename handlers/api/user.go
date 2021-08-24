@@ -216,7 +216,7 @@ func UpdateUser(db *db.DB) fiber.Handler {
 
 		updatedUser, err := repositories.UpdateUser(db, id, user)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error when deleting user")
+			return fiber.NewError(fiber.StatusInternalServerError, "Error when updating user")
 		}
 
 		return c.JSON(updatedUser)

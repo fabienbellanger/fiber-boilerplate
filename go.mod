@@ -6,8 +6,8 @@ require (
 	github.com/ansrivas/fiberprometheus/v2 v2.1.2
 	github.com/fabienbellanger/goutils v1.0.16
 	github.com/go-playground/validator/v10 v10.9.0
-	github.com/gofiber/fiber/v2 v2.17.0
-	github.com/gofiber/jwt/v2 v2.2.6
+	github.com/gofiber/fiber/v2 v2.18.0
+	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/gofiber/template v1.6.15
 	github.com/golang-jwt/jwt/v4 v4.0.0
 	github.com/google/uuid v1.3.0
@@ -18,7 +18,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.0
 	gorm.io/driver/mysql v1.1.2
-	gorm.io/gorm v1.21.13
+	gorm.io/gorm v1.21.14
 	gorm.io/plugin/prometheus v0.0.0-20210820101226-2a49866f83ee
 )
 
@@ -28,14 +28,13 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
-	github.com/fsnotify/fsnotify v1.5.0 // indirect
+	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/here v0.6.2 // indirect
 	github.com/gofiber/adaptor/v2 v2.1.10 // indirect
 	github.com/gofiber/utils v0.1.2 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect

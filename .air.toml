@@ -7,9 +7,9 @@ tmp_dir = "tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build --race -o ./tmp/main cmd/main.go run"
+cmd = "go build --race -o ./tmp/main cmd/main.go"
 # Binary file yields from `cmd`.
-bin = "tmp/main"
+bin = "tmp/main run"
 # Customize binary.
 full_bin = "APP_ENV=development APP_USER=air ./tmp/main run"
 # Watch these filename extensions.

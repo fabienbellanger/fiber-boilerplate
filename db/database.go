@@ -19,7 +19,7 @@ import (
 
 const (
 	// Max number of items for pagination
-	MAX_LIMIT = 10
+	MAX_LIMIT = 100
 )
 
 // TODO: Add a custom logger for GORM : https://www.soberkoder.com/go-gorm-logging/
@@ -196,8 +196,6 @@ func Paginate(page, limit string) func(db *gorm.DB) *gorm.DB {
 		}
 
 		offset := (page - 1) * limit
-
-		log.Printf("page=%d, offset=%d, limit=%d\n", page, offset, limit)
 
 		return db.Offset(offset).Limit(limit)
 	}

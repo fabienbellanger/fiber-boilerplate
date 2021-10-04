@@ -75,6 +75,7 @@ func Run(db *db.DB, logger *zap.Logger) {
 	// ----------------
 	err := app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
 	if err != nil {
+		fmt.Printf("error when running the server: %v\n", err)
 		app.Shutdown()
 	}
 }

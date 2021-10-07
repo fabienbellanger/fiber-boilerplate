@@ -176,7 +176,7 @@ func initMiddlewares(s *fiber.App) {
 			TimeFormat:   "2006-01-02 15:04:05",
 			TimeZone:     "Local",
 			TimeInterval: 500 * time.Millisecond,
-			Output:       os.Stderr,
+			// Output:       os.Stderr, // If not comment, colors are not enabled
 		}))
 	}
 

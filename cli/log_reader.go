@@ -46,10 +46,19 @@ var logReaderCmd = &cobra.Command{
 }
 
 type errorLog struct {
-	Level   string    `json:"level"`
-	Time    time.Time `json:"time"`
-	Caller  string    `json:"caller"`
-	Message string    `json:"message"`
+	Level     string    `json:"level"`
+	Time      time.Time `json:"time"`
+	Caller    string    `json:"caller"`
+	Message   string    `json:"message"`
+	Error     string    `json:"error"`
+	Code      uint      `json:"code"`
+	Method    string    `json:"method"`
+	Path      string    `json:"path"`
+	Body      string    `json:"body"`
+	URL       string    `json:"url"`
+	Host      string    `json:"host"`
+	IP        string    `json:"ip"`
+	RequestID string    `json:"requestId"`
 }
 
 func parseLine(line []byte, serverLogs, dbLogs bool) (string, error) {
@@ -61,6 +70,7 @@ func parseLine(line []byte, serverLogs, dbLogs bool) (string, error) {
 	return "", errors.New("invalid flag")
 }
 
+// TODO: Add new fields
 func parseLineServer(line []byte) (string, error) {
 	var errLog errorLog
 	err := json.Unmarshal(line, &errLog)

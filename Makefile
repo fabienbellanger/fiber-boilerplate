@@ -54,7 +54,7 @@ error-reader:
 build:
 	$(GO_VET) ./...
 	$(PKGER)
-	$(GO_BUILD) -o $(BINARY_NAME) -v $(MAIN_PATH)
+	$(GO_BUILD) -ldflags "-s -w" -o $(BINARY_NAME) -v $(MAIN_PATH)
 	@rm $(PKGER_FILE)
 
 ## test: Run test

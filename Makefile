@@ -18,6 +18,7 @@ GO_TEST=$(GO_CMD) test
 GO_GET=$(GO_CMD) get
 GO_MOD=$(GO_CMD) mod
 GO_TOOL=$(GO_CMD) tool
+GO_VET=$(GO_CMD) vet
 BINARY_NAME=fiber-boilerplate
 BINARY_UNIX=$(BINARY_NAME)_unix
 DOCKER_COMPOSE=docker-compose
@@ -50,7 +51,8 @@ serve-race:
 error-reader:
 	$(GO_RUN) $(MAIN_PATH) log-reader --server
 
-build: 
+build:
+	$(GO_VET) ./...
 	$(PKGER)
 	$(GO_BUILD) -o $(BINARY_NAME) -v $(MAIN_PATH)
 	@rm $(PKGER_FILE)

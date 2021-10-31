@@ -212,10 +212,11 @@ func initMiddlewares(s *fiber.App) {
 				return c.IP()
 			},
 			LimitReached: func(c *fiber.Ctx) error {
-				return c.Status(fiber.StatusTooManyRequests).JSON(utils.HTTPError{
-					Code:    fiber.StatusTooManyRequests,
-					Message: "Too Many Requests",
-				})
+				return fiber.NewError(fiber.StatusTooManyRequests, "Too Many Requests")
+				// return c.Status(fiber.StatusTooManyRequests).JSON(utils.HTTPError{
+				// 	Code:    fiber.StatusTooManyRequests,
+				// 	Message: "Too Many Requests",
+				// })
 			},
 		}))
 	}

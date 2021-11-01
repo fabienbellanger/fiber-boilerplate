@@ -19,7 +19,7 @@ require (
 	go.uber.org/zap v1.19.1
 	gorm.io/driver/mysql v1.1.3
 	gorm.io/gorm v1.22.2
-	gorm.io/plugin/prometheus v0.0.0-20211008091850-4733b13f9c33
+	gorm.io/plugin/prometheus v0.0.0-20211101061516-519b2f950052
 )
 
 require (

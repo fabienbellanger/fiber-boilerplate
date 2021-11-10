@@ -20,6 +20,8 @@ import (
 const (
 	// Max number of items for pagination
 	MAX_LIMIT = 100
+
+	DefaultSlowThreshold time.Duration = 200 * time.Millisecond
 )
 
 // TODO: Add a custom logger for GORM : https://www.soberkoder.com/go-gorm-logging/
@@ -38,6 +40,7 @@ type DatabaseConfig struct {
 	MaxIdleConns    int           // Sets the maximum number of connections in the idle connection pool
 	MaxOpenConns    int           // Sets the maximum number of open connections to the database
 	ConnMaxLifetime time.Duration // Sets the maximum amount of time a connection may be reused
+	SlowThreshold   time.Duration // Slow SQL threshold (Default: 200ms)
 }
 
 // DB represents the database.
@@ -50,6 +53,10 @@ func New(config *DatabaseConfig) (*DB, error) {
 	dsn, err := config.dsn()
 	if err != nil {
 		return nil, err
+	}
+
+	if config.SlowThreshold == 0 {
+		config.SlowThreshold = DefaultSlowThreshold
 	}
 
 	// GORM logger configuration
@@ -68,10 +75,10 @@ func New(config *DatabaseConfig) (*DB, error) {
 	customLogger := logger.New(
 		log.New(output, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
-			SlowThreshold:             200 * time.Millisecond, // Slow SQL threshold (Default: 200ms)
-			LogLevel:                  level,                  // Log level (Silent, Error, Warn, Info) (Default: Warn)
-			IgnoreRecordNotFoundError: false,                  // Ignore ErrRecordNotFound error for logger (Default: false)
-			Colorful:                  true,                   // Disable color (Default: true)
+			SlowThreshold:             config.SlowThreshold, // Slow SQL threshold (Default: 200ms)
+			LogLevel:                  level,                // Log level (Silent, Error, Warn, Info) (Default: Warn)
+			IgnoreRecordNotFoundError: false,                // Ignore ErrRecordNotFound error for logger (Default: false)
+			Colorful:                  true,                 // Disable color (Default: true)
 		},
 	)
 

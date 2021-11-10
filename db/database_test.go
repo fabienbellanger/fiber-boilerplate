@@ -55,6 +55,7 @@ func TestDsn(t *testing.T) {
 		MaxIdleConns:    10,
 		MaxOpenConns:    10,
 		ConnMaxLifetime: time.Second,
+		SlowThreshold:   200 * time.Millisecond,
 	}
 	expected := "root:root@tcp(localhost:3306)/fiber?parseTime=True&charset=utf8mb4&collation=utf8mb4_general_ci&loc=UTC"
 	wanted, err := c.dsn()

@@ -53,6 +53,7 @@ func startServer() {
 		MaxIdleConns:    viper.GetInt("DB_MAX_IDLE_CONNS"),
 		MaxOpenConns:    viper.GetInt("DB_MAX_OPEN_CONNS"),
 		ConnMaxLifetime: viper.GetDuration("DB_CONN_MAX_LIFETIME") * time.Hour,
+		SlowThreshold:   viper.GetDuration("GORM_SLOW_THRESHOLD"),
 	})
 	if err != nil {
 		log.Fatalln(err)

@@ -62,7 +62,7 @@ func New(config *DatabaseConfig) (*DB, error) {
 	// GORM logger configuration
 	// -------------------------
 	env := viper.GetString("APP_ENV")
-	level := getGormLogLevel(viper.GetString("GORM_LEVEL"), env)
+	level := getGormLogLevel(viper.GetString("GORM_LOG_LEVEL"), env)
 	output, err := getGormLogOutput(viper.GetString("GORM_LOG_OUTPUT"),
 		viper.GetString("GORM_LOG_FILE_PATH"),
 		env)

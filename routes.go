@@ -23,19 +23,19 @@ func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
 func registerPublicAPIRoutes(r fiber.Router, db *db.DB) {
 	v1 := r.Group("/v1")
 
-	registerAuth(v1, db)
+	// Login
+	v1.Post("/login", api.Login(db))
+
 	registerTask(v1, db)
 }
 
 func registerProtectedAPIRoutes(r fiber.Router, db *db.DB) {
 	v1 := r.Group("/v1")
 
-	registerUser(v1, db)
-}
+	// Register
+	v1.Post("/register", api.CreateUser(db))
 
-func registerAuth(r fiber.Router, db *db.DB) {
-	r.Post("/login", api.Login(db))
-	r.Post("/register", api.CreateUser(db))
+	registerUser(v1, db)
 }
 
 func registerUser(r fiber.Router, db *db.DB) {

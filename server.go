@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/signal"
 	"path"
@@ -151,11 +150,12 @@ func initConfig(logger *zap.Logger) fiber.Config {
 	}
 }
 
+// initLogger initialize Fiber access logger
 func initLogger(s *fiber.App) {
 	if viper.GetString("APP_ENV") == "development" || viper.GetBool("ENABLE_ACCESS_LOG") {
-		var logOutput io.Writer
 		var file *os.File
 
+		logOutput := os.Stderr
 		switch viper.GetString("ACCESS_LOG_OUTPUT") {
 		case "stdout":
 			logOutput = os.Stdout
@@ -168,15 +168,12 @@ func initLogger(s *fiber.App) {
 				path := logPath + "/" + appName + "_access.log"
 
 				file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-				if err != nil {
-					logOutput = os.Stderr
-				} else {
+				if err == nil {
 					logOutput = file
 				}
 			}
-		default:
-			logOutput = os.Stderr
 		}
+
 		defer file.Close()
 
 		s.Use(logger.New(logger.Config{

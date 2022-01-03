@@ -91,6 +91,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		DisableStartupMessage: false,
 		StrictRouting:         true,
 		Views:                 engine,
+		EnablePrintRoutes:     viper.GetString("APP_ENV") == "development",
 		// Errors handling
 		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {

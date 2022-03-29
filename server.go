@@ -90,7 +90,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		StrictRouting:         true,
 		Views:                 engine,
 		EnablePrintRoutes:     false, // viper.GetString("APP_ENV") == "development",
-		Concurrency:           256 * 1024 * 1024,
+		Concurrency:           256 * 1024,
 		ReduceMemoryUsage:     true,
 		// Errors handling
 		// ---------------

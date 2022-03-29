@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"path"
 	"strings"
 	"time"
 
@@ -16,7 +15,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -36,7 +34,7 @@ import (
 func Run(db *db.DB, logger *zap.Logger) {
 	app := fiber.New(initConfig(logger))
 
-	initMiddlewares(app)
+	initMiddlewares(app, logger)
 	initTools(app)
 
 	// Routes
@@ -91,7 +89,9 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		DisableStartupMessage: false,
 		StrictRouting:         true,
 		Views:                 engine,
-		EnablePrintRoutes:     viper.GetString("APP_ENV") == "development",
+		EnablePrintRoutes:     false, // viper.GetString("APP_ENV") == "development",
+		Concurrency:           256 * 1024 * 1024,
+		ReduceMemoryUsage:     true,
 		// Errors handling
 		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -151,44 +151,14 @@ func initConfig(logger *zap.Logger) fiber.Config {
 	}
 }
 
-// initLogger initialize Fiber access logger
-func initLogger(s *fiber.App) {
-	if viper.GetString("APP_ENV") == "development" || viper.GetBool("ENABLE_ACCESS_LOG") {
-		var file *os.File
-
-		logOutput := os.Stderr
-		switch viper.GetString("ACCESS_LOG_OUTPUT") {
-		case "stdout":
-			logOutput = os.Stdout
-		case "file":
-			logPath := path.Clean(viper.GetString("LOG_PATH"))
-			appName := strings.ReplaceAll(viper.GetString("APP_NAME"), " ", "_")
-			if logPath == "" || appName == "" {
-				logOutput = os.Stderr
-			} else {
-				path := logPath + "/" + appName + "_access.log"
-
-				file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-				if err == nil {
-					logOutput = file
-				}
-			}
-		}
-
-		defer file.Close()
-
-		s.Use(logger.New(logger.Config{
-			Next:         nil,
-			Format:       "${time} | ${status} | ${method} | ${path} | ${protocol}://${host}${url} | ${latency} | ${locals:requestid}\n",
-			TimeFormat:   "2006-01-02 15:04:05",
-			TimeZone:     "Local",
-			TimeInterval: 500 * time.Millisecond,
-			Output:       logOutput, // TODO: Use .env param
-		}))
+// initLogger initialize access logger
+func initLogger(s *fiber.App, loggerZap *zap.Logger) {
+	if viper.GetBool("ENABLE_ACCESS_LOG") {
+		s.Use(zapLogger(loggerZap))
 	}
 }
 
-func initMiddlewares(s *fiber.App) {
+func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 	// CORS
 	// ----
 	s.Use(cors.New(cors.Config{
@@ -208,7 +178,7 @@ func initMiddlewares(s *fiber.App) {
 
 	// Logger
 	// ------
-	initLogger(s)
+	initLogger(s, logger)
 
 	// Recover
 	// -------

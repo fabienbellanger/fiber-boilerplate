@@ -1,4 +1,26 @@
-.PHONY: all install update update-all serve serve-pkger serve-race error-reader build test bench clean help test-cover-count cover-count test-cover-atomic cover-atomic html-cover-count html-cover-atomic run-cover-count run-cover-atomic view-cover-count view-cover-atomic
+.PHONY: all \
+	install \
+	update \
+	update-all \
+	serve \
+	serve-pkger \
+	serve-race \
+	logs \
+	build \
+	test \
+	bench \
+	clean \
+	help \
+	test-cover-count \
+	cover-count \
+	test-cover-atomic \
+	cover-atomic \
+	html-cover-count \
+	html-cover-atomic \
+	run-cover-count \
+	run-cover-atomic \
+	view-cover-count \
+	view-cover-atomic
 
 .DEFAULT_GOAL=help
 
@@ -47,9 +69,9 @@ serve-pkger:
 serve-race:
 	$(GO_RUN) run -race $(MAIN_PATH)
 
-## error-reader: Display server logs
-error-reader:
-	$(GO_RUN) $(MAIN_PATH) log-reader --server
+## logs: Display server logs
+logs:
+	$(GO_RUN) $(MAIN_PATH) logs --server
 
 build:
 	$(GO_VET) ./...

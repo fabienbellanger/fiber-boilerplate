@@ -5,13 +5,13 @@ import (
 
 	server "github.com/fabienbellanger/fiber-boilerplate"
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora/v3"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
-const version = "0.0.1"
+const version = "0.0.2"
 
 var rootCmd = &cobra.Command{
 	Use:     "Fiber Boilerplate",
@@ -74,7 +74,7 @@ func initConfigLoggerDatabase(initLogger, initDatabase bool) (logger *zap.Logger
 	return logger, database, err
 }
 
-func displayLevel(l string) aurora.Value {
+func displayLogLevel(l string) aurora.Value {
 	switch l {
 	case "DEBUG":
 		return aurora.Cyan(l)
@@ -84,5 +84,36 @@ func displayLevel(l string) aurora.Value {
 		return aurora.Brown(l)
 	default:
 		return aurora.Red(l)
+	}
+}
+
+func displayLogMethod(m string) aurora.Value {
+	switch m {
+	case "GET":
+		return aurora.Cyan(m)
+	case "POST":
+		return aurora.Blue(m)
+	case "PUT":
+		return aurora.Brown(m)
+	case "PATCH":
+		return aurora.Magenta(m)
+	case "DELETE":
+		return aurora.Red(m)
+	default:
+		return aurora.Gray(12, m)
+	}
+}
+
+func displayLogStatusCode(c uint) aurora.Value {
+	if c < 200 {
+		return aurora.Cyan(c)
+	} else if c < 300 {
+		return aurora.Green(c)
+	} else if c < 400 {
+		return aurora.Magenta(c)
+	} else if c < 500 {
+		return aurora.Brown(c)
+	} else {
+		return aurora.Red(c)
 	}
 }

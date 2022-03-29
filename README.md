@@ -23,22 +23,22 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 
 | Command               | Description                 |
 | --------------------- | --------------------------- |
-| `<binary> version`    | Display application version |
 | `<binary> run`        | Start server                |
-| `<binary> log-rotate` | Log rotation                |
-| `<binary> log-reader` | Log reader                  |
+| `<binary> logs -s`    | Server logs reader          |
+| `<binary> logs -d`    | Database (GORM) logs reader |
 | `<binary> register`   | Create a new user           |
 
 ## Makefile commands
 
-| Makefile command   | Go command                                     | Description                                 |
-| ------------------ | ---------------------------------------------- | ------------------------------------------- |
-| `make update`      | `go get -u && go mod tidy`                     | Update Go dependencies                      |
-| `make serve`       | `go run cmd/main.go`                           | Start the Web server                        |
-| `make serve-race`  | `go run --race cmd/main.go`                    | Start the Web server with data races option |
-| `make serve-pkger` | `pkger && go run cmd/main.go`                  | Run Pkger and start the Web server          |
-| `make build`       | `go build -o fiber-boilerplate -v cmd/main.go` | Build application with pkger                |
-| `make test`        | `go test -cover -v ./...`                      | Launch unit tests                           |
+| Makefile command    | Go command                                    | Description                                 |
+| ------------------- | --------------------------------------------- | ------------------------------------------- |
+| `make update`       | `go get -u && go mod tidy`                    | Update Go dependencies                      |
+| `make serve`        | `go run cmd/main.go`                          | Start the Web server                        |
+| `make serve-race`   | `go run --race cmd/main.go`                   | Start the Web server with data races option |
+| `make build`        | `go build -o go-url-shortener -v cmd/main.go` | Build application                           |
+| `make test`         | `go test -cover ./...`                        | Launch unit tests                           |
+| `make test-verbose` | `go test -cover -v ./...`                     | Launch unit tests in verbose mode           |
+| `make logs`         | `go run cmd/main.go logs -s`                  | Start server logs reader                    |
 
 ## Routes
 

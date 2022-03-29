@@ -31,7 +31,7 @@ func TestLogLevel(t *testing.T) {
 }
 
 func TestLogOutputsWithOneOutput(t *testing.T) {
-	appName := "fiber-boilerplate"
+	appName := "go-url-shortener"
 	filePath := "/tmp"
 	outputs := []string{"stdout"}
 
@@ -39,14 +39,9 @@ func TestLogOutputsWithOneOutput(t *testing.T) {
 	assert.Equal(t, []string{"stdout"}, gottenOutputs, "with stdout")
 	assert.Nil(t, err)
 
-	outputs = []string{"stderr"}
-	gottenOutputs, err = getLoggerOutputs(outputs, "", "")
-	assert.Equal(t, []string{"stderr"}, gottenOutputs, "with stderr")
-	assert.Nil(t, err)
-
 	outputs = []string{"file"}
 	gottenOutputs, err = getLoggerOutputs(outputs, appName, filePath)
-	assert.Equal(t, []string{"/tmp/fiber-boilerplate.log"}, gottenOutputs, "with file")
+	assert.Equal(t, []string{"/tmp/go-url-shortener.log"}, gottenOutputs, "with file")
 	assert.Nil(t, err)
 
 	gottenOutputs, err = getLoggerOutputs(outputs, "", filePath)
@@ -54,21 +49,21 @@ func TestLogOutputsWithOneOutput(t *testing.T) {
 	assert.NotNil(t, err)
 
 	gottenOutputs, err = getLoggerOutputs(outputs, appName, "")
-	assert.Equal(t, []string{"./fiber-boilerplate.log"}, gottenOutputs, "with file and empty file path")
+	assert.Equal(t, []string{"./go-url-shortener.log"}, gottenOutputs, "with file and empty file path")
 	assert.Nil(t, err)
 }
 
 func TestLogOutputsWithMoreThanOneOutput(t *testing.T) {
-	appName := "fiber-boilerplate"
+	appName := "go-url-shortener"
 	filePath := "/tmp"
-	outputs := []string{"stdout", "stderr"}
+	outputs := []string{"stdout"}
 
 	gottenOutputs, err := getLoggerOutputs(outputs, "", "")
-	assert.Equal(t, []string{"stderr", "stdout"}, gottenOutputs, "with stdout")
+	assert.Equal(t, []string{"stdout"}, gottenOutputs, "with stdout")
 	assert.Nil(t, err)
 
-	outputs = []string{"stdout", "stderr", "file"}
+	outputs = []string{"stdout", "file"}
 	gottenOutputs, err = getLoggerOutputs(outputs, appName, filePath)
-	assert.Equal(t, []string{"/tmp/fiber-boilerplate.log", "stderr", "stdout"}, gottenOutputs, "with stdout")
+	assert.Equal(t, []string{"/tmp/go-url-shortener.log", "stdout"}, gottenOutputs, "with stdout")
 	assert.Nil(t, err)
 }

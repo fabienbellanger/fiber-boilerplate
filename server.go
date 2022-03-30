@@ -180,6 +180,7 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 	// -------
 	if logger != nil {
 		// Not an unit test
+		// TODO: Add a parameter in Setup to specify if it is an test app or not
 		s.Use(favicon.New(favicon.Config{
 			File: "favicon.png",
 		}))
@@ -187,7 +188,9 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 
 	// Logger
 	// ------
-	initLogger(s, logger)
+	if logger != nil {
+		initLogger(s, logger)
+	}
 
 	// Recover
 	// -------
@@ -275,7 +278,7 @@ func initJWT(s *fiber.App) {
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
 				Code:    fiber.StatusUnauthorized,
-				Message: "Invalid or expired JWT",
+				Message: "Unauthorized",
 			})
 		},
 	}))

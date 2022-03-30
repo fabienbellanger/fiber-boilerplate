@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
 )
 
@@ -24,4 +25,34 @@ type UserForm struct {
 	Password  string `json:"password" xml:"password" form:"password" validate:"required,min=8"`
 	Lastname  string `json:"lastname" xml:"lastname" form:"lastname" validate:"required"`
 	Firstname string `json:"firstname" xml:"firstname" form:"firstname" validate:"required"`
+}
+
+// GenerateJWT returns a token
+// TODO: Add unit tests
+func (u *User) GenerateJWT(lifetime time.Duration, secret string) (string, time.Time, error) {
+	// Create token
+	token := jwt.New(jwt.SigningMethodHS512)
+
+	// Expiration time
+	now := time.Now()
+	expiresAt := now.Add(time.Hour * lifetime)
+
+	// Set claims
+	claims := token.Claims.(jwt.MapClaims)
+	claims["id"] = u.ID
+	claims["username"] = u.Username
+	claims["lastname"] = u.Lastname
+	claims["firstname"] = u.Firstname
+	claims["createdAt"] = u.CreatedAt
+	claims["exp"] = expiresAt.Unix()
+	claims["iat"] = now.Unix()
+	claims["nbf"] = now.Unix()
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return "", expiresAt, err
+	}
+
+	return t, expiresAt, nil
 }

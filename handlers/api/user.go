@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -36,7 +35,7 @@ func Login(db *db.DB) fiber.Handler {
 		if err := c.BodyParser(u); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 				Code:    fiber.StatusBadRequest,
-				Message: "Bad Request",
+				Message: "Invalid body",
 			})
 		}
 
@@ -44,7 +43,7 @@ func Login(db *db.DB) fiber.Handler {
 		if loginErrors != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 				Code:    fiber.StatusBadRequest,
-				Message: "Bad Request",
+				Message: "Invalid body",
 				Details: loginErrors,
 			})
 		}
@@ -61,32 +60,14 @@ func Login(db *db.DB) fiber.Handler {
 		}
 
 		// Create token
-		token := jwt.New(jwt.SigningMethodHS512)
-
-		// Expiration time
-		now := time.Now()
-		expiresAt := now.Add(time.Hour * viper.GetDuration("JWT_LIFETIME"))
-
-		// Set claims
-		claims := token.Claims.(jwt.MapClaims)
-		claims["id"] = user.ID
-		claims["username"] = user.Username
-		claims["lastname"] = user.Lastname
-		claims["firstname"] = user.Firstname
-		claims["createdAt"] = user.CreatedAt
-		claims["exp"] = expiresAt.Unix()
-		claims["iat"] = now.Unix()
-		claims["nbf"] = now.Unix()
-
-		// Generate encoded token and send it as response.
-		t, err := token.SignedString([]byte(viper.GetString("JWT_SECRET")))
+		token, expiresAt, err := user.GenerateJWT(viper.GetDuration("JWT_LIFETIME"), viper.GetString("JWT_SECRET"))
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, "Error during token generation")
 		}
 
 		return c.JSON(userLogin{
 			User:      user,
-			Token:     t,
+			Token:     token,
 			ExpiresAt: expiresAt.Format("2006-01-02T15:04:05.000Z"),
 		})
 	}

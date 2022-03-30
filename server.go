@@ -32,6 +32,27 @@ import (
 
 // Run starts HTTP server.
 func Run(db *db.DB, logger *zap.Logger) {
+	app := Setup(db, logger)
+
+	// Close any connections on interrupt signal
+	// -----------------------------------------
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		app.Shutdown()
+	}()
+
+	// Run fiber server
+	// ----------------
+	err := app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
+	if err != nil {
+		fmt.Printf("error when running the server: %v\n", err)
+		app.Shutdown()
+	}
+}
+
+func Setup(db *db.DB, logger *zap.Logger) *fiber.App {
 	app := fiber.New(initConfig(logger))
 
 	initMiddlewares(app, logger)
@@ -61,22 +82,7 @@ func Run(db *db.DB, logger *zap.Logger) {
 		})
 	})
 
-	// Close any connections on interrupt signal
-	// -----------------------------------------
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	go func() {
-		<-c
-		app.Shutdown()
-	}()
-
-	// Run fiber server
-	// ----------------
-	err := app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
-	if err != nil {
-		fmt.Printf("error when running the server: %v\n", err)
-		app.Shutdown()
-	}
+	return app
 }
 
 func initConfig(logger *zap.Logger) fiber.Config {
@@ -172,9 +178,12 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 
 	// Favicon
 	// -------
-	s.Use(favicon.New(favicon.Config{
-		File: "favicon.png",
-	}))
+	if logger != nil {
+		// Not an unit test
+		s.Use(favicon.New(favicon.Config{
+			File: "favicon.png",
+		}))
+	}
 
 	// Logger
 	// ------

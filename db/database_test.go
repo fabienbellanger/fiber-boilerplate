@@ -24,12 +24,8 @@ func TestGetGormLogOutput(t *testing.T) {
 	assert.Equal(t, os.Stdout, output)
 	assert.Nil(t, err)
 
-	output, err = getGormLogOutput("stderr", "", "production")
-	assert.Equal(t, os.Stderr, output)
-	assert.Nil(t, err)
-
 	output, err = getGormLogOutput("stdout", "", "development")
-	assert.Equal(t, os.Stderr, output)
+	assert.Equal(t, os.Stdout, output)
 	assert.Nil(t, err)
 
 	output, err = getGormLogOutput("file", "test.log", "production")

@@ -51,7 +51,7 @@ func InitLogger() (*zap.Logger, error) {
 }
 
 // getLoggerOutputs returns an array with the log outputs.
-// Outputs can be stdout and/or stderr and/or file.
+// Outputs can be stdout and/or file.
 func getLoggerOutputs(logOutputs []string, appName, filePath string) (outputs []string, err error) {
 	if goutils.StringInSlice("file", logOutputs) {
 		logPath := path.Clean(filePath)
@@ -67,9 +67,6 @@ func getLoggerOutputs(logOutputs []string, appName, filePath string) (outputs []
 		outputs = append(outputs, fmt.Sprintf("%s/%s.log",
 			logPath,
 			appName))
-	}
-	if goutils.StringInSlice("stderr", logOutputs) {
-		outputs = append(outputs, "stderr")
 	}
 	if goutils.StringInSlice("stdout", logOutputs) {
 		outputs = append(outputs, "stdout")

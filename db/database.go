@@ -143,11 +143,11 @@ func getGormLogLevel(level, env string) logger.LogLevel {
 }
 
 // getGormLogOutput returns GORM log output.
-// The default value is os.Stderr.
-// In development mode, the ouput is set to os.Stderr.
+// The default value is os.Stdout.
+// In development mode, the ouput is set to os.Stdout.
 func getGormLogOutput(output, filePath, env string) (file io.Writer, err error) {
 	if env == "development" {
-		return os.Stderr, nil
+		return os.Stdout, nil
 	}
 
 	switch output {
@@ -157,10 +157,8 @@ func getGormLogOutput(output, filePath, env string) (file io.Writer, err error) 
 			return nil, err
 		}
 		return f, nil
-	case "stdout":
-		return os.Stdout, nil
 	default:
-		return os.Stderr, nil
+		return os.Stdout, nil
 	}
 }
 

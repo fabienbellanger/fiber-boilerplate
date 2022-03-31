@@ -33,7 +33,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/here v0.6.5 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.21 // indirect
+	github.com/gofiber/adaptor/v2 v2.1.22 // indirect
 	github.com/gofiber/utils v0.1.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

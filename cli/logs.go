@@ -124,7 +124,7 @@ func parseLineServer(line []byte) (string, error) {
 		latency = fmt.Sprintf(" | %s", errLog.Latency)
 	}
 
-	result := fmt.Sprintf("%s %7s %s%s%s%s%s%s%s%s%s%s%s%s",
+	result := fmt.Sprintf("%s | %7s %s%s%s%s%s%s%s%s%s%s%s%s",
 		errLog.Time.Format(time.RFC3339),
 		displayLogLevel(errLog.Level),
 		code,

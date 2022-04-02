@@ -111,9 +111,9 @@ func parseLineServer(line []byte) (string, error) {
 	if errLog.IP != "" {
 		ip = fmt.Sprintf(" | IP: %s", errLog.IP)
 	}
-	requestId := ""
+	requestID := ""
 	if errLog.RequestID != "" {
-		requestId = fmt.Sprintf(" | RequestID: %s", errLog.RequestID)
+		requestID = fmt.Sprintf(" | RequestID: %s", errLog.RequestID)
 	}
 	userAgent := ""
 	if errLog.UserAgent != "" {
@@ -135,7 +135,7 @@ func parseLineServer(line []byte) (string, error) {
 		url,
 		host,
 		ip,
-		requestId,
+		requestID,
 		userAgent,
 		latency,
 		" | "+errLog.Caller,

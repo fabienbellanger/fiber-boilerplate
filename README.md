@@ -11,6 +11,7 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 - [Commands list](#commands-list)
 - [Makefile commands](#makefile-commands)
 - [Routes](#routes)
+- [Swagger](#swagger)
 - [Golang web server in production](#golang-web-server-in-production)
 - [Go documentation](#go-documentation)
 - [Mesure et performance](#mesure-et-performance)
@@ -43,6 +44,10 @@ A simple boilerplate for [Fiber](https://github.com/gofiber/fiber)
 ## Routes
 
 [Liste des routes](ROUTES.md)
+
+## Swagger
+
+TODO
 
 ## Golang web server in production
 
@@ -165,3 +170,5 @@ go tool cover -html=<fichier à analyser>
 - [ ] Mettre en place la stack Prometheus + Grafana pour la télémétrie
 - [x] Si la connexion à la base de données est coupée, cela retourne une 401 au lieu d'une 500.
 - [x] Validation des données avec github.com/go-playground/validator
+- [ ] Use Swagger [middleware](https://github.com/gofiber/contrib/tree/main/swagger)
+- [ ] Try OpenTelemetry [middleware](https://github.com/gofiber/contrib/tree/main/otelfiber)

@@ -18,9 +18,10 @@ import (
 )
 
 const (
-	// Max number of items for pagination
-	MAX_LIMIT = 100
+	// MaxLimit represents the max number of items for pagination
+	MaxLimit = 100
 
+	// DefaultSlowThreshold represents the default slow threshold value
 	DefaultSlowThreshold time.Duration = 200 * time.Millisecond
 )
 
@@ -196,8 +197,8 @@ func Paginate(page, limit string) func(db *gorm.DB) *gorm.DB {
 		}
 
 		limit, err := strconv.Atoi(limit)
-		if err != nil || limit > MAX_LIMIT || limit < 1 {
-			limit = MAX_LIMIT
+		if err != nil || limit > MaxLimit || limit < 1 {
+			limit = MaxLimit
 		}
 
 		offset := (page - 1) * limit

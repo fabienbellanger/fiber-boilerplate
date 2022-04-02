@@ -20,6 +20,7 @@ var rootCmd = &cobra.Command{
 	Version: version,
 }
 
+// Execute starts CLI
 func Execute() error {
 	return rootCmd.Execute()
 }

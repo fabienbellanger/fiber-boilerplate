@@ -52,6 +52,7 @@ func Run(db *db.DB, logger *zap.Logger) {
 	}
 }
 
+// Setup returns a Fiber App instance
 func Setup(db *db.DB, logger *zap.Logger) *fiber.App {
 	app := fiber.New(initConfig(logger))
 

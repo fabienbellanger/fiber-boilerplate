@@ -100,7 +100,7 @@ func parseLineServer(line []byte) (string, error) {
 		url = fmt.Sprintf(" | %s", errLog.URL)
 	}
 	path := ""
-	if errLog.URL != "" {
+	if errLog.Path != "" {
 		path = fmt.Sprintf(" | %s", errLog.Path)
 	}
 	host := ""

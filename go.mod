@@ -14,12 +14,12 @@ require (
 	github.com/logrusorgru/aurora/v3 v3.0.0
 	github.com/markbates/pkger v0.17.1
 	github.com/spf13/cobra v1.4.0
-	github.com/spf13/viper v1.10.1
+	github.com/spf13/viper v1.11.0
 	github.com/stretchr/testify v1.7.1
 	go.uber.org/zap v1.21.0
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.4
-	gorm.io/plugin/prometheus v0.0.0-20220223061010-d8bdd50fdfc7
+	gorm.io/plugin/prometheus v0.0.0-20220414034526-3a4b06c41cbf
 )
 
 require (
@@ -46,6 +46,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.0-beta.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.12.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
@@ -61,8 +62,8 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
-	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
-	golang.org/x/sys v0.0.0-20220406155245-289d7a0edf71 // indirect
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
+	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect

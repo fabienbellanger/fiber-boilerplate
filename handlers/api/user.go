@@ -60,7 +60,7 @@ func Login(db *db.DB) fiber.Handler {
 		}
 
 		// Create token
-		token, expiresAt, err := user.GenerateJWT(viper.GetDuration("JWT_LIFETIME"), viper.GetString("JWT_SECRET"))
+		token, expiresAt, err := user.GenerateJWT(viper.GetDuration("JWT_LIFETIME"), viper.GetString("JWT_ALGO"), viper.GetString("JWT_SECRET"))
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, "Error during token generation")
 		}

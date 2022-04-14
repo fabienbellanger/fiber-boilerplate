@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -29,8 +30,11 @@ type UserForm struct {
 
 // GenerateJWT returns a token
 // TODO: Add unit tests
-func (u *User) GenerateJWT(lifetime time.Duration, secret string) (string, time.Time, error) {
+func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string, time.Time, error) {
 	// Create token
+	if algo != "HS512" {
+		return "", time.Now(), errors.New("unsupported JWT algo")
+	}
 	token := jwt.New(jwt.SigningMethodHS512)
 
 	// Expiration time

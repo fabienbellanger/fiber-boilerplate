@@ -274,7 +274,7 @@ func initTools(s *fiber.App) {
 
 func initJWT(s *fiber.App) {
 	s.Use(jwtware.New(jwtware.Config{
-		SigningMethod: "HS512",
+		SigningMethod: viper.GetString("JWT_ALGO"),
 		SigningKey:    []byte(viper.GetString("JWT_SECRET")),
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{

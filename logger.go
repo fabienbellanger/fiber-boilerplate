@@ -124,9 +124,8 @@ func zapLogger(log *zap.Logger) fiber.Handler {
 			zap.String("latency", stop.String()),
 			zap.String("requestId", fmt.Sprintf("%s", c.Locals("requestid"))),
 		}
-		go func() {
-			log.Info("", fields...)
-		}()
+
+		log.Info("", fields...)
 
 		return nil
 	}

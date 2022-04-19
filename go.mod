@@ -6,9 +6,9 @@ require (
 	github.com/ansrivas/fiberprometheus/v2 v2.2.0
 	github.com/fabienbellanger/goutils v1.0.17
 	github.com/go-playground/validator/v10 v10.10.1
-	github.com/gofiber/fiber/v2 v2.31.0
+	github.com/gofiber/fiber/v2 v2.32.0
 	github.com/gofiber/jwt/v2 v2.2.7
-	github.com/gofiber/template v1.6.26
+	github.com/gofiber/template v1.6.27
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/google/uuid v1.3.0
 	github.com/logrusorgru/aurora/v3 v3.0.0
@@ -33,7 +33,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/here v0.6.5 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.22 // indirect
+	github.com/gofiber/adaptor/v2 v2.1.23 // indirect
 	github.com/gofiber/utils v0.1.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

@@ -7,7 +7,7 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/deliveries/task"
 	"github.com/fabienbellanger/fiber-boilerplate/deliveries/user"
-	"github.com/fabienbellanger/fiber-boilerplate/handlers/web"
+	"github.com/fabienbellanger/fiber-boilerplate/deliveries/web"
 	storeTask "github.com/fabienbellanger/fiber-boilerplate/stores/task"
 	storeUser "github.com/fabienbellanger/fiber-boilerplate/stores/user"
 )

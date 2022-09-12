@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/fabienbellanger/fiber-boilerplate/entities"
-	"github.com/fabienbellanger/fiber-boilerplate/repositories"
+	storeUser "github.com/fabienbellanger/fiber-boilerplate/stores/user"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/spf13/cobra"
 )
@@ -75,7 +75,8 @@ var userCmd = &cobra.Command{
 			Username:  user.Email,
 		}
 
-		err = repositories.CreateUser(db, &u)
+		userStore := storeUser.New(db)
+		err = userStore.Create(&u)
 		if err != nil {
 			fmt.Printf("\n%v\n", err)
 			return

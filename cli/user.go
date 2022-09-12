@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/repositories"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/spf13/cobra"
@@ -68,7 +68,7 @@ var userCmd = &cobra.Command{
 
 		// User creation
 		// -------------
-		u := models.User{
+		u := entities.User{
 			Lastname:  user.Lastname,
 			Firstname: user.Firstname,
 			Password:  user.Password,

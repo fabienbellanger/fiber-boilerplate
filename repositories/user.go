@@ -7,25 +7,25 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/entities"
 )
 
 // Login gets user from username and password.
-func Login(db *db.DB, username, password string) (user models.User, err error) {
+func Login(db *db.DB, username, password string) (user entities.User, err error) {
 	// Hash password
 	// -------------
 	passwordBytes := sha512.Sum512([]byte(password))
 	password = hex.EncodeToString(passwordBytes[:])
 
-	if result := db.Where(&models.User{Username: username, Password: password}).First(&user); result.Error != nil {
+	if result := db.Where(&entities.User{Username: username, Password: password}).First(&user); result.Error != nil {
 		return user, result.Error
 	}
 	return user, err
 }
 
 // ListAllUsers gets all users in database.
-func ListAllUsers(db *db.DB) ([]models.User, error) {
-	var users []models.User
+func ListAllUsers(db *db.DB) ([]entities.User, error) {
+	var users []entities.User
 
 	if response := db.Find(&users); response.Error != nil {
 		return users, response.Error
@@ -34,7 +34,7 @@ func ListAllUsers(db *db.DB) ([]models.User, error) {
 }
 
 // CreateUser adds user in database.
-func CreateUser(db *db.DB, user *models.User) error {
+func CreateUser(db *db.DB, user *entities.User) error {
 	// UUID
 	// ----
 	user.ID = uuid.New().String()
@@ -51,7 +51,7 @@ func CreateUser(db *db.DB, user *models.User) error {
 }
 
 // GetUser returns a user from its ID.
-func GetUser(db *db.DB, id string) (user models.User, err error) {
+func GetUser(db *db.DB, id string) (user entities.User, err error) {
 	if result := db.Find(&user, "id = ?", id); result.Error != nil {
 		return user, result.Error
 	}
@@ -60,7 +60,7 @@ func GetUser(db *db.DB, id string) (user models.User, err error) {
 
 // DeleteUser deletes a user from database.
 func DeleteUser(db *db.DB, id string) error {
-	result := db.Delete(&models.User{}, "id = ?", id)
+	result := db.Delete(&entities.User{}, "id = ?", id)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -68,12 +68,12 @@ func DeleteUser(db *db.DB, id string) error {
 }
 
 // UpdateUser updates user information.
-func UpdateUser(db *db.DB, id string, userForm *models.UserForm) (user models.User, err error) {
+func UpdateUser(db *db.DB, id string, userForm *entities.UserForm) (user entities.User, err error) {
 	// Hash password
 	// -------------
 	hashedPassword := sha512.Sum512([]byte(userForm.Password))
 
-	result := db.Model(&models.User{}).Where("id = ?", id).Select("lastname", "firstname", "username", "password").Updates(models.User{
+	result := db.Model(&entities.User{}).Where("id = ?", id).Select("lastname", "firstname", "username", "password").Updates(entities.User{
 		Lastname:  userForm.Lastname,
 		Firstname: userForm.Firstname,
 		Username:  userForm.Username,

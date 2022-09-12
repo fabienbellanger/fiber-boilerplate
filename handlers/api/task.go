@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/models"
+	"github.com/fabienbellanger/fiber-boilerplate/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/repositories"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/gofiber/fiber/v2"
@@ -41,7 +41,7 @@ func GetAllTasksStream(db *db.DB) fiber.Handler {
 					w.WriteString(",")
 				}
 
-				var task models.Task
+				var task entities.Task
 				if err := db.ScanRows(rows, &task); err != nil {
 					continue
 				}
@@ -61,7 +61,7 @@ func GetAllTasksStream(db *db.DB) fiber.Handler {
 // CreateTask creates a new task.
 func CreateTask(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		task := new(models.TaskForm)
+		task := new(entities.TaskForm)
 		if err := c.BodyParser(task); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 				Code:    fiber.StatusBadRequest,
@@ -89,7 +89,7 @@ func CreateTask(db *db.DB) fiber.Handler {
 
 		// Database insertion
 		// ------------------
-		newTask := models.Task{
+		newTask := entities.Task{
 			Name:        task.Name,
 			Description: task.Description,
 		}

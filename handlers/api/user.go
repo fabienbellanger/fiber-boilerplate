@@ -12,13 +12,13 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	models "github.com/fabienbellanger/fiber-boilerplate/models"
+	entities "github.com/fabienbellanger/fiber-boilerplate/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/repositories"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 )
 
 type userLogin struct {
-	models.User
+	entities.User
 	Token     string `json:"token" xml:"token" form:"token"`
 	ExpiresAt string `json:"expires_at" xml:"expires_at" form:"expires_at"`
 }
@@ -114,7 +114,7 @@ func GetUser(db *db.DB) fiber.Handler {
 // CreateUser creates a new user.
 func CreateUser(db *db.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		user := new(models.UserForm)
+		user := new(entities.UserForm)
 		if err := c.BodyParser(user); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 				Code:    fiber.StatusBadRequest,
@@ -133,7 +133,7 @@ func CreateUser(db *db.DB) fiber.Handler {
 
 		// Database insertion
 		// ------------------
-		newUser := models.User{
+		newUser := entities.User{
 			Lastname:  user.Lastname,
 			Firstname: user.Firstname,
 			Password:  user.Password,
@@ -178,7 +178,7 @@ func UpdateUser(db *db.DB) fiber.Handler {
 			})
 		}
 
-		user := new(models.UserForm)
+		user := new(entities.UserForm)
 		if err := c.BodyParser(user); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 				Code:    fiber.StatusBadRequest,
@@ -214,7 +214,7 @@ func StreamUsers(db *db.DB) fiber.Handler {
 			enc := json.NewEncoder(w)
 			n := 100_000
 			for i := 0; i < n; i++ {
-				user := models.User{
+				user := entities.User{
 					ID:        uuid.New().String(),
 					Username:  "My Username",
 					Password:  ",kkjkjkjkjknnqfjkkjdnfsjklqblk",

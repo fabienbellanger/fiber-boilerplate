@@ -119,7 +119,7 @@ func New(config *DatabaseConfig) (*DB, error) {
 
 // MakeMigrations runs GORM migrations.
 func (db *DB) MakeMigrations() {
-	db.AutoMigrate(modelsList...)
+	db.AutoMigrate(entitiesList...)
 }
 
 // getGormLogLevel returns the log level for GORM.

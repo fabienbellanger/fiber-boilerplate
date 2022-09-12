@@ -67,12 +67,12 @@ func Setup(db *db.DB, logger *zap.Logger) *fiber.App {
 	// Public routes
 	// -------------
 	registerPublicWebRoutes(web, logger)
-	registerPublicAPIRoutes(api, db)
+	registerPublicAPIRoutes(api, db, logger)
 
 	// Protected routes
 	// ----------------
 	initJWT(app)
-	registerProtectedAPIRoutes(api, db)
+	registerProtectedAPIRoutes(api, db, logger)
 
 	// Custom 404 (after all routes but not available because of JWT)
 	// --------------------------------------------------------------

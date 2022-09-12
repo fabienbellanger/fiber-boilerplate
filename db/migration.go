@@ -1,9 +1,9 @@
 package db
 
-import "github.com/fabienbellanger/fiber-boilerplate/models"
+import "github.com/fabienbellanger/fiber-boilerplate/entities"
 
-// modelsList lists all models to automigrate.
-var modelsList = []interface{}{
-	&models.User{},
-	&models.Task{},
+// entitiesList lists all entities to automigrate.
+var entitiesList = []interface{}{
+	&entities.User{},
+	&entities.Task{},
 }

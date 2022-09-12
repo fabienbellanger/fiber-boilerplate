@@ -5,8 +5,11 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/handlers/api"
-	"github.com/fabienbellanger/fiber-boilerplate/handlers/web"
+	"github.com/fabienbellanger/fiber-boilerplate/deliveries/task"
+	"github.com/fabienbellanger/fiber-boilerplate/deliveries/user"
+	"github.com/fabienbellanger/fiber-boilerplate/deliveries/web"
+	storeTask "github.com/fabienbellanger/fiber-boilerplate/stores/task"
+	storeUser "github.com/fabienbellanger/fiber-boilerplate/stores/user"
 )
 
 // Web routes
@@ -20,38 +23,37 @@ func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
 // API routes
 // ----------
 
-func registerPublicAPIRoutes(r fiber.Router, db *db.DB) {
+func registerPublicAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	v1 := r.Group("/v1")
+	userStore := storeUser.New(db)
 
 	// Login
-	v1.Post("/login", api.Login(db))
+	authGroup := v1.Group("")
+	auth := user.New(authGroup, userStore, logger)
+	authGroup.Post("/login", auth.Login)
 
-	registerTask(v1, db)
+	// Tasks
+	registerTask(v1, db, logger)
 }
 
-func registerProtectedAPIRoutes(r fiber.Router, db *db.DB) {
+func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	v1 := r.Group("/v1")
+	userStore := storeUser.New(db)
 
 	// Register
-	v1.Post("/register", api.CreateUser(db))
+	registerGroup := v1.Group("")
+	register := user.New(registerGroup, userStore, logger)
+	registerGroup.Post("/register", register.Create)
 
-	registerUser(v1, db)
+	// Users
+	userGroup := r.Group("/users")
+	users := user.New(userGroup, userStore, logger)
+	users.Routes()
 }
 
-func registerUser(r fiber.Router, db *db.DB) {
-	users := r.Group("/users")
-
-	users.Get("/", api.GetAllUsers(db))
-	users.Get("/stream", api.StreamUsers(db))
-	users.Get("/:id", api.GetUser(db))
-	users.Delete("/:id", api.DeleteUser(db))
-	users.Put("/:id", api.UpdateUser(db))
-}
-
-func registerTask(r fiber.Router, db *db.DB) {
-	tasks := r.Group("/tasks")
-
-	tasks.Get("/", api.GetAllTasks(db))
-	tasks.Get("/stream", api.GetAllTasksStream(db))
-	tasks.Post("/", api.CreateTask(db))
+func registerTask(r fiber.Router, db *db.DB, logger *zap.Logger) {
+	taskGroup := r.Group("/tasks")
+	taskStore := storeTask.New(db)
+	tasks := task.New(taskGroup, taskStore, db, logger)
+	tasks.Routes()
 }

@@ -23,37 +23,37 @@ func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
 // API routes
 // ----------
 
-func registerPublicAPIRoutes(r fiber.Router, db *db.DB) {
+func registerPublicAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	v1 := r.Group("/v1")
 	userStore := storeUser.New(db)
 
 	// Login
 	authGroup := v1.Group("")
-	auth := user.New(authGroup, userStore)
+	auth := user.New(authGroup, userStore, logger)
 	authGroup.Post("/login", auth.Login)
 
 	// Tasks
-	registerTask(v1, db)
+	registerTask(v1, db, logger)
 }
 
-func registerProtectedAPIRoutes(r fiber.Router, db *db.DB) {
+func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	v1 := r.Group("/v1")
 	userStore := storeUser.New(db)
 
 	// Register
 	registerGroup := v1.Group("")
-	register := user.New(registerGroup, userStore)
+	register := user.New(registerGroup, userStore, logger)
 	registerGroup.Post("/register", register.Create)
 
 	// Users
 	userGroup := r.Group("/users")
-	users := user.New(userGroup, userStore)
+	users := user.New(userGroup, userStore, logger)
 	users.Routes()
 }
 
-func registerTask(r fiber.Router, db *db.DB) {
+func registerTask(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	taskGroup := r.Group("/tasks")
 	taskStore := storeTask.New(db)
-	tasks := task.New(taskGroup, taskStore, db)
+	tasks := task.New(taskGroup, taskStore, db, logger)
 	tasks.Routes()
 }

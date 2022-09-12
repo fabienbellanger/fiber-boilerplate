@@ -9,20 +9,23 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/stores"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
 )
 
 type TaskHandler struct {
 	router fiber.Router
 	store  stores.TaskStorer
 	db     *db.DB
+	logger *zap.Logger
 }
 
 // New returns a new TaskHandler
-func New(r fiber.Router, task stores.TaskStorer, db *db.DB) TaskHandler {
+func New(r fiber.Router, task stores.TaskStorer, db *db.DB, logger *zap.Logger) TaskHandler {
 	return TaskHandler{
 		router: r,
 		store:  task,
 		db:     db,
+		logger: logger,
 	}
 }
 

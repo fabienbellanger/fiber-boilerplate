@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 
 	entities "github.com/fabienbellanger/fiber-boilerplate/entities"
@@ -19,13 +20,15 @@ import (
 type UserHandler struct {
 	router fiber.Router
 	store  stores.UserStorer
+	logger *zap.Logger
 }
 
 // New returns a new UserHandler
-func New(r fiber.Router, user stores.UserStorer) UserHandler {
+func New(r fiber.Router, user stores.UserStorer, logger *zap.Logger) UserHandler {
 	return UserHandler{
 		router: r,
 		store:  user,
+		logger: logger,
 	}
 }
 

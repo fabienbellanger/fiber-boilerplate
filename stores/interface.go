@@ -12,8 +12,13 @@ type UserStorer interface {
 	Create(user *entities.User) error
 	GetAll() ([]entities.User, error)
 	GetOne(id string) (entities.User, error)
+	GetByUsername(username string) (user entities.User, err error)
 	Delete(id string) error
 	Update(id string, userForm *entities.UserForm) (entities.User, error)
+	UpdatePassword(id, currentPassword, password string) error
+	GetIDFromPasswordReset(token, password string) (string, string, error)
+	DeletePasswordReset(userId string) error
+	CreateOrUpdatePasswordReset(passwordReset *entities.PasswordResets) error
 }
 
 // TaskStorer interface

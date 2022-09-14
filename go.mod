@@ -1,6 +1,6 @@
 module github.com/fabienbellanger/fiber-boilerplate
 
-go 1.18
+go 1.19
 
 require (
 	github.com/ansrivas/fiberprometheus/v2 v2.4.1
@@ -62,7 +62,7 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
-	golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 // indirect
+	golang.org/x/sys v0.0.0-20220913175220-63ea55921009 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

@@ -32,6 +32,10 @@ func registerPublicAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	auth := user.New(authGroup, userStore, logger)
 	authGroup.Post("/login", auth.Login)
 
+	// Password reset
+	authGroup.Post("/forgotten-password/:email", auth.ForgottenPassword)
+	authGroup.Patch("/update-password/:token", auth.UpdatePassword)
+
 	// Tasks
 	registerTask(v1, db, logger)
 }

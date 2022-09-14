@@ -3,8 +3,10 @@ package user
 import (
 	"crypto/sha512"
 	"encoding/hex"
+	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/entities"
@@ -68,6 +70,14 @@ func (u UserStore) GetOne(id string) (user entities.User, err error) {
 	return user, err
 }
 
+// GetByUsername returns a user from its username.
+func (u UserStore) GetByUsername(username string) (user entities.User, err error) {
+	if result := u.db.Find(&user, "username = ?", username); result.Error != nil {
+		return user, result.Error
+	}
+	return user, err
+}
+
 // Delete deletes a user from database.
 func (u UserStore) Delete(id string) error {
 	result := u.db.Delete(&entities.User{}, "id = ?", id)
@@ -98,4 +108,65 @@ func (u UserStore) Update(id string, userForm *entities.UserForm) (user entities
 		return user, err
 	}
 	return user, err
+}
+
+// UpdatePassword updates user passwords.
+func (u UserStore) UpdatePassword(id, currentPassword, password string) error {
+	// Hash password
+	// -------------
+	hashedPassword := sha512.Sum512([]byte(password))
+
+	result := u.db.Exec(`
+		UPDATE users
+		SET password = ?, updated_at = ?
+		WHERE id = ?`,
+		hex.EncodeToString(hashedPassword[:]),
+		time.Now().UTC(),
+		id,
+	)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+// GetIDFromPasswordReset update user password and delete password_resets line.
+func (u UserStore) GetIDFromPasswordReset(token, password string) (string, string, error) {
+	data := struct {
+		ID       string
+		Password string
+	}{}
+
+	result := u.db.Raw(`
+			SELECT u.id AS id, u.password AS passwors
+			FROM password_resets pr
+				INNER JOIN users u ON u.id = pr.user_id AND u.deleted_at IS NULL
+			WHERE pr.token = ?
+				AND pr.expired_at >= ?`,
+		token,
+		time.Now().UTC()).Scan(&data)
+	if result.Error != nil {
+		return "", "", result.Error
+	}
+
+	return data.ID, data.Password, nil
+}
+
+// DeletePasswordReset deletes user password reset.
+func (u UserStore) DeletePasswordReset(userId string) error {
+	result := u.db.Where("user_id = ?", userId).Delete(&entities.PasswordResets{})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// CreateOrUpdatePasswordReset add a reset password request in database or update it if a line already exists.
+func (u UserStore) CreateOrUpdatePasswordReset(passwordReset *entities.PasswordResets) error {
+	result := u.db.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(&passwordReset)
+
+	return result.Error
 }

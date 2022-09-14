@@ -28,6 +28,18 @@ type UserForm struct {
 	Firstname string `json:"firstname" xml:"firstname" form:"firstname" validate:"required"`
 }
 
+// PasswordResets is used to reset user password.
+type PasswordResets struct {
+	UserID    string    `json:"user_id" xml:"user_id" form:"user_id" gorm:"primaryKey" validate:"required,uuid"`
+	Token     string    `json:"token" xml:"token" form:"token" gorm:"size:36;not null" validate:"required,uuid"`
+	ExpiredAt time.Time `json:"expired_at" xml:"expired_at" gorm:"not null" form:"expired_at"`
+}
+
+// UserUpdatePassword use to update user password.
+type UserUpdatePassword struct {
+	Password string `validate:"required,min=8"`
+}
+
 // GenerateJWT returns a token
 // TODO: Add unit tests
 func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string, time.Time, error) {

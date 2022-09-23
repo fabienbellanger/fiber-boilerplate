@@ -2,13 +2,13 @@ openapi: '3.0.2'
 info:
   title: Fiber Boilerplate
   version: '1.0'
-  description: REST API for URL shortener
+  description: REST API for Fiber boilerplate
   contact:
     name: Fabien Bellanger
     email: valentil@gmail.com
   license:
     name: MIT
-    url: https://github.com/fabienbellanger/fiber-boilerplate/blob/main/server/LICENSE
+    url: https://github.com/fabienbellanger/fiber-boilerplate/blob/master/LICENSE
 servers:
   - url: http://localhost:{port}/api/v1
     description: Local server
@@ -16,8 +16,9 @@ servers:
       port:
         enum:
           - "3000"
-        default: "3000"
-  - url: https://apitic.fr/api/v1
+          - "3001"
+        default: "3001"
+  - url: https://localhost/api/v1
     description: Production server
 security:
   - bearerAuth: []

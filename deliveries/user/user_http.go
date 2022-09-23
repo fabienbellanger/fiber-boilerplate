@@ -309,7 +309,7 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, "Error when requesting new password")
 	}
 
-	// TODO: Send email with link
+	// Send email with link
 	to := make([]string, 1)
 	to[0] = user.Username
 	subject := fmt.Sprintf("[%s] Forgotten password", viper.GetString("APP_NAME"))

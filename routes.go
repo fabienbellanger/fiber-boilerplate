@@ -21,8 +21,6 @@ import (
 // ----------
 
 func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
-	r.Get("/health-check", web.HealthCheck(logger))
-
 	// Basic Auth
 	// ----------
 	cfg := basicauth.Config{
@@ -35,6 +33,8 @@ func registerPublicWebRoutes(r fiber.Router, logger *zap.Logger) {
 	doc := r.Group("/doc")
 	doc.Use(basicauth.New(cfg))
 	doc.Get("/api-v1", web.DocAPIv1())
+
+	r.Get("/health-check", web.HealthCheck(logger))
 
 	// Filesystem
 	// ----------
@@ -77,7 +77,7 @@ func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	registerGroup.Post("/register", register.Create)
 
 	// Users
-	userGroup := r.Group("/users")
+	userGroup := v1.Group("/users")
 	users := user.New(userGroup, userStore, logger)
 	users.Routes()
 }

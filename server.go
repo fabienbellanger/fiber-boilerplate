@@ -13,7 +13,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/favicon"
-	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
@@ -21,7 +20,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	jwtware "github.com/gofiber/jwt/v2"
 	"github.com/gofiber/template/html"
-	"github.com/markbates/pkger"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
@@ -92,10 +90,11 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		Prefork:               viper.GetBool("SERVER_PREFORK"),
 		DisableStartupMessage: false,
 		StrictRouting:         true,
-		Views:                 html.New("./templates", ".gohtml"),
 		EnablePrintRoutes:     false, // viper.GetString("APP_ENV") == "development",
 		Concurrency:           256 * 1024,
 		ReduceMemoryUsage:     true,
+		UnescapePath:          true,
+		Views:                 html.New("./templates", ".gohtml"),
 		// Errors handling
 		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -229,12 +228,6 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 }
 
 func initTools(s *fiber.App) {
-	// Pkger
-	// -----
-	s.Use("/assets", filesystem.New(filesystem.Config{
-		Root: pkger.Dir("/public/assets"),
-	}))
-
 	// Basic Auth
 	// ----------
 	cfg := basicauth.Config{

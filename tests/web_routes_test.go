@@ -2,7 +2,6 @@ package tests
 
 import (
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
@@ -32,7 +31,7 @@ type test struct {
 	expectedBody  string
 }
 
-func TestRoutes(t *testing.T) {
+func TestWebRoutes(t *testing.T) {
 	tests := []test{
 		{
 			description:   "Health Check route",
@@ -83,7 +82,7 @@ func TestRoutes(t *testing.T) {
 		assert.Equalf(t, test.expectedCode, res.StatusCode, test.description)
 
 		// Read the response body
-		body, err := ioutil.ReadAll(res.Body)
+		body, err := io.ReadAll(res.Body)
 
 		// Reading the response body should work everytime, such that
 		// the err variable should be nil

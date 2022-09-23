@@ -20,7 +20,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	jwtware "github.com/gofiber/jwt/v2"
-	"github.com/gofiber/template/django"
+	"github.com/gofiber/template/html"
 	"github.com/markbates/pkger"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -87,15 +87,12 @@ func Setup(db *db.DB, logger *zap.Logger) *fiber.App {
 }
 
 func initConfig(logger *zap.Logger) fiber.Config {
-	// Initialize standard Go html template engine
-	engine := django.NewFileSystem(pkger.Dir("/public/templates"), ".django")
-
 	return fiber.Config{
 		AppName:               viper.GetString("APP_NAME"),
 		Prefork:               viper.GetBool("SERVER_PREFORK"),
 		DisableStartupMessage: false,
 		StrictRouting:         true,
-		Views:                 engine,
+		Views:                 html.New("./templates", ".gohtml"),
 		EnablePrintRoutes:     false, // viper.GetString("APP_ENV") == "development",
 		Concurrency:           256 * 1024,
 		ReduceMemoryUsage:     true,

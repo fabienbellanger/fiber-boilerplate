@@ -12,12 +12,9 @@ func HealthCheck(logger *zap.Logger) fiber.Handler {
 	}
 }
 
-// Hello is a test for pkger template.
-func Hello() fiber.Handler {
+// DocAPIv1 show API v1 documentation.
+func DocAPIv1() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		name := c.Params("name")
-		return c.Render("hello", fiber.Map{
-			"name": name,
-		})
+		return c.Render("doc_api_v1", fiber.Map{})
 	}
 }

@@ -169,7 +169,7 @@ go tool cover -html=<fichier à analyser>
 - [x] Add OpenAPI documentation [RapiDoc](https://rapidocweb.com/examples.html)
 - [x] Validation des données avec github.com/go-playground/validator
 - [x] Si la connexion à la base de données est coupée, cela retourne une 401 au lieu d'une 500.
-- [ ] Supprimer Pkger (plus maintenu)
+- [x] Supprimer Pkger (plus maintenu)
 - [ ] **Attention** : Le middleware websocket de Fiber génère une data race avec le hub ! Voir si cela sera corrigé à l'avenir (lever une issue sur Github ?)
 - [ ] Add Docker support
   - [ ] Try OpenTelemetry [middleware](https://github.com/gofiber/contrib/tree/main/otelfiber)

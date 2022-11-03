@@ -43,6 +43,6 @@ func NewTestDB() (TestDB, error) {
 
 // Drop database after the test.
 func (d *TestDB) Drop() error {
-
+	// TODO: Drop database
 	return nil
 }

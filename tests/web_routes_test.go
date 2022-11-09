@@ -2,11 +2,13 @@ package tests
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"testing"
 
 	server "github.com/fabienbellanger/fiber-boilerplate"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -55,11 +57,21 @@ func TestWebRoutes(t *testing.T) {
 		},
 	}
 
+	// Init config
+	viper.SetConfigFile("../.env")
+	viper.ReadInConfig()
+	log.Println(viper.GetString("DB_DATABASE"))
+
+	// Init database
+	tdb, err := NewTestDB()
+	log.Printf("err=%v\nname=%v\n", err, tdb.name)
+
 	// Setup the app as it is done in the main function
-	app := server.Setup(nil, nil)
+	app := server.Setup(tdb.db, nil)
 
 	// Iterate through test single test cases
 	for _, test := range tests {
+
 		// Create a new http request with the route from the test case
 		req, _ := http.NewRequest(test.method, test.route, test.body)
 		for _, h := range test.headers {

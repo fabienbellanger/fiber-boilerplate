@@ -19,13 +19,15 @@ type TestDB struct {
 func NewTestDB() (TestDB, error) {
 	rand.Seed(time.Now().UnixNano())
 
+	// TODO: Database must be created before
+
 	config := db.DatabaseConfig{
 		Driver:          viper.GetString("DB_DRIVER"),
 		Host:            viper.GetString("DB_HOST"),
 		Username:        viper.GetString("DB_USERNAME"),
 		Password:        viper.GetString("DB_PASSWORD"),
 		Port:            viper.GetInt("DB_PORT"),
-		Database:        viper.GetString("DB_DATABASE") + "_" + fmt.Sprintf("%08d", rand.Int63n(1e8)),
+		Database:        viper.GetString("DB_DATABASE") + "__" + fmt.Sprintf("%08d", rand.Int63n(1e8)),
 		Charset:         viper.GetString("DB_CHARSET"),
 		Collation:       viper.GetString("DB_COLLATION"),
 		Location:        viper.GetString("DB_LOCATION"),
@@ -42,7 +44,8 @@ func NewTestDB() (TestDB, error) {
 }
 
 // Drop database after the test.
-func (d *TestDB) Drop() error {
-	// TODO: Drop database
-	return nil
+func (tdb *TestDB) Drop() error {
+	result := tdb.db.Exec("DROP DATABASE IF EXISTS ?;", tdb.name)
+
+	return result.Error
 }

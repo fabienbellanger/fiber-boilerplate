@@ -19,7 +19,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	jwtware "github.com/gofiber/jwt/v2"
-	"github.com/gofiber/template/html"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
@@ -94,7 +93,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		Concurrency:           256 * 1024,
 		ReduceMemoryUsage:     true,
 		UnescapePath:          true,
-		Views:                 html.New("./templates", ".gohtml"),
+		//Views:                 html.New("./templates", ".gohtml"),
 		// Errors handling
 		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {

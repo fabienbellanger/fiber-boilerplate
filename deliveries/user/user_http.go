@@ -44,7 +44,7 @@ type userLogin struct {
 	ExpiresAt string `json:"expires_at" xml:"expires_at" form:"expires_at"`
 }
 
-type userAuth struct {
+type UserAuth struct {
 	Username string `json:"username" xml:"username" form:"username" validate:"required,email"`
 	Password string `json:"password" xml:"password" form:"password" validate:"required,min=8"`
 }
@@ -60,7 +60,7 @@ func (u *UserHandler) Routes() {
 
 // Login authenticates a user.
 func (u *UserHandler) Login(c *fiber.Ctx) error {
-	ua := new(userAuth)
+	ua := new(UserAuth)
 	if err := c.BodyParser(ua); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 			Code:    fiber.StatusBadRequest,
@@ -113,10 +113,12 @@ func (u *UserHandler) Create(c *fiber.Ctx) error {
 
 	// Data validation
 	// ---------------
-	if user.Firstname == "" || user.Lastname == "" || user.Username == "" || user.Password == "" {
+	registerErrors := utils.ValidateStruct(*user)
+	if registerErrors != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
 			Code:    fiber.StatusBadRequest,
-			Message: "Bad Parameters",
+			Message: "Invalid body",
+			Details: registerErrors,
 		})
 	}
 

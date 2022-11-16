@@ -165,7 +165,7 @@ func getGormLogOutput(output, filePath, env string) (file io.Writer, err error) 
 
 // dsn returns the DSN if the configuration is OK or an error in other case.
 func (c *DatabaseConfig) dsn() (dsn string, err error) {
-	if c.Driver == "" || c.Host == "" || c.Database == "" || c.Port == 0 || c.Username == "" || c.Password == "" {
+	if c.Driver == "" || c.Host == "" || c.Port == 0 || c.Username == "" || c.Password == "" {
 		return dsn, errors.New("error in database configuration")
 	}
 

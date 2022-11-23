@@ -37,5 +37,5 @@ func startServer() {
 
 	// Start server
 	// ------------
-	server.Run(db, logger)
+	server.Run(db, logger, "./templates")
 }

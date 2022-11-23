@@ -153,7 +153,7 @@ func createUserAndAuthenticate(db *db.DB) (token string, err error) {
 // Execute runs all tests.
 func Execute(t *testing.T, db *db.DB, tests []Test) {
 	// Setup the app as it is done in the main function
-	app := server.Setup(db, nil)
+	app := server.Setup(db, nil, "../templates")
 
 	// Iterate through test single test cases
 	for _, test := range tests {

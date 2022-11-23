@@ -29,8 +29,8 @@ import (
 )
 
 // Run starts HTTP server.
-func Run(db *db.DB, logger *zap.Logger) {
-	app := Setup(db, logger)
+func Run(db *db.DB, logger *zap.Logger, templatesPath string) {
+	app := Setup(db, logger, templatesPath)
 
 	// Close any connections on interrupt signal
 	// -----------------------------------------
@@ -51,8 +51,8 @@ func Run(db *db.DB, logger *zap.Logger) {
 }
 
 // Setup returns a Fiber App instance
-func Setup(db *db.DB, logger *zap.Logger) *fiber.App {
-	app := fiber.New(initConfig(logger))
+func Setup(db *db.DB, logger *zap.Logger, templatesPath string) *fiber.App {
+	app := fiber.New(initConfig(logger, templatesPath))
 
 	initMiddlewares(app, logger)
 	initTools(app)
@@ -84,7 +84,7 @@ func Setup(db *db.DB, logger *zap.Logger) *fiber.App {
 	return app
 }
 
-func initConfig(logger *zap.Logger) fiber.Config {
+func initConfig(logger *zap.Logger, templatesPath string) fiber.Config {
 	return fiber.Config{
 		AppName:               viper.GetString("APP_NAME"),
 		Prefork:               viper.GetBool("SERVER_PREFORK"),
@@ -94,7 +94,7 @@ func initConfig(logger *zap.Logger) fiber.Config {
 		Concurrency:           256 * 1024,
 		ReduceMemoryUsage:     true,
 		UnescapePath:          true,
-		Views:                 html.New("./templates", ".gohtml"),
+		Views:                 html.New(templatesPath, ".gohtml"),
 		// Errors handling
 		// ---------------
 		ErrorHandler: func(c *fiber.Ctx, err error) error {

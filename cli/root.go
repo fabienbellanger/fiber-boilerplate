@@ -82,7 +82,7 @@ func displayLogLevel(l string) aurora.Value {
 	case "INFO":
 		return aurora.Green(l)
 	case "WARN":
-		return aurora.Brown(l)
+		return aurora.Yellow(l)
 	default:
 		return aurora.Red(l)
 	}
@@ -95,7 +95,7 @@ func displayLogMethod(m string) aurora.Value {
 	case "POST":
 		return aurora.Blue(m)
 	case "PUT":
-		return aurora.Brown(m)
+		return aurora.Yellow(m)
 	case "PATCH":
 		return aurora.Magenta(m)
 	case "DELETE":
@@ -113,7 +113,7 @@ func displayLogStatusCode(c uint) aurora.Value {
 	} else if c < 400 {
 		return aurora.Magenta(c)
 	} else if c < 500 {
-		return aurora.Brown(c)
+		return aurora.Yellow(c)
 	} else {
 		return aurora.Red(c)
 	}

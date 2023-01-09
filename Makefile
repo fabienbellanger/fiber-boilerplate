@@ -3,7 +3,6 @@
 	update \
 	update-all \
 	serve \
-	serve-pkger \
 	serve-race \
 	logs \
 	build \
@@ -20,7 +19,14 @@
 	run-cover-count \
 	run-cover-atomic \
 	view-cover-count \
-	view-cover-atomic
+	view-cover-atomic \
+	docker \
+	docker-up \
+	docker-up-no-daemon \
+	docker-down \
+	docker-down-rm \
+	docker-cli-register \
+	docker-cli-build
 
 .DEFAULT_GOAL=help
 
@@ -44,8 +50,7 @@ GO_VET=$(GO_CMD) vet
 BINARY_NAME=fiber-boilerplate
 BINARY_UNIX=$(BINARY_NAME)_unix
 DOCKER_COMPOSE=docker-compose
-PKGER=pkger
-PKGER_FILE=pkged.go
+DOCKER=docker
 
 all: test build
 
@@ -61,11 +66,6 @@ update-all:
 serve:
 	$(GO_RUN) $(MAIN_PATH) run
 
-serve-pkger:
-	$(PKGER)
-	$(GO_RUN) $(MAIN_PATH) run
-	@rm $(PKGER_FILE)
-
 serve-race:
 	$(GO_RUN) run -race $(MAIN_PATH)
 
@@ -75,9 +75,7 @@ logs:
 
 build:
 	$(GO_VET) ./...
-	$(PKGER)
 	$(GO_BUILD) -ldflags "-s -w" -o $(BINARY_NAME) -v $(MAIN_PATH)
-	@rm $(PKGER_FILE)
 
 ## test: Run test
 test:
@@ -109,6 +107,33 @@ view-cover-atomic: test-cover-atomic html-cover-atomic
 ## bench: Run benchmarks
 bench: 
 	$(GO_TEST) -benchmem -bench=. ./...
+
+## docker: Stop running containers, build docker-compose.yml file and run containers
+docker: docker-down docker-up
+
+## docker-up: Build docker-compose.yml file and run containers
+docker-up:
+	$(DOCKER_COMPOSE) up --build --force-recreate -d
+
+## docker-up-no-daemon: Build docker-compose.yml file and run containers in non daemon mode
+docker-up-no-daemon:
+	$(DOCKER_COMPOSE) up --build --force-recreate
+
+## docker-down: Stop running containers
+docker-down:
+	$(DOCKER_COMPOSE) down --remove-orphans
+
+## docker-down-rm: Stop running containers and remove linked volumes
+docker-down-rm:
+	$(DOCKER_COMPOSE) down --remove-orphans --volumes
+
+## docker-cli-build: Build project for CLI
+docker-cli-build:
+	$(DOCKER) build -f Dockerfile.cli -t fiber-boilerplate-cli .
+
+## docker-cli-register: Run CLI container to register an admin user
+docker-cli-register: docker-cli-build
+	$(DOCKER) run -i --rm --net fiber-boilerplate_fiber-boilerplate-bridge --link fiber-boilerplate-mysql fiber-boilerplate-cli register -l Admin -f Admin -e admin@gmail.com -p 'K-qy,Kg{<AB*XX;V3}_/x19u>1BBl!d'
 
 ## clean: Clean files
 clean: 

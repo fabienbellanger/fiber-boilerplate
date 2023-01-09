@@ -17,6 +17,7 @@ servers:
         enum:
           - "3000"
           - "3001"
+          - "9090"
         default: "3001"
   - url: https://localhost/api/v1
     description: Production server

@@ -5,7 +5,7 @@ services:
     container_name: fiber-boilerplate-api
     build: .
     ports: 
-      - 9900:8888
+      - 9090:9090
     volumes:
       - ./:/build:delegated
     restart: always
@@ -22,7 +22,7 @@ services:
     volumes:
       - fiber-boilerplate-data_mysql:/var/lib/mysql:delegated
     environment:
-      - MYSQL_DATABASE=boilerplate
+      - MYSQL_DATABASE=fiber
       - MYSQL_USER=fiber
       - MYSQL_PASSWORD=fiber
       - MYSQL_RANDOM_ROOT_PASSWORD=yes

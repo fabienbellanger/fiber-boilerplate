@@ -1,3 +1,6 @@
+# TODO:
+# - secure Dockerfile
+
 FROM golang:alpine AS builder
 
 LABEL maintainer="Fabien Bellanger <valentil@gmail.com>"
@@ -19,19 +22,17 @@ RUN go mod download
 # Copy the code into the container
 COPY . .
 
-# Pkger
-RUN go get github.com/markbates/pkger/cmd/pkger
-RUN pkger
-
 # Build the application
-RUN go build -a -installsuffix cgo -o fiber-boilerplate .
+# RUN go build -ldflags "-s -w" -a -installsuffix cgo -o fiber-boilerplate cmd/main.go
+RUN go build -ldflags "-s -w" -a -installsuffix cgo -o fiber-boilerplate cmd/main.go
 
 # Move to /dist directory as the place for resulting binary folder
 WORKDIR /dist
 
 # Copy binary from build to main folder
-RUN cp /build/fiber-boilerplate /build/projects.json /build/favicon.png .
-RUN cp /build/config-docker.toml ./config.toml
+RUN cp /build/fiber-boilerplate /build/favicon.png .
+RUN cp -R /build/assets /build/templates .
+RUN cp /build/.env.docker ./.env
 
 # -----------------------------------------------------------------------------
 
@@ -41,12 +42,18 @@ LABEL maintainer="Fabien Bellanger <valentil@gmail.com>"
 
 RUN apk update && apk --no-cache add ca-certificates
 
-COPY --from=builder /dist/fiber-boilerplate /
-COPY --from=builder /dist/config.toml /
-COPY --from=builder /dist/projects.json /
-COPY --from=builder /dist/favicon.png /
+WORKDIR /app
 
-# Command to run
+COPY --from=builder /dist/.env .
+COPY --from=builder /dist/favicon.png .
+COPY --from=builder /dist/assets assets
+COPY --from=builder /dist/templates templates
+COPY --from=builder /dist/fiber-boilerplate .
+
+RUN echo $(ls -lah)
+
+# RUN chmod +x ./fiber-boilerplate
+
+EXPOSE 9090
 ENTRYPOINT ["./fiber-boilerplate"]
-
-EXPOSE 9999
+CMD ["run"]

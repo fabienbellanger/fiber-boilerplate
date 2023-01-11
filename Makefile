@@ -52,20 +52,26 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 DOCKER_COMPOSE=docker-compose
 DOCKER=docker
 
+## all: Test and build application
 all: test build
 
+## install: Run go install
 install:
 	$(GO_INSTALL) ./...
 
+## update: Update modules
 update:
 	$(GO_GET) -u && $(GO_MOD) tidy
 
+## update-all: Update all modules
 update-all:
 	$(GO_GET) -u all && $(GO_MOD) tidy
 
+## serve: Serve API
 serve:
 	$(GO_RUN) $(MAIN_PATH) run
 
+## serve-race: Serve API with -race option
 serve-race:
 	$(GO_RUN) run -race $(MAIN_PATH)
 

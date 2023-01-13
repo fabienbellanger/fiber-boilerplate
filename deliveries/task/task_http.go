@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 
-	"github.com/fabienbellanger/fiber-boilerplate/db"
 	"github.com/fabienbellanger/fiber-boilerplate/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/stores"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
@@ -15,16 +14,14 @@ import (
 type TaskHandler struct {
 	router fiber.Router
 	store  stores.TaskStorer
-	db     *db.DB
 	logger *zap.Logger
 }
 
 // New returns a new TaskHandler
-func New(r fiber.Router, task stores.TaskStorer, db *db.DB, logger *zap.Logger) TaskHandler {
+func New(r fiber.Router, task stores.TaskStorer, logger *zap.Logger) TaskHandler {
 	return TaskHandler{
 		router: r,
 		store:  task,
-		db:     db,
 		logger: logger,
 	}
 }
@@ -33,7 +30,7 @@ func New(r fiber.Router, task stores.TaskStorer, db *db.DB, logger *zap.Logger) 
 func (t *TaskHandler) Routes() {
 	t.router.Post("", t.create())
 	t.router.Get("", t.getAll())
-	t.router.Get("/stream", t.getAllStream(t.db))
+	t.router.Get("/stream", t.getAllStream())
 }
 
 // create creates a new task.
@@ -92,7 +89,7 @@ func (t *TaskHandler) getAll() fiber.Handler {
 }
 
 // getAllStream lists all tasks with a stream.
-func (t *TaskHandler) getAllStream(db *db.DB) fiber.Handler {
+func (t *TaskHandler) getAllStream() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		rows, err := t.store.ListAllRows()
 		if err != nil {
@@ -110,7 +107,7 @@ func (t *TaskHandler) getAllStream(db *db.DB) fiber.Handler {
 				}
 
 				var task entities.Task
-				if err := db.ScanRows(rows, &task); err != nil {
+				if err := t.store.ScanRow(rows, &task); err != nil {
 					continue
 				}
 				if err := enc.Encode(task); err != nil {

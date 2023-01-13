@@ -26,4 +26,5 @@ type TaskStorer interface {
 	ListAll() ([]entities.Task, error)
 	ListAllRows() (*sql.Rows, error)
 	Create(task *entities.Task) error
+	ScanRow(rows *sql.Rows, task *entities.Task) error
 }

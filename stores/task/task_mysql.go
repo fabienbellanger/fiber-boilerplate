@@ -44,3 +44,7 @@ func (t TaskStore) Create(task *entities.Task) error {
 	}
 	return nil
 }
+
+func (t TaskStore) ScanRow(rows *sql.Rows, task *entities.Task) error {
+	return t.db.ScanRows(rows, &task)
+}

@@ -85,6 +85,6 @@ func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 func registerTask(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	taskGroup := r.Group("/tasks")
 	taskStore := storeTask.New(db)
-	tasks := task.New(taskGroup, taskStore, db, logger)
+	tasks := task.New(taskGroup, taskStore, logger)
 	tasks.Routes()
 }

@@ -134,7 +134,7 @@ func initConfig(logger *zap.Logger, templatesPath string) fiber.Config {
 			if code == fiber.StatusInternalServerError {
 				logger.Error(
 					"Internal server error",
-					zap.Error(e),
+					zap.Error(err),
 					zap.Int("code", code),
 					zap.String("method", c.Method()),
 					zap.String("path", c.Path()),

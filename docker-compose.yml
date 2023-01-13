@@ -1,36 +1,154 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  api:
-    container_name: fiber-boilerplate-api
-    build: .
-    ports: 
-      - 9090:9090
-    volumes:
-      - ./:/build:delegated
-    restart: always
-    depends_on:
-      - mysql
-    networks:
-      - fiber-boilerplate-bridge
-
   mysql:
     container_name: fiber-boilerplate-mysql
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
-    restart: always # "no" | on-failure
+    restart: "no" # "no" | on-failure
     volumes:
-      - fiber-boilerplate-data_mysql:/var/lib/mysql:delegated
+      - database:/var/lib/mysql:delegated
     environment:
       - MYSQL_DATABASE=fiber
       - MYSQL_USER=fiber
       - MYSQL_PASSWORD=fiber
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     networks:
-      - fiber-boilerplate-bridge
+      - backend
+
+  adminer:
+    container_name: fiber_boilerplate_adminer
+    image: adminer:latest
+    ports:
+      - 8083:8080
+    links:
+      - mysql:db
+    networks:
+      - backend
+    restart: "no"
+
+  maildev:
+    container_name: fiber_boilerplate_maildev
+    image: djfarrelly/maildev
+    ports:
+      - 1081:80
+      - 1026:25
+    networks:
+      - backend
+    restart: "no"
+
+  api:
+    container_name: fiber-boilerplate-api
+    build: .
+    ports: 
+      - 3002:3002
+    # volumes:
+    #   - ./:/build:delegated
+    restart: "no"
+    links:
+      - mysql
+    # depends_on:
+    #   - mysql
+    networks:
+      - backend
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: fiber-boilerplate-prometheus
+    volumes:
+      - ./docker/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      # - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: "no"
+    ports:
+      - "9090:9090"
+    # expose:
+    #   - 9090
+    networks:
+      - monitoring
+      - backend
+    # labels:
+    #   org.label-schema.group: "monitoring"
+
+  nodeexporter:
+    image: prom/node-exporter:latest
+    container_name: fiber-boilerplate-nodeexporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      # - /:/rootfs:ro # Does not work on macOS
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: "no"
+    ports:
+      - "9100:9100"
+    # expose:
+    #   - 9100
+    networks:
+      - monitoring
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: fiber-boilerplate-alertmanager
+    volumes:
+      - ./docker/alertmanager:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    restart: "no"
+    ports:
+      - "9093:9093"
+    expose:
+      - 9093
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: fiber-boilerplate-grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Puis 00000000
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: "no"
+    # expose:
+    #   - 3003
+    ports:
+      - "3003:3000"
+    networks:
+      - monitoring
+    # labels:
+    #   org.label-schema.group: "monitoring"
 
 networks:
-  fiber-boilerplate-bridge:
+  backend:
+    driver: bridge
+  monitoring:
+    driver: bridge
 
 volumes:
-  fiber-boilerplate-data_mysql:
+  database:
+    name: fiber_boilerplate_database
+    external: false
+  redis:
+    name: fiber_boilerplate_redis
+    external: false
+  prometheus_data:
+    name: fiber_boilerplate_prometheus
+    external: false
+  grafana_data:
+    name: fiber_boilerplate_grafana
+    external: false

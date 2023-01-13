@@ -29,7 +29,7 @@ scrape_configs:
       username: toto
       password: toto
     static_configs:
-      - targets: ['api:3002']
+      - targets: ['server:3002']
 
 alerting:
   alertmanagers:

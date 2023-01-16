@@ -61,11 +61,11 @@ install:
 
 ## update: Update modules
 update:
-	$(GO_GET) -u && $(GO_MOD) tidy
+	$(GO_GET) -u ./... && $(GO_MOD) tidy
 
 ## update-all: Update all modules
 update-all:
-	$(GO_GET) -u all && $(GO_MOD) tidy
+	$(GO_GET) -u ./... all && $(GO_MOD) tidy
 
 ## serve: Serve API
 serve:

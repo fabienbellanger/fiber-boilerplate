@@ -29,8 +29,8 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.30 // indirect
-	github.com/gofiber/template v1.7.3
+	github.com/gofiber/adaptor/v2 v2.1.31 // indirect
+	github.com/gofiber/template v1.7.4
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

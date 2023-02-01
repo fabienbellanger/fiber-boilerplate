@@ -25,7 +25,6 @@ func (t TaskStore) ListAll(page, limit, sorts string) (tasks []entities.Task, to
 
 	q := t.db.Scopes(db.Paginate(page, limit))
 	q.Scopes(db.Order(sorts))
-
 	if response := q.Find(&tasks); response.Error != nil {
 		return tasks, total, response.Error
 	}

@@ -62,9 +62,6 @@ func registerPublicAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	// Password reset
 	authGroup.Post("/forgotten-password/:email", auth.ForgottenPassword)
 	authGroup.Patch("/update-password/:token", auth.UpdatePassword)
-
-	// Tasks
-	registerTask(v1, db, logger)
 }
 
 func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
@@ -80,6 +77,9 @@ func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	userGroup := v1.Group("/users")
 	users := user.New(userGroup, userStore, logger)
 	users.Routes()
+
+	// Tasks
+	registerTask(v1, db, logger)
 }
 
 func registerTask(r fiber.Router, db *db.DB, logger *zap.Logger) {

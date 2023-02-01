@@ -264,6 +264,8 @@ paths:
       description: List all tasks
       tags:
         - "Tasks"
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: p
@@ -306,6 +308,8 @@ paths:
       description: Create a new task
       tags:
         - "Tasks"
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -333,6 +337,8 @@ paths:
       description: List all tasks in a stream
       tags:
         - "Tasks"
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OK

@@ -70,7 +70,7 @@ func (t *TaskHandler) create() fiber.Handler {
 		}
 
 		if err := t.store.Create(&newTask); err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error during task creation")
+			return utils.NewError(c, t.logger, "Database error", "Error during task creation", err)
 		}
 		return c.JSON(newTask)
 	}
@@ -81,7 +81,7 @@ func (t *TaskHandler) getAll() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		tasks, err := t.store.ListAll()
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error during tasks list")
+			return utils.NewError(c, t.logger, "Database error", "Error during tasks list", err)
 		}
 
 		return c.JSON(tasks)
@@ -93,7 +93,7 @@ func (t *TaskHandler) getAllStream() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		rows, err := t.store.ListAllRows()
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error during tasks list with stream")
+			return utils.NewError(c, t.logger, "Database error", "Error during tasks list with stream", err)
 		}
 
 		c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)

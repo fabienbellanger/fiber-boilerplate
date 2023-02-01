@@ -22,7 +22,9 @@ func New(db *db.DB) TaskStore {
 func (t TaskStore) ListAll() ([]entities.Task, error) {
 	var tasks []entities.Task
 
-	if response := t.db.Find(&tasks); response.Error != nil {
+	q := t.db.Scopes(db.Order("+created_at,-id", "task"))
+
+	if response := q.Find(&tasks); response.Error != nil {
 		return tasks, response.Error
 	}
 	return tasks, nil

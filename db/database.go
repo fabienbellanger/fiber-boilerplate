@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/spf13/viper"
@@ -188,7 +189,7 @@ func (c *DatabaseConfig) dsn() (dsn string, err error) {
 }
 
 // Paginate creates a GORM scope to paginate queries.
-// TODO: Continue and Optimize
+// TODO: Add unit tests
 func Paginate(page, limit string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		page, err := strconv.Atoi(page)
@@ -204,5 +205,31 @@ func Paginate(page, limit string) func(db *gorm.DB) *gorm.DB {
 		offset := (page - 1) * limit
 
 		return db.Offset(offset).Limit(limit)
+	}
+}
+
+// Order creates a GORM scope to sort query attributes.
+// Example: "+created_at,-id" will produce "ORDER BY created_at ASC, id DESC".
+// TODO: Try db.AddError (https://gorm.io/docs/scopes.html#Updates)
+// TODO: Add prefix
+// TODO: Add unit tests
+func Order(list string, prefixes ...string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		log.Printf("prefixes: %v\n", prefixes)
+		prefix := ""
+		if len(prefixes) == 1 {
+			prefix = prefixes[0] + "."
+		}
+
+		sorts := strings.Split(list, ",")
+		for _, s := range sorts {
+			if strings.HasPrefix(s, "+") && len(s[1:]) > 1 {
+				db.Order(fmt.Sprintf("%s%s %s", prefix, s[1:], "ASC"))
+			} else if strings.HasPrefix(s, "-") && len(s[1:]) > 1 {
+				db.Order(fmt.Sprintf("%s%s %s", prefix, s[1:], "DESC"))
+			}
+		}
+
+		return db
 	}
 }

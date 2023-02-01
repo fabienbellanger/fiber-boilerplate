@@ -85,13 +85,13 @@ func (u *UserHandler) Login(c *fiber.Ctx) error {
 				Message: "Unauthorized",
 			})
 		}
-		return fiber.NewError(fiber.StatusInternalServerError, "Error during authentication")
+		return utils.NewError(c, u.logger, "Database error", "Error during authentication", err)
 	}
 
 	// Create token
 	token, expiresAt, err := user.GenerateJWT(viper.GetDuration("JWT_LIFETIME"), viper.GetString("JWT_ALGO"), viper.GetString("JWT_SECRET"))
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error during token generation")
+		return utils.NewError(c, u.logger, "Database error", "Error during token generation", err)
 	}
 
 	return c.JSON(userLogin{
@@ -132,7 +132,7 @@ func (u *UserHandler) Create(c *fiber.Ctx) error {
 	}
 
 	if err := u.store.Create(&newUser); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error during user creation")
+		return utils.NewError(c, u.logger, "Database error", "Error during user creation", err)
 	}
 	return c.JSON(newUser)
 }
@@ -142,7 +142,7 @@ func (u *UserHandler) getAll() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		users, err := u.store.GetAll()
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+			return utils.NewError(c, u.logger, "Database error", "Error during get all users", err)
 		}
 
 		return c.JSON(users)
@@ -162,7 +162,7 @@ func (u *UserHandler) getOne() fiber.Handler {
 
 		user, err := u.store.GetOne(id)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error when retrieving user")
+			return utils.NewError(c, u.logger, "Database error", "Error when retrieving user", err)
 		}
 		if user.ID == "" {
 			return c.Status(fiber.StatusNotFound).JSON(utils.HTTPError{
@@ -188,7 +188,7 @@ func (u *UserHandler) delete() fiber.Handler {
 
 		err := u.store.Delete(id)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error when deleting user")
+			return utils.NewError(c, u.logger, "Database error", "Error when deleting user", err)
 		}
 
 		return c.SendStatus(fiber.StatusNoContent)
@@ -225,7 +225,7 @@ func (u *UserHandler) update() fiber.Handler {
 
 		updatedUser, err := u.store.Update(id, user)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error when updating user")
+			return utils.NewError(c, u.logger, "Database error", "Error when updating user", err)
 		}
 
 		return c.JSON(updatedUser)
@@ -259,7 +259,7 @@ func (u *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 	// --------------------
 	userID, currentPassword, err := u.store.GetIDFromPasswordReset(token, newPassword.Password)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when searching user")
+		return utils.NewError(c, u.logger, "Database error", "Error when searching user", err)
 	}
 	if userID == "" {
 		return fiber.NewError(fiber.StatusNotFound, "no user found")
@@ -273,14 +273,14 @@ func (u *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 
 	err = u.store.UpdatePassword(userID, currentPassword, newPassword.Password)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when updating user password")
+		return utils.NewError(c, u.logger, "Database error", "Error when updating user password", err)
 	}
 
 	// Delete password reset
 	// ---------------------
 	err = u.store.DeletePasswordReset(userID)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when deleting user password reset")
+		return utils.NewError(c, u.logger, "Database error", "Error when deleting user password reset", err)
 	}
 
 	return c.SendStatus(fiber.StatusOK)
@@ -291,7 +291,7 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 	// Find user
 	user, err := u.store.GetByUsername(c.Params("email"))
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when retrieving user")
+		return utils.NewError(c, u.logger, "Database error", "Error when retrieving user", err)
 	}
 	if user.ID == "" {
 		return c.Status(fiber.StatusNotFound).JSON(utils.HTTPError{
@@ -308,7 +308,7 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 	}
 	err = u.store.CreateOrUpdatePasswordReset(&passwordReset)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when requesting new password")
+		return utils.NewError(c, u.logger, "Database error", "Error when requesting new password", err)
 	}
 
 	// Send email with link
@@ -319,7 +319,7 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 
 	tp, err := template.ParseFiles("templates/forgotten_password.gohtml")
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when creating password reset email")
+		return utils.NewError(c, u.logger, "Database error", "Error when creating password reset email", err)
 	}
 	err = tp.Execute(&body, struct {
 		Title string
@@ -329,12 +329,12 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 		Link:  fmt.Sprintf("%s/%s", viper.GetString("FORGOTTEN_PASSWORD_BASE_URL"), passwordReset.Token),
 	})
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when creating password reset email")
+		return utils.NewError(c, u.logger, "Database error", "Error when creating password reset email", err)
 	}
 
 	err = mail.Send(viper.GetString("FORGOTTEN_PASSWORD_EMAIL_FROM"), to, subject, body.String(), "", "", viper.GetString("SMTP_HOST"), viper.GetInt("SMTP_PORT"))
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error when sending password reset email")
+		return utils.NewError(c, u.logger, "Database error", "Error when sending password reset email", err)
 	}
 
 	return c.JSON(passwordReset)

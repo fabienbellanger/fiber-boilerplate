@@ -264,15 +264,37 @@ paths:
       description: List all tasks
       tags:
         - "Tasks"
+      parameters:
+        - in: query
+          name: p
+          schema:
+            type: integer
+            default: 0
+          required: false
+          description: Page number
+          example: 1
+        - in: query
+          name: l
+          schema:
+            type: integer
+            maximum: 100
+          required: false
+          description: Limit of links per page
+          example: 10
+        - in: query
+          name: s
+          schema:
+            type: string
+          required: false
+          description: "Sort (Ex.: s=+lastname,-firstname) {+: ASC, -: DESC}"
+          example: +name,+created_at
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/TaskResponse'
         '400':
             $ref: "#/components/responses/BadRequest"
         '401':
@@ -363,6 +385,13 @@ components:
           schema:
             $ref: '#/components/schemas/ResponseError'
   schemas:
+    PaginateTotal:
+      type: object
+      properties:
+        total:
+          type: integer
+      required:
+        - total
     ResponseError:
       type: object
       properties:
@@ -517,3 +546,14 @@ components:
           type: string
       required:
         - name
+    TaskResponse:
+      allOf:
+        - $ref: "#/components/schemas/PaginateTotal"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Task"
+          required:
+            - data

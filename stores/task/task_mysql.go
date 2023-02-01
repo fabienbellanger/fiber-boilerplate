@@ -19,18 +19,20 @@ func New(db *db.DB) TaskStore {
 }
 
 // ListAll gets all users in database.
-func (t TaskStore) ListAll() ([]entities.Task, error) {
-	var tasks []entities.Task
+func (t TaskStore) ListAll(page, limit, sorts string) (tasks []entities.Task, total int64, err error) {
+	// Total rows
+	t.db.Model(&tasks).Count(&total)
 
-	q := t.db.Scopes(db.Order("+created_at,-id", "task"))
+	q := t.db.Scopes(db.Paginate(page, limit))
+	q.Scopes(db.Order(sorts))
 
 	if response := q.Find(&tasks); response.Error != nil {
-		return tasks, response.Error
+		return tasks, total, response.Error
 	}
-	return tasks, nil
+	return tasks, total, nil
 }
 
-// ListAllRows gets all users in database.
+// ListAllRows gets all tasks in database.
 func (t TaskStore) ListAllRows() (*sql.Rows, error) {
 	return t.db.Model(&entities.Task{}).Where("deleted_at IS NULL").Rows()
 }

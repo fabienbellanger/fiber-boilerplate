@@ -79,12 +79,19 @@ func (t *TaskHandler) create() fiber.Handler {
 // getAll lists all tasks.
 func (t *TaskHandler) getAll() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		tasks, err := t.store.ListAll()
+		page := c.Query("p")
+		limit := c.Query("l")
+		sorts := c.Query("s")
+
+		tasks, total, err := t.store.ListAll(page, limit, sorts)
 		if err != nil {
 			return utils.NewError(c, t.logger, "Database error", "Error during tasks list", err)
 		}
 
-		return c.JSON(tasks)
+		return c.JSON(fiber.Map{
+			"total": total,
+			"data":  tasks,
+		})
 	}
 }
 

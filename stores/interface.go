@@ -23,7 +23,7 @@ type UserStorer interface {
 
 // TaskStorer interface
 type TaskStorer interface {
-	ListAll() ([]entities.Task, error)
+	ListAll(page, limit, sorts string) ([]entities.Task, int64, error)
 	ListAllRows() (*sql.Rows, error)
 	Create(task *entities.Task) error
 	ScanRow(rows *sql.Rows, task *entities.Task) error

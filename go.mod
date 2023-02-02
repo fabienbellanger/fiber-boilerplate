@@ -1,6 +1,6 @@
 module github.com/fabienbellanger/fiber-boilerplate
 
-go 1.19
+go 1.20
 
 require (
 	github.com/ansrivas/fiberprometheus/v2 v2.5.0
@@ -16,7 +16,7 @@ require (
 	github.com/stretchr/testify v1.8.1
 	go.uber.org/zap v1.24.0
 	gorm.io/driver/mysql v1.4.5
-	gorm.io/gorm v1.24.3
+	gorm.io/gorm v1.24.4
 	gorm.io/plugin/prometheus v0.0.0-20230109022219-ee24990c7392
 )
 

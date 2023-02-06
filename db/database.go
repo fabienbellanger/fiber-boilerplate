@@ -215,7 +215,6 @@ func Paginate(page, limit string) func(db *gorm.DB) *gorm.DB {
 // TODO: Add unit tests
 func Order(list string, prefixes ...string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		log.Printf("prefixes: %v\n", prefixes)
 		prefix := ""
 		if len(prefixes) == 1 {
 			prefix = prefixes[0] + "."

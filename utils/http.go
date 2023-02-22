@@ -20,3 +20,9 @@ func NewError(c *fiber.Ctx, logger *zap.Logger, desc, msg string, err error) *fi
 
 	return fiber.NewError(fiber.StatusInternalServerError, msg)
 }
+
+// PaginateResponse represents a response with pagination.
+type PaginateResponse struct {
+	Data  interface{} `json:"data"`
+	Total int64       `json:"total"`
+}

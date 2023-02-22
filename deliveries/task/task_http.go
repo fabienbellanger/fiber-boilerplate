@@ -88,10 +88,9 @@ func (t *TaskHandler) getAll() fiber.Handler {
 			return utils.NewError(c, t.logger, "Database error", "Error during tasks list", err)
 		}
 
-		// TODO: Create a struct instead of Map
-		return c.JSON(fiber.Map{
-			"total": total,
-			"data":  tasks,
+		return c.JSON(utils.PaginateResponse{
+			Total: total,
+			Data:  tasks,
 		})
 	}
 }

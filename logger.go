@@ -102,7 +102,7 @@ func getLoggerLevel(l string, env string) (level zapcore.Level) {
 }
 
 // zapLogger is a middleware and zap to provide an "access log" like logging for each request.
-// TODO: https://github.com/gofiber/contrib/tree/main/fiberzap
+// https://github.com/gofiber/contrib/tree/main/fiberzap
 func zapLogger(log *zap.Logger) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now().UTC()

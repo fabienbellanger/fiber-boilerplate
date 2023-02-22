@@ -26,8 +26,6 @@ const (
 	DefaultSlowThreshold time.Duration = 200 * time.Millisecond
 )
 
-// TODO: Add a custom logger for GORM : https://www.soberkoder.com/go-gorm-logging/
-
 // DatabaseConfig represents the database configuration.
 type DatabaseConfig struct {
 	Driver          string // Not used
@@ -74,12 +72,14 @@ func New(config *DatabaseConfig) (*DB, error) {
 
 	// Logger
 	// ------
+	// TODO: Add a custom logger for GORM like https://www.soberkoder.com/go-gorm-logging/
+	// Or try something like this: https://github.com/moul/zapgorm2
 	customLogger := logger.New(
 		log.New(output, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             config.SlowThreshold, // Slow SQL threshold (Default: 200ms)
 			LogLevel:                  level,                // Log level (Silent, Error, Warn, Info) (Default: Warn)
-			IgnoreRecordNotFoundError: false,                // Ignore ErrRecordNotFound error for logger (Default: false)
+			IgnoreRecordNotFoundError: true,                 // Ignore ErrRecordNotFound error for logger (Default: false)
 			Colorful:                  true,                 // Disable color (Default: true)
 		},
 	)

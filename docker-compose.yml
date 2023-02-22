@@ -5,7 +5,7 @@ services:
     container_name: fiber-boilerplate-mysql
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
-    restart: "no" # "no" | on-failure
+    restart: on-failure # "no" | on-failure
     volumes:
       - database:/var/lib/mysql:delegated
     environment:
@@ -25,7 +25,7 @@ services:
       - mysql:db
     networks:
       - backend
-    restart: "no"
+    restart: on-failure
 
   maildev:
     container_name: fiber_boilerplate_maildev
@@ -35,7 +35,7 @@ services:
       - 1026:25
     networks:
       - backend
-    restart: "no"
+    restart: on-failure
 
   server:
     container_name: fiber-boilerplate-server
@@ -44,11 +44,11 @@ services:
       - 3002:3002
     # volumes:
     #   - ./:/build:delegated
-    restart: "no"
+    restart: on-failure
     links:
       - mysql
-    # depends_on:
-    #   - mysql
+    depends_on:
+      - mysql
     networks:
       - backend
 
@@ -65,7 +65,7 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       # - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    restart: "no"
+    restart: on-failure
     ports:
       - "9090:9090"
     # expose:
@@ -88,7 +88,7 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: "no"
+    restart: on-failure
     ports:
       - "9100:9100"
     # expose:
@@ -104,7 +104,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/alertmanager'
-    restart: "no"
+    restart: on-failure
     ports:
       - "9093:9093"
     # expose:
@@ -123,7 +123,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin # Puis 00000000
       - GF_USERS_ALLOW_SIGN_UP=false
-    restart: "no"
+    restart: on-failure
     # expose:
     #   - 3003
     ports:

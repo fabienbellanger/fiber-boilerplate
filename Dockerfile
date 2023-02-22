@@ -54,6 +54,6 @@ RUN echo $(ls -lah)
 
 # RUN chmod +x ./fiber-boilerplate
 
-EXPOSE 9090
+EXPOSE 3002
 ENTRYPOINT ["./fiber-boilerplate"]
 CMD ["run"]

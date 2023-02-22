@@ -2,6 +2,8 @@
 	install \
 	update \
 	update-all \
+	format \
+	vet \
 	serve \
 	serve-race \
 	logs \
@@ -47,6 +49,7 @@ GO_GET=$(GO_CMD) get
 GO_MOD=$(GO_CMD) mod
 GO_TOOL=$(GO_CMD) tool
 GO_VET=$(GO_CMD) vet
+GO_FMT=$(GO_CMD) fmt
 BINARY_NAME=fiber-boilerplate
 BINARY_UNIX=$(BINARY_NAME)_unix
 DOCKER_COMPOSE=docker-compose
@@ -67,20 +70,27 @@ update:
 update-all:
 	$(GO_GET) -u ./... all && $(GO_MOD) tidy
 
+## format: Run go fmt
+format:
+	$(GO_FMT) ./...
+
+## vet: Run go vet
+vet:
+	$(GO_VET) ./...
+
 ## serve: Serve API
-serve:
+serve: format vet
 	$(GO_RUN) $(MAIN_PATH) run
 
 ## serve-race: Serve API with -race option
-serve-race:
+serve-race: format vet
 	$(GO_RUN) run -race $(MAIN_PATH)
 
 ## logs: Display server logs
 logs:
 	$(GO_RUN) $(MAIN_PATH) logs --server
 
-build:
-	$(GO_VET) ./...
+build: format vet
 	$(GO_BUILD) -ldflags "-s -w" -o $(BINARY_NAME) -v $(MAIN_PATH)
 
 ## test: Run test

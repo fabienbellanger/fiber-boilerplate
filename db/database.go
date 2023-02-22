@@ -218,6 +218,10 @@ func Paginate(p, l string) func(db *gorm.DB) *gorm.DB {
 func orderValues(list string, prefixes ...string) map[string]string {
 	r := make(map[string]string)
 
+	if len(list) <= 0 {
+		return r
+	}
+
 	prefix := ""
 	if len(prefixes) == 1 {
 		prefix = prefixes[0] + "."

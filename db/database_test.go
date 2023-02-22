@@ -151,6 +151,16 @@ func TestOrderValues(t *testing.T) {
 				"table.id":         "DESC",
 			},
 		},
+		{
+			name:   "No fields",
+			args:   args{"", []string{"toto"}},
+			wanted: map[string]string{},
+		},
+		{
+			name:   "With invalid field",
+			args:   args{"created_at", []string{}},
+			wanted: map[string]string{},
+		},
 	}
 
 	for _, tt := range tests {

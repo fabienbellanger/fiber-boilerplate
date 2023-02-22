@@ -69,6 +69,7 @@ func TestPaginateValues(t *testing.T) {
 		page  string
 		limit string
 	}
+
 	type result struct {
 		offset int
 		limit  int

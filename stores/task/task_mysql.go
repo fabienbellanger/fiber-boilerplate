@@ -40,7 +40,7 @@ func (t TaskStore) ListAllRows() (*sql.Rows, error) {
 func (t TaskStore) Create(task *entities.Task) error {
 	// UUID
 	// ----
-	task.ID = uuid.New().String()
+	task.ID = uuid.NewString()
 
 	if result := t.db.Create(&task); result.Error != nil {
 		return result.Error

@@ -49,7 +49,7 @@ func (u UserStore) GetAll() ([]entities.User, error) {
 func (u UserStore) Create(user *entities.User) error {
 	// UUID
 	// ----
-	user.ID = uuid.New().String()
+	user.ID = uuid.NewString()
 
 	// Hash password
 	// -------------

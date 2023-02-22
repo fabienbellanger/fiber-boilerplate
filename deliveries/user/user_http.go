@@ -303,7 +303,7 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 	// Sale line in database
 	passwordReset := entities.PasswordResets{
 		UserID:    user.ID,
-		Token:     uuid.New().String(),
+		Token:     uuid.NewString(),
 		ExpiredAt: time.Now().Add(viper.GetDuration("FORGOTTEN_PASSWORD_EXPIRATION_DURATION") * time.Hour).UTC(),
 	}
 	err = u.store.CreateOrUpdatePasswordReset(&passwordReset)
@@ -351,7 +351,7 @@ func (u *UserHandler) stream() fiber.Handler {
 			n := 100_000
 			for i := 0; i < n; i++ {
 				user := entities.User{
-					ID:        uuid.New().String(),
+					ID:        uuid.NewString(),
 					Username:  "My Username",
 					Password:  ",kkjkjkjkjknnqfjkkjdnfsjklqblk",
 					Lastname:  "My Lastname",

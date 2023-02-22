@@ -42,12 +42,16 @@ type UserUpdatePassword struct {
 }
 
 // GenerateJWT returns a token
-// TODO: Add unit tests
 func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string, time.Time, error) {
-	// Create token
 	if algo != "HS512" {
-		return "", time.Now(), errors.New("unsupported JWT algo")
+		return "", time.Now(), errors.New("unsupported JWT algo: must be HS512")
 	}
+
+	if len(secret) < 8 {
+		return "", time.Now(), errors.New("secret must have at least 8 caracters")
+	}
+
+	// Create token
 	token := jwt.New(jwt.SigningMethodHS512)
 
 	// Expiration time

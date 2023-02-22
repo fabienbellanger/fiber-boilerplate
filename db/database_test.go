@@ -63,3 +63,99 @@ func TestDsn(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "error in database configuration")
 }
+
+func TestPaginateValues(t *testing.T) {
+	type args struct {
+		page  string
+		limit string
+	}
+	type result struct {
+		offset int
+		limit  int
+	}
+
+	tests := []struct {
+		name   string
+		args   args
+		wanted result
+	}{
+		{
+			name:   "First page",
+			args:   args{"1", "100"},
+			wanted: result{offset: 0, limit: 100},
+		},
+		{
+			name:   "Third page",
+			args:   args{"3", "100"},
+			wanted: result{offset: 200, limit: 100},
+		},
+		{
+			name:   "Invalid page",
+			args:   args{"-3", "100"},
+			wanted: result{offset: 0, limit: 100},
+		},
+		{
+			name:   "Too large limit",
+			args:   args{"1", "1000"},
+			wanted: result{offset: 0, limit: MaxLimit},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			offset, limit := paginateValues(tt.args.page, tt.args.limit)
+			got := result{offset: offset, limit: limit}
+			assert.Equal(t, got, tt.wanted)
+		})
+	}
+}
+
+func TestOrderValues(t *testing.T) {
+	type args struct {
+		list     string
+		prefixes []string
+	}
+
+	tests := []struct {
+		name   string
+		args   args
+		wanted map[string]string
+	}{
+		{
+			name: "One field with no prefix",
+			args: args{"+created_at", []string{}},
+			wanted: map[string]string{
+				"created_at": "ASC",
+			},
+		},
+		{
+			name: "One field with prefix",
+			args: args{"+created_at", []string{"table"}},
+			wanted: map[string]string{
+				"table.created_at": "ASC",
+			},
+		},
+		{
+			name: "Many fields with no prefix",
+			args: args{"+created_at,-id", []string{}},
+			wanted: map[string]string{
+				"created_at": "ASC",
+				"id":         "DESC",
+			},
+		},
+		{
+			name: "Many fields with prefix",
+			args: args{"+created_at,-id", []string{"table"}},
+			wanted: map[string]string{
+				"table.created_at": "ASC",
+				"table.id":         "DESC",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, orderValues(tt.args.list, tt.args.prefixes...), tt.wanted)
+		})
+	}
+}

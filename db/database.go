@@ -188,45 +188,62 @@ func (c *DatabaseConfig) dsn() (dsn string, err error) {
 	return
 }
 
+// paginateValues transforms page and limit into offset and limit.
+func paginateValues(p, l string) (offset int, limit int) {
+	page, err := strconv.Atoi(p)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err = strconv.Atoi(l)
+	if err != nil || limit > MaxLimit || limit < 1 {
+		limit = MaxLimit
+	}
+
+	offset = (page - 1) * limit
+
+	return
+}
+
 // Paginate creates a GORM scope to paginate queries.
-// TODO: Add unit tests
-func Paginate(page, limit string) func(db *gorm.DB) *gorm.DB {
+func Paginate(p, l string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		page, err := strconv.Atoi(page)
-		if err != nil || page < 1 {
-			page = 1
-		}
-
-		limit, err := strconv.Atoi(limit)
-		if err != nil || limit > MaxLimit || limit < 1 {
-			limit = MaxLimit
-		}
-
-		offset := (page - 1) * limit
+		offset, limit := paginateValues(p, l)
 
 		return db.Offset(offset).Limit(limit)
 	}
 }
 
+// orderValues transforms list of fields to sort into a map.
+func orderValues(list string, prefixes ...string) map[string]string {
+	r := make(map[string]string)
+
+	prefix := ""
+	if len(prefixes) == 1 {
+		prefix = prefixes[0] + "."
+	}
+
+	sorts := strings.Split(list, ",")
+	for _, s := range sorts {
+		key := fmt.Sprintf("%s%s", prefix, s[1:])
+		if strings.HasPrefix(s, "+") && len(s[1:]) > 1 {
+			r[key] = "ASC"
+		} else if strings.HasPrefix(s, "-") && len(s[1:]) > 1 {
+			r[key] = "DESC"
+		}
+	}
+
+	return r
+}
+
 // Order creates a GORM scope to sort query attributes.
 // Example: "+created_at,-id" will produce "ORDER BY created_at ASC, id DESC".
-// TODO: Try db.AddError (https://gorm.io/docs/scopes.html#Updates)
-// TODO: Add prefix
-// TODO: Add unit tests
 func Order(list string, prefixes ...string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		prefix := ""
-		if len(prefixes) == 1 {
-			prefix = prefixes[0] + "."
-		}
+		values := orderValues(list, prefixes...)
 
-		sorts := strings.Split(list, ",")
-		for _, s := range sorts {
-			if strings.HasPrefix(s, "+") && len(s[1:]) > 1 {
-				db.Order(fmt.Sprintf("%s%s %s", prefix, s[1:], "ASC"))
-			} else if strings.HasPrefix(s, "-") && len(s[1:]) > 1 {
-				db.Order(fmt.Sprintf("%s%s %s", prefix, s[1:], "DESC"))
-			}
+		for f, s := range values {
+			db.Order(f + " " + s)
 		}
 
 		return db

@@ -199,10 +199,12 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 
 	// Timer
 	// -----
-	s.Use(timer.New(timer.Config{
-		DisplayMilliseconds: false,
-		DisplaySeconds:      true,
-	}))
+	if viper.GetBool("SERVER_TIMER") {
+		s.Use(timer.New(timer.Config{
+			DisplayMilliseconds: false,
+			DisplaySeconds:      true,
+		}))
+	}
 
 	// Limiter
 	// -------

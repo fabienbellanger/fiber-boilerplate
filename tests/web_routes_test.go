@@ -6,7 +6,7 @@ import (
 )
 
 func TestWebRoutes(t *testing.T) {
-	testsList := []Test{
+	useCases := []Test{
 		{
 			Description:  "Health Check route",
 			Route:        "/health-check",
@@ -32,5 +32,5 @@ func TestWebRoutes(t *testing.T) {
 		},
 	}
 
-	Execute(t, nil, testsList)
+	Execute(t, nil, useCases)
 }

@@ -14,7 +14,7 @@ func TestUserCreation(t *testing.T) {
 	tdb := tests.Init("../../.env")
 	defer tdb.Drop()
 
-	testsList := []tests.Test{
+	useCases := []tests.Test{
 		{
 			Description: "User creation",
 			Route:       "/api/v1/register",
@@ -72,14 +72,14 @@ func TestUserCreation(t *testing.T) {
 		},
 	}
 
-	tests.Execute(t, tdb.DB, testsList)
+	tests.Execute(t, tdb.DB, useCases)
 }
 
 func TestUserLogin(t *testing.T) {
 	tdb := tests.Init("../../.env")
 	defer tdb.Drop()
 
-	testsList := []tests.Test{
+	useCases := []tests.Test{
 		{
 			Description: "User login",
 			Route:       "/api/v1/login",
@@ -96,5 +96,5 @@ func TestUserLogin(t *testing.T) {
 		},
 	}
 
-	tests.Execute(t, tdb.DB, testsList)
+	tests.Execute(t, tdb.DB, useCases)
 }

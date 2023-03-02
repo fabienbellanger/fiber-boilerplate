@@ -77,7 +77,8 @@ type TestDB struct {
 
 // newTestDB returns a TestDB instance.
 func newTestDB() (TestDB, error) {
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
 	dbName := viper.GetString("DB_DATABASE") + "__" + fmt.Sprintf("%08d", rand.Int63n(1e8))
 
 	config := db.DatabaseConfig{
@@ -95,28 +96,28 @@ func newTestDB() (TestDB, error) {
 		ConnMaxLifetime: viper.GetDuration("DB_CONN_MAX_LIFETIME") * time.Hour,
 	}
 
-	db, err := db.New(&config)
+	dbt, err := db.New(&config)
 	if err != nil {
 		return TestDB{}, err
 	}
 
-	// Create databse for test, use it and run migrations
-	db.Exec("CREATE DATABASE IF NOT EXISTS `" + dbName + "`;")
-	db.Exec("USE `" + dbName + "`;")
-	db.MakeMigrations()
+	// Create database for test, use it and run migrations
+	dbt.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`;", dbName))
+	dbt.Exec(fmt.Sprintf("USE `%s`;", dbName))
+	dbt.MakeMigrations()
 
 	// Create first user and get token
-	token, err := createUserAndAuthenticate(db)
+	token, err := createUserAndAuthenticate(dbt)
 	if err != nil {
 		return TestDB{}, err
 	}
 
-	return TestDB{DB: db, name: dbName, Token: token}, nil
+	return TestDB{DB: dbt, name: dbName, Token: token}, nil
 }
 
 // Drop database after the test.
 func (tdb *TestDB) Drop() error {
-	result := tdb.DB.Exec("DROP DATABASE IF EXISTS `" + tdb.name + "`;")
+	result := tdb.DB.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS `%s`;", tdb.name))
 
 	return result.Error
 }
@@ -152,7 +153,7 @@ func createUserAndAuthenticate(db *db.DB) (token string, err error) {
 
 // Execute runs all tests.
 func Execute(t *testing.T, db *db.DB, tests []Test) {
-	// Setup the app as it is done in the main function
+	// Set up the app as it is done in the main function
 	app := server.Setup(db, nil, "../templates")
 
 	// Iterate through test single test cases
@@ -168,7 +169,7 @@ func Execute(t *testing.T, db *db.DB, tests []Test) {
 		res, err := app.Test(req, -1)
 
 		if test.CheckError {
-			// Verify that no error occured, that is not expected
+			// Verify that no error occurred, that is not expected
 			assert.Equalf(t, test.ExpectedError, err != nil, test.Description)
 
 			// As expected errors lead to broken responses, the next test case needs to be processed
@@ -191,7 +192,7 @@ func Execute(t *testing.T, db *db.DB, tests []Test) {
 			// the err variable should be nil
 			assert.Nilf(t, err, test.Description)
 
-			// Verify, that the reponse body equals the expected body
+			// Verify, that the response body equals the expected body
 			assert.Equalf(t, test.ExpectedBody, string(body), test.Description)
 		}
 	}

@@ -32,5 +32,5 @@ func TestWebRoutes(t *testing.T) {
 		},
 	}
 
-	Execute(t, nil, useCases)
+	Execute(t, nil, useCases, "../templates")
 }

@@ -72,7 +72,7 @@ func TestUserCreation(t *testing.T) {
 		},
 	}
 
-	tests.Execute(t, tdb.DB, useCases)
+	tests.Execute(t, tdb.DB, useCases, "../../templates")
 }
 
 func TestUserLogin(t *testing.T) {
@@ -96,5 +96,5 @@ func TestUserLogin(t *testing.T) {
 		},
 	}
 
-	tests.Execute(t, tdb.DB, useCases)
+	tests.Execute(t, tdb.DB, useCases, "../../templates")
 }

@@ -3,6 +3,8 @@
 @baseUrl = http://{{$dotenv APP_ADDR}}:{{$dotenv APP_PORT}}/api/v1
 @token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIxLTAzLTA5VDIwOjA1OjM1LjU2NFoiLCJleHAiOjE2NjM4NTAzNTcsImZpcnN0bmFtZSI6IlRvdG8gMiIsImlhdCI6MTY2Mjk4NjM1NywiaWQiOiJjYjEzY2MyOS0xM2JiLTRiODQtYmYzMC0xN2RhMDBlYzc0MDAiLCJsYXN0bmFtZSI6IlRlc3QiLCJuYmYiOjE2NjI5ODYzNTcsInVzZXJuYW1lIjoidGVzdEBnbWFpbC5jb20ifQ.NfOxwDXu7DNzmvkGQ6yQ4yUmIMUY1Maxo3ZuqjRLh5LDrfXfsJqWb6LmyyF7YkCwhvPnS4TuBI8gR8HxWpCc7w
 
+< {% client.global.set("baseUrl", "http://localhost:3001/api/v1") %}
+
 
 # Users
 # -----

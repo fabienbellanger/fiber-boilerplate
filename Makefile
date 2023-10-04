@@ -145,11 +145,11 @@ docker-down-rm:
 
 ## docker-cli-build: Build project for CLI
 docker-cli-build:
-	$(DOCKER) build -f Dockerfile.cli -t fiber-boilerplate-cli .
+	$(DOCKER) build -f Dockerfile -t fiber-boilerplate-cli .
 
 ## docker-cli-register: Run CLI container to register an admin user
 docker-cli-register: docker-cli-build
-	$(DOCKER) run -i --rm --net fiber-boilerplate_fiber-boilerplate-bridge --link fiber-boilerplate-mysql fiber-boilerplate-cli register -l Admin -f Admin -e admin@gmail.com -p 'K-qy,Kg{<AB*XX;V3}_/x19u>1BBl!d'
+	$(DOCKER) run -i --rm --net fiber-boilerplate_backend --link fiber-boilerplate-mysql fiber-boilerplate-cli register -l Admin -f Admin -e admin@gmail.com -p 'K-qy,Kg{<AB*XX;V3}_/x19u>1BBl!d'
 
 ## clean: Clean files
 clean: 

@@ -17,6 +17,7 @@ servers:
         enum:
           - "3000"
           - "3001"
+          - "3002"
           - "9090"
         default: "3001"
   - url: https://<base URL>/api/v1

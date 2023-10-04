@@ -23,7 +23,6 @@ RUN go mod download
 COPY . .
 
 # Build the application
-# RUN go build -ldflags "-s -w" -a -installsuffix cgo -o fiber-boilerplate cmd/main.go
 RUN go build -ldflags "-s -w" -a -installsuffix cgo -o fiber-boilerplate cmd/main.go
 
 # Move to /dist directory as the place for resulting binary folder
@@ -49,10 +48,6 @@ COPY --from=builder /dist/favicon.png .
 COPY --from=builder /dist/assets assets
 COPY --from=builder /dist/templates templates
 COPY --from=builder /dist/fiber-boilerplate .
-
-RUN echo $(ls -lah)
-
-# RUN chmod +x ./fiber-boilerplate
 
 EXPOSE 3002
 ENTRYPOINT ["./fiber-boilerplate"]

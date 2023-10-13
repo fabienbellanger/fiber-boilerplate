@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/ansrivas/fiberprometheus/v2 v2.6.1
-	github.com/fabienbellanger/goutils v1.0.18
+	github.com/fabienbellanger/goutils v1.0.20
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/gofiber/fiber/v2 v2.49.2
 	github.com/gofiber/jwt/v2 v2.2.7
@@ -15,20 +15,20 @@ require (
 	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.26.0
-	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.4
-	gorm.io/plugin/prometheus v0.0.0-20230504115745-1aec2356381b
+	gorm.io/driver/mysql v1.5.2
+	gorm.io/gorm v1.25.5
+	gorm.io/plugin/prometheus v0.0.0-20231010074352-de33ebe52539
 )
 
 require (
-	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/sagikazarmark/locafero v0.3.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
-	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 )
 
 require (

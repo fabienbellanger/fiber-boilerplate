@@ -332,7 +332,7 @@ func (u *UserHandler) ForgottenPassword(c *fiber.Ctx) error {
 		return utils.NewError(c, u.logger, "Database error", "Error when creating password reset email", err)
 	}
 
-	err = mail.Send(viper.GetString("FORGOTTEN_PASSWORD_EMAIL_FROM"), to, subject, body.String(), "", "", viper.GetString("SMTP_HOST"), viper.GetInt("SMTP_PORT"))
+	err = mail.Send(viper.GetString("FORGOTTEN_PASSWORD_EMAIL_FROM"), to, nil, nil, subject, body.String(), "", "", viper.GetString("SMTP_HOST"), viper.GetInt("SMTP_PORT"))
 	if err != nil {
 		return utils.NewError(c, u.logger, "Database error", "Error when sending password reset email", err)
 	}

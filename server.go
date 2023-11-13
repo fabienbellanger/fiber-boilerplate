@@ -9,6 +9,7 @@ import (
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/fabienbellanger/goutils"
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -18,7 +19,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	jwtware "github.com/gofiber/jwt/v2"
 	"github.com/gofiber/template/html"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -266,8 +266,10 @@ func initTools(s *fiber.App) {
 
 func initJWT(s *fiber.App) {
 	s.Use(jwtware.New(jwtware.Config{
-		SigningMethod: viper.GetString("JWT_ALGO"),
-		SigningKey:    []byte(viper.GetString("JWT_SECRET")),
+		SigningKey: jwtware.SigningKey{
+			JWTAlg: viper.GetString("JWT_ALGO"),
+			Key:    []byte(viper.GetString("JWT_SECRET")),
+		},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{
 				Code:    fiber.StatusUnauthorized,

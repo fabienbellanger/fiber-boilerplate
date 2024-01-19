@@ -28,8 +28,8 @@ func init() {
 
 var logReaderCmd = &cobra.Command{
 	Use:   "logs",
-	Short: "Logs reader",
-	Long:  `Logs reader`,
+	Short: "Reader for server and database logs",
+	Long:  `Reader for server and database logs`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if serverLogsFlag == dbLogsFlag {
 			fmt.Println(cmd.UsageString())
@@ -76,7 +76,6 @@ func parseLine(line []byte, serverLogs, dbLogs, verboseFlag bool) (string, error
 	return "", errors.New("invalid flag")
 }
 
-// TODO: Improve parser
 func parseLineServer(line []byte, verboseFlag bool) (string, error) {
 	var errLog errorLog
 	err := json.Unmarshal(line, &errLog)

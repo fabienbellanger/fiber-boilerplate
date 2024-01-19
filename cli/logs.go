@@ -12,12 +12,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var serverLogsFlag bool
-var dbLogsFlag bool
+var (
+	serverLogsFlag bool
+	dbLogsFlag     bool
+	verboseFlag    bool
+)
 
 func init() {
 	logReaderCmd.Flags().BoolVarP(&serverLogsFlag, "server", "s", false, "server access/error logs")
 	logReaderCmd.Flags().BoolVarP(&dbLogsFlag, "db", "d", false, "database logs")
+	logReaderCmd.Flags().BoolVarP(&verboseFlag, "verbose", "v", false, "verbose logs")
 
 	rootCmd.AddCommand(logReaderCmd)
 }
@@ -34,7 +38,7 @@ var logReaderCmd = &cobra.Command{
 
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			line, _ := parseLine(scanner.Bytes(), serverLogsFlag, dbLogsFlag)
+			line, _ := parseLine(scanner.Bytes(), serverLogsFlag, dbLogsFlag, verboseFlag)
 			fmt.Println(line)
 		}
 
@@ -63,9 +67,9 @@ type errorLog struct {
 	UserAgent   string    `json:"userAgent"`
 }
 
-func parseLine(line []byte, serverLogs, dbLogs bool) (string, error) {
+func parseLine(line []byte, serverLogs, dbLogs, verboseFlag bool) (string, error) {
 	if serverLogs {
-		return parseLineServer(line)
+		return parseLineServer(line, verboseFlag)
 	} else if dbLogs {
 		return string(line), nil
 	}
@@ -73,7 +77,7 @@ func parseLine(line []byte, serverLogs, dbLogs bool) (string, error) {
 }
 
 // TODO: Improve parser
-func parseLineServer(line []byte) (string, error) {
+func parseLineServer(line []byte, verboseFlag bool) (string, error) {
 	var errLog errorLog
 	err := json.Unmarshal(line, &errLog)
 	if err != nil {
@@ -101,7 +105,7 @@ func parseLineServer(line []byte) (string, error) {
 		method = fmt.Sprintf(" | %6s", displayLogMethod(errLog.Method))
 	}
 	url := ""
-	if errLog.URL != "" {
+	if errLog.URL != "" && verboseFlag {
 		url = fmt.Sprintf(" | %s", errLog.URL)
 	}
 	path := ""
@@ -109,11 +113,11 @@ func parseLineServer(line []byte) (string, error) {
 		path = fmt.Sprintf(" | %s", errLog.Path)
 	}
 	host := ""
-	if errLog.Host != "" {
+	if errLog.Host != "" && verboseFlag {
 		host = fmt.Sprintf(" | %s", errLog.Host)
 	}
 	ip := ""
-	if errLog.IP != "" {
+	if errLog.IP != "" && verboseFlag {
 		ip = fmt.Sprintf(" | IP: %s", errLog.IP)
 	}
 	requestID := ""
@@ -121,7 +125,7 @@ func parseLineServer(line []byte) (string, error) {
 		requestID = fmt.Sprintf(" | RequestID: %s", errLog.RequestID)
 	}
 	userAgent := ""
-	if errLog.UserAgent != "" {
+	if errLog.UserAgent != "" && verboseFlag {
 		userAgent = fmt.Sprintf(" | UserAgent: %s", errLog.UserAgent)
 	}
 	latency := ""

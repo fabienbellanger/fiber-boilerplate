@@ -54,32 +54,37 @@ func registerPublicAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	v1 := r.Group("/v1")
 	userStore := storeUser.New(db)
 
-	// Login
-	authGroup := v1.Group("")
-	auth := user.New(authGroup, userStore, logger)
-	authGroup.Post("/login", auth.Login)
+	// Login-
+	auth := user.New(v1, userStore, logger)
+	v1.Post("/login", auth.Login)
 
 	// Password reset
-	authGroup.Post("/forgotten-password/:email", auth.ForgottenPassword)
-	authGroup.Patch("/update-password/:token", auth.UpdatePassword)
+	v1.Post("/forgotten-password/:email", auth.ForgottenPassword)
+	v1.Patch("/update-password/:token", auth.UpdatePassword)
 }
 
 func registerProtectedAPIRoutes(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	v1 := r.Group("/v1")
+
+	// Register & Users
+	registerUser(v1, db, logger)
+
+	// Tasks
+	registerTask(v1, db, logger)
+}
+
+func registerUser(r fiber.Router, db *db.DB, logger *zap.Logger) {
 	userStore := storeUser.New(db)
 
 	// Register
-	registerGroup := v1.Group("")
+	registerGroup := r.Group("")
 	register := user.New(registerGroup, userStore, logger)
 	registerGroup.Post("/register", register.Create)
 
 	// Users
-	userGroup := v1.Group("/users")
+	userGroup := r.Group("/users")
 	users := user.New(userGroup, userStore, logger)
 	users.Routes()
-
-	// Tasks
-	registerTask(v1, db, logger)
 }
 
 func registerTask(r fiber.Router, db *db.DB, logger *zap.Logger) {

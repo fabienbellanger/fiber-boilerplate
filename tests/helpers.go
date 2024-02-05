@@ -12,7 +12,7 @@ import (
 
 	server "github.com/fabienbellanger/fiber-boilerplate"
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/entities"
+	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 	storeUser "github.com/fabienbellanger/fiber-boilerplate/stores/user"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"

@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 
-	"github.com/fabienbellanger/fiber-boilerplate/entities"
+	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/stores"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/gofiber/fiber/v2"

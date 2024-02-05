@@ -17,7 +17,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 
-	entities "github.com/fabienbellanger/fiber-boilerplate/entities"
+	entities "github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/stores"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/fabienbellanger/goutils/mail"

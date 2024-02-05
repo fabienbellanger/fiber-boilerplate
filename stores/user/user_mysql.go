@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/entities"
+	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 )
 
 // UserStore ...

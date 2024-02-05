@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/entities"
+	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 	"github.com/google/uuid"
 )
 

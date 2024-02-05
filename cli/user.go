@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fabienbellanger/fiber-boilerplate/entities"
+	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 	storeUser "github.com/fabienbellanger/fiber-boilerplate/stores/user"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/spf13/cobra"

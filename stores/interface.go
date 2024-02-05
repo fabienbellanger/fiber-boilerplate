@@ -3,7 +3,7 @@ package stores
 import (
 	"database/sql"
 
-	"github.com/fabienbellanger/fiber-boilerplate/entities"
+	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 )
 
 // UserStorer interface

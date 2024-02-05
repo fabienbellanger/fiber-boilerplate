@@ -20,8 +20,15 @@ func (p *Password) String() string {
 }
 
 // NewPassword creates a new password
-func NewPassword(value string) Password {
-	return Password{value: value}
+func NewPassword(value string) (Password, error) {
+	p := Password{value: value}
+
+	err := p.Validate()
+	if err != nil {
+		return Password{}, err
+	}
+
+	return Password{value: value}, nil
 }
 
 // Validate checks if a struct is valid and returns an array of errors

@@ -1,34 +1,29 @@
 package values_objects
 
-import "github.com/fabienbellanger/fiber-boilerplate/utils"
-
-// TODO: Write tests
+import (
+	"github.com/fabienbellanger/fiber-boilerplate/utils"
+)
 
 // Password represents an password value object
 type Password struct {
-	value string `validate:"min=8"`
-}
-
-// Value returns the password value
-func (p *Password) Value() string {
-	return p.value
+	Value string `validate:"required,min=8"`
 }
 
 // String returns the password value
 func (p *Password) String() string {
-	return p.value
+	return p.Value
 }
 
 // NewPassword creates a new password
 func NewPassword(value string) (Password, error) {
-	p := Password{value: value}
+	p := Password{Value: value}
 
 	err := p.Validate()
 	if err != nil {
 		return Password{}, err
 	}
 
-	return Password{value: value}, nil
+	return Password{Value: value}, nil
 }
 
 // Validate checks if a struct is valid and returns an array of errors

@@ -2,26 +2,26 @@ package values_objects
 
 import "github.com/fabienbellanger/fiber-boilerplate/utils"
 
-// TODO: Write tests
-
 // Email represents an email value object
 type Email struct {
-	value string `validate:"email"`
-}
-
-// Value returns the email value
-func (e *Email) Value() string {
-	return e.value
+	Value string `validate:"required,email"`
 }
 
 // String returns the email value
 func (e *Email) String() string {
-	return e.value
+	return e.Value
 }
 
 // NewEmail creates a new email
-func NewEmail(value string) Email {
-	return Email{value: value}
+func NewEmail(value string) (Email, error) {
+	p := Email{Value: value}
+
+	err := p.Validate()
+	if err != nil {
+		return Email{}, err
+	}
+
+	return Email{Value: value}, nil
 }
 
 // Validate checks if a struct is valid and returns an array of errors

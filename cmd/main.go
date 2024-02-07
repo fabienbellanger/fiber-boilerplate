@@ -1,9 +1,8 @@
 package main
 
 import (
+	"github.com/fabienbellanger/fiber-boilerplate/pkg/infrastructure/cli"
 	"log"
-
-	"github.com/fabienbellanger/fiber-boilerplate/cli"
 )
 
 func main() {

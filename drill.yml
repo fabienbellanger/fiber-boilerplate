@@ -1,6 +1,6 @@
-concurrency: 1024
-base: 'http://localhost:3000'
-iterations: 100000
+concurrency: 256
+base: 'http://localhost:3001'
+iterations: 10000
 rampup: 0
 
 plan:
@@ -9,9 +9,18 @@ plan:
       url: /health-check
   
   - name: Login
+    assign: login
     request:
       url: /api/v1/login
       method: POST
       body: '{"username": "test@gmail.com", "password": "00000000"}'
       headers:
         Content-Type: 'application/json'
+
+  - name: Tasks stream
+    request:
+      url: /api/v1/tasks/stream
+      method: GET
+      headers:
+        Content-Type: 'application/json'
+        Authorization: 'Bearer {{login.body.token}}'

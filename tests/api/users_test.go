@@ -1,11 +1,10 @@
 package api
 
 import (
+	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/requests"
 	"strings"
 	"testing"
 
-	"github.com/fabienbellanger/fiber-boilerplate/deliveries/user"
-	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/tests"
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,7 +18,7 @@ func TestUserCreation(t *testing.T) {
 			Description: "User creation",
 			Route:       "/api/v1/register",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(entities.UserForm{
+			Body: strings.NewReader(tests.JsonToString(requests.UserEdit{
 				Username:  "test1@gmail.com",
 				Password:  "11111111",
 				Lastname:  "Test",
@@ -36,7 +35,7 @@ func TestUserCreation(t *testing.T) {
 			Description: "User creation with invalid password",
 			Route:       "/api/v1/register",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(entities.UserForm{
+			Body: strings.NewReader(tests.JsonToString(requests.UserEdit{
 				Username:  "test1@gmail.com",
 				Password:  "1111111",
 				Lastname:  "Test",
@@ -55,7 +54,7 @@ func TestUserCreation(t *testing.T) {
 			Description: "User creation with invalid username",
 			Route:       "/api/v1/register",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(entities.UserForm{
+			Body: strings.NewReader(tests.JsonToString(requests.UserEdit{
 				Username:  "test1",
 				Password:  "11111111",
 				Lastname:  "Test",
@@ -84,7 +83,7 @@ func TestUserLogin(t *testing.T) {
 			Description: "User login",
 			Route:       "/api/v1/login",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(user.UserAuth{
+			Body: strings.NewReader(tests.JsonToString(requests.UserLogin{
 				Username: tests.UserUsername,
 				Password: tests.UserPassword,
 			})),

@@ -3,6 +3,10 @@ package tests
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/db"
+	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/stores"
+	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/entities"
+	server "github.com/fabienbellanger/fiber-boilerplate/pkg/infrastructure/router"
 	"io"
 	"log"
 	"math/rand"
@@ -10,10 +14,6 @@ import (
 	"testing"
 	"time"
 
-	server "github.com/fabienbellanger/fiber-boilerplate"
-	"github.com/fabienbellanger/fiber-boilerplate/db"
-	"github.com/fabienbellanger/fiber-boilerplate/domain/entities"
-	storeUser "github.com/fabienbellanger/fiber-boilerplate/stores/user"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -125,7 +125,7 @@ func (tdb *TestDB) Drop() error {
 // Create a first user, authenticate him and return JWT.
 func createUserAndAuthenticate(db *db.DB) (token string, err error) {
 	// Create first user
-	userStore := storeUser.New(db)
+	userStore := stores.NewUserStore(db)
 	err = userStore.Create(&entities.User{
 		Lastname:  "User",
 		Firstname: "Test",

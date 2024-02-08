@@ -40,7 +40,7 @@ func TestGenerateJWT(t *testing.T) {
 			wanted: result{
 				token:     "",
 				expiredAt: time.Now(),
-				err:       errors.New("unsupported JWT algo: must be HS512"),
+				err:       errors.New("unsupported JWT algo: must be HS512 or ES384"),
 			},
 		},
 		{

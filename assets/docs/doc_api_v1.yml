@@ -36,7 +36,7 @@ paths:
               $ref: '#/components/schemas/userAuth'
             example:
               username: test@gmail.com
-              password: "00000000"
+              password: "11111111"
       responses:
         '200':
           description: OK
@@ -115,34 +115,7 @@ paths:
             $ref: "#/components/responses/MethodNotAllowed"
         '500':
             $ref: "#/components/responses/InternalServerError"
-  
-  /register:  
-    post:
-      summary: ""
-      description: User creation
-      tags:
-        - "Users"
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserForm'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-            $ref: "#/components/responses/BadRequest"
-        '401':
-            $ref: "#/components/responses/Unauthorized"
-        '500':
-            $ref: "#/components/responses/InternalServerError"
+
   /users:
     get:
       summary: ""
@@ -166,6 +139,32 @@ paths:
             $ref: "#/components/responses/Unauthorized"
         '500':
             $ref: "#/components/responses/InternalServerError"
+    post:
+      summary: ""
+      description: User creation
+      tags:
+        - "Users"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForm'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
   /users/{id}:
     get:
       summary: ""

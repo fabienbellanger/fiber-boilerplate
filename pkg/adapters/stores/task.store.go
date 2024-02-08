@@ -18,8 +18,8 @@ func NewTaskStore(db *db.DB) TaskStore {
 	return TaskStore{db: db}
 }
 
-// ListAll gets all users in database.
-func (t TaskStore) ListAll(page, limit, sorts string) (tasks []entities.Task, total int64, err error) {
+// GetAll gets all users in database.
+func (t TaskStore) GetAll(page, limit, sorts string) (tasks []entities.Task, total int64, err error) {
 	// Total rows
 	t.db.Model(&tasks).Count(&total)
 
@@ -31,8 +31,8 @@ func (t TaskStore) ListAll(page, limit, sorts string) (tasks []entities.Task, to
 	return tasks, total, nil
 }
 
-// ListAllRows gets all tasks in database.
-func (t TaskStore) ListAllRows() (*sql.Rows, error) {
+// GetAllRows gets all tasks in database.
+func (t TaskStore) GetAllRows() (*sql.Rows, error) {
 	return t.db.Model(&entities.Task{}).Where("deleted_at IS NULL").Rows()
 }
 

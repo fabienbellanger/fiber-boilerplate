@@ -80,10 +80,3 @@ func NewError(c *fiber.Ctx, logger *zap.Logger, msg, details string, err error) 
 
 	return fiber.NewError(fiber.StatusInternalServerError, msg)
 }
-
-// PaginateResponse represents a response with pagination.
-// TODO: Move to domain?
-type PaginateResponse struct {
-	Data  interface{} `json:"data"`
-	Total int64       `json:"total"`
-}

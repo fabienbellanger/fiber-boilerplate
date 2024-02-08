@@ -1,22 +1,33 @@
 package services
 
 import (
+	"bytes"
+	"crypto/sha512"
+	"encoding/hex"
 	"errors"
+	"fmt"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/repositories"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/requests"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/responses"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
+	"github.com/fabienbellanger/goutils/mail"
+	"github.com/google/uuid"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
+	"html/template"
+	"time"
 )
 
 type UserService interface {
 	Login(req requests.UserLogin) (responses.UserLogin, *utils.HTTPError)
-	Create(req requests.UserEdit) (entities.User, *utils.HTTPError)
+	Create(req requests.UserCreation) (entities.User, *utils.HTTPError)
 	GetAll() ([]entities.User, *utils.HTTPError)
 	GetByID(id requests.UserByID) (entities.User, *utils.HTTPError)
 	Delete(id requests.UserByID) *utils.HTTPError
+	Update(req requests.UserUpdate) (entities.User, *utils.HTTPError)
+	UpdatePassword(req requests.UserPasswordUpdate) *utils.HTTPError
+	ForgottenPassword(req requests.UserForgotPassword) (entities.PasswordResets, *utils.HTTPError)
 }
 
 type userService struct {
@@ -63,7 +74,7 @@ func (us userService) Login(req requests.UserLogin) (responses.UserLogin, *utils
 }
 
 // Create user
-func (us userService) Create(req requests.UserEdit) (entities.User, *utils.HTTPError) {
+func (us userService) Create(req requests.UserCreation) (entities.User, *utils.HTTPError) {
 	creationErrors := utils.ValidateStruct(req)
 	if creationErrors != nil {
 		return entities.User{}, utils.NewHTTPError(utils.StatusBadRequest, "Invalid body", creationErrors, nil)
@@ -124,4 +135,132 @@ func (us userService) Delete(req requests.UserByID) *utils.HTTPError {
 	}
 
 	return nil
+}
+
+// Update user
+func (us userService) Update(req requests.UserUpdate) (entities.User, *utils.HTTPError) {
+	validateID := utils.ValidateStruct(req)
+	if validateID != nil {
+		return entities.User{}, utils.NewHTTPError(utils.StatusBadRequest, "Invalid parameters", validateID, nil)
+	}
+
+	user := entities.User{
+		ID:        req.ID,
+		Lastname:  req.Lastname,
+		Firstname: req.Firstname,
+		Password:  req.Password,
+		Username:  req.Username,
+	}
+
+	if err := us.userRepository.Update(&user); err != nil {
+		return entities.User{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error during user update", err)
+	}
+
+	if user.ID == "" {
+		return entities.User{}, utils.NewHTTPError(utils.StatusNotFound, "No user found", nil, nil)
+	}
+
+	return user, nil
+}
+
+// UpdatePassword updates user password
+func (us userService) UpdatePassword(req requests.UserPasswordUpdate) *utils.HTTPError {
+	validateReq := utils.ValidateStruct(req)
+	if validateReq != nil {
+		return utils.NewHTTPError(utils.StatusBadRequest, "Invalid parameters", validateReq, nil)
+	}
+
+	// Update user password
+	userID, currentPassword, err := us.userRepository.GetIDFromPasswordReset(req.Token, req.Password)
+	if err != nil {
+		return utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when searching user", err)
+	}
+	if userID == "" {
+		return utils.NewHTTPError(utils.StatusNotFound, "No user found", nil, nil)
+	}
+
+	// Change by the same password is forbidden
+	hashedPassword := sha512.Sum512([]byte(req.Password))
+	if hex.EncodeToString(hashedPassword[:]) == currentPassword {
+		return utils.NewHTTPError(utils.StatusBadRequest, "New password cannot be the same as the current one", nil, nil)
+	}
+
+	err = us.userRepository.UpdatePassword(userID, currentPassword, req.Password)
+	if err != nil {
+		return utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when updating user password", err)
+	}
+
+	// Delete password reset
+	err = us.userRepository.DeletePasswordReset(userID)
+	if err != nil {
+		return utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when deleting user password reset", err)
+	}
+
+	return nil
+}
+
+// ForgottenPassword save a forgotten password request
+func (us userService) ForgottenPassword(req requests.UserForgotPassword) (entities.PasswordResets, *utils.HTTPError) {
+	validateReq := utils.ValidateStruct(req)
+	if validateReq != nil {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusBadRequest, "Invalid parameters", validateReq, nil)
+	}
+
+	// Find user
+	user, err := us.userRepository.GetByUsername(req.Email)
+	if err != nil {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when retrieving user", err)
+	}
+	if user.ID == "" {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusNotFound, "No user found", nil, nil)
+	}
+
+	// Create password reset
+	passwordReset := entities.PasswordResets{
+		UserID:    user.ID,
+		Token:     uuid.NewString(),
+		ExpiredAt: time.Now().Add(viper.GetDuration("FORGOTTEN_PASSWORD_EXPIRATION_DURATION") * time.Hour).UTC(),
+	}
+	err = us.userRepository.CreateOrUpdatePasswordReset(passwordReset)
+	if err != nil {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when requesting new password", err)
+	}
+
+	// Send email with link
+	to := make([]string, 1)
+	to[0] = user.Username
+	subject := fmt.Sprintf("[%s] Forgotten password", viper.GetString("APP_NAME"))
+	var body bytes.Buffer
+
+	tp, err := template.ParseFiles("templates/forgotten_password.gohtml")
+	if err != nil {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusInternalServerError, "Email error", "Error when creating password reset email", err)
+	}
+	err = tp.Execute(&body, struct {
+		Title string
+		Link  string
+	}{
+		Title: fmt.Sprintf("%s - Forgotten password", viper.GetString("APP_NAME")),
+		Link:  fmt.Sprintf("%s/%s", viper.GetString("FORGOTTEN_PASSWORD_BASE_URL"), passwordReset.Token),
+	})
+	if err != nil {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusInternalServerError, "Email error", "Error when creating password reset email", err)
+	}
+
+	err = mail.Send(
+		viper.GetString("FORGOTTEN_PASSWORD_EMAIL_FROM"),
+		to,
+		nil,
+		nil,
+		subject,
+		body.String(),
+		"",
+		"",
+		viper.GetString("SMTP_HOST"),
+		viper.GetInt("SMTP_PORT"))
+	if err != nil {
+		return entities.PasswordResets{}, utils.NewHTTPError(utils.StatusInternalServerError, "Email error", "Error when sending password reset email", err)
+	}
+
+	return passwordReset, nil
 }

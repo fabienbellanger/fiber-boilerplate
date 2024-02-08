@@ -18,7 +18,7 @@ func TestUserCreation(t *testing.T) {
 			Description: "User creation",
 			Route:       "/api/v1/register",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(requests.UserEdit{
+			Body: strings.NewReader(tests.JsonToString(requests.UserCreation{
 				Username:  "test1@gmail.com",
 				Password:  "11111111",
 				Lastname:  "Test",
@@ -35,7 +35,7 @@ func TestUserCreation(t *testing.T) {
 			Description: "User creation with invalid password",
 			Route:       "/api/v1/register",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(requests.UserEdit{
+			Body: strings.NewReader(tests.JsonToString(requests.UserCreation{
 				Username:  "test1@gmail.com",
 				Password:  "1111111",
 				Lastname:  "Test",
@@ -54,7 +54,7 @@ func TestUserCreation(t *testing.T) {
 			Description: "User creation with invalid username",
 			Route:       "/api/v1/register",
 			Method:      "POST",
-			Body: strings.NewReader(tests.JsonToString(requests.UserEdit{
+			Body: strings.NewReader(tests.JsonToString(requests.UserCreation{
 				Username:  "test1",
 				Password:  "11111111",
 				Lastname:  "Test",

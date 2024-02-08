@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/db"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/entities"
-	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/requests"
 	"time"
 
 	"github.com/google/uuid"
@@ -88,26 +87,29 @@ func (u UserStore) Delete(id string) error {
 }
 
 // Update updates user information.
-func (u UserStore) Update(id string, userEdit requests.UserEdit) (user entities.User, err error) {
+func (u UserStore) Update(user *entities.User) error {
 	// Hash password
 	// -------------
-	hashedPassword := sha512.Sum512([]byte(userEdit.Password))
+	hashedPassword := sha512.Sum512([]byte(user.Password))
 
-	result := u.db.Model(&entities.User{}).Where("id = ?", id).Select("lastname", "firstname", "username", "password").Updates(entities.User{
-		Lastname:  userEdit.Lastname,
-		Firstname: userEdit.Firstname,
-		Username:  userEdit.Username,
+	result := u.db.Model(&entities.User{}).Where("id = ?", user.ID).Select("lastname", "firstname", "username", "password").Updates(entities.User{
+		Lastname:  user.Lastname,
+		Firstname: user.Firstname,
+		Username:  user.Username,
 		Password:  hex.EncodeToString(hashedPassword[:]),
 	})
 	if result.Error != nil {
-		return user, result.Error
+		return result.Error
 	}
 
-	user, err = u.GetByID(id)
+	userUpdated, err := u.GetByID(user.ID)
 	if err != nil {
-		return user, err
+		return err
 	}
-	return user, err
+
+	*user = userUpdated
+
+	return err
 }
 
 // UpdatePassword updates user passwords.

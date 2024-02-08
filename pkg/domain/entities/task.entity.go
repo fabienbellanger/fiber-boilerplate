@@ -15,9 +15,3 @@ type Task struct {
 	UpdatedAt   time.Time      `json:"updated_at" xml:"updated_at" form:"updated_at" gorm:"not null;autoUpdateTime"`
 	DeletedAt   gorm.DeletedAt `json:"-" xml:"-" form:"deleted_at" gorm:"index"`
 }
-
-// TaskForm represents structure to create or update a task.
-type TaskForm struct {
-	Name        string `json:"name" xml:"name" form:"name" validate:"required,min=3,max=127"`
-	Description string `json:"description" xml:"description" form:"description"`
-}

@@ -10,17 +10,20 @@ import (
 
 type User interface {
 	Login(req requests.UserLogin) (responses.UserLogin, *utils.HTTPError)
-	Create(req requests.UserEdit) (entities.User, *utils.HTTPError)
+	Create(req requests.UserCreation) (entities.User, *utils.HTTPError)
 	GetAll() ([]entities.User, *utils.HTTPError)
 	GetByID(id requests.UserByID) (entities.User, *utils.HTTPError)
 	Delete(id requests.UserByID) *utils.HTTPError
+	Update(req requests.UserUpdate) (entities.User, *utils.HTTPError)
+	UpdatePassword(req requests.UserPasswordUpdate) *utils.HTTPError
+	ForgottenPassword(req requests.UserForgotPassword) (entities.PasswordResets, *utils.HTTPError)
 }
 
 type userUseCase struct {
 	userService services.UserService
 }
 
-// NewUser returns a new CreateUser use case
+// NewUser returns a new User use case
 func NewUser(userService services.UserService) User {
 	return &userUseCase{userService}
 }
@@ -31,7 +34,7 @@ func (uc *userUseCase) Login(req requests.UserLogin) (responses.UserLogin, *util
 }
 
 // Create user
-func (uc *userUseCase) Create(req requests.UserEdit) (entities.User, *utils.HTTPError) {
+func (uc *userUseCase) Create(req requests.UserCreation) (entities.User, *utils.HTTPError) {
 	return uc.userService.Create(req)
 }
 
@@ -48,4 +51,19 @@ func (uc *userUseCase) GetByID(id requests.UserByID) (entities.User, *utils.HTTP
 // Delete user
 func (uc *userUseCase) Delete(id requests.UserByID) *utils.HTTPError {
 	return uc.userService.Delete(id)
+}
+
+// Update user
+func (uc *userUseCase) Update(req requests.UserUpdate) (entities.User, *utils.HTTPError) {
+	return uc.userService.Update(req)
+}
+
+// UpdatePassword user
+func (uc *userUseCase) UpdatePassword(req requests.UserPasswordUpdate) *utils.HTTPError {
+	return uc.userService.UpdatePassword(req)
+}
+
+// ForgottenPassword user
+func (uc *userUseCase) ForgottenPassword(req requests.UserForgotPassword) (entities.PasswordResets, *utils.HTTPError) {
+	return uc.userService.ForgottenPassword(req)
 }

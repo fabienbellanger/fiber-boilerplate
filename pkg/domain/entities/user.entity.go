@@ -28,11 +28,6 @@ type PasswordResets struct {
 	ExpiredAt time.Time `json:"expired_at" xml:"expired_at" gorm:"not null" form:"expired_at"`
 }
 
-// UserUpdatePassword use to update user password.
-type UserUpdatePassword struct {
-	Password string `validate:"required,min=8"`
-}
-
 // GenerateJWT returns a token
 func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string, time.Time, error) {
 	if algo != "HS512" {

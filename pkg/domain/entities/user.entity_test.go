@@ -54,7 +54,7 @@ func TestGenerateJWT(t *testing.T) {
 			wanted: result{
 				token:     "",
 				expiredAt: time.Now(),
-				err:       errors.New("secret must have at least 8 caracters"),
+				err:       errors.New("secret must have at least 8 characters"),
 			},
 		},
 		{

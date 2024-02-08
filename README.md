@@ -163,6 +163,23 @@ Puis :
 go tool cover -html=<fichier à analyser>
 ```
 
+## Generate JWT ES384 keys
+
+```bash
+mkdir keys
+
+# Private key
+openssl ecparam -name secp384r1 -genkey -noout -out keys/private.ec.key
+
+# Public key
+openssl ec -in keys/private.ec.key -pubout -out keys/public.ec.pem
+
+# Convert SEC1 private key to PKCS8
+openssl pkcs8 -topk8 -nocrypt -in keys/private.ec.key -out keys/private.ec.pem
+
+rm keys/private.ec.key
+```
+
 ## TODO
 
 - [x] Utiliser Zap

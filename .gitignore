@@ -14,9 +14,11 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+keys/*
+
 .env
 tmp
 .idea
 fiber-boilerplate
 *.log
-/dist
+dist

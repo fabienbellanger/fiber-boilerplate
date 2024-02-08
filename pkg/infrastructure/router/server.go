@@ -1,6 +1,7 @@
 package router
 
 import (
+	"encoding/pem"
 	"fmt"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/db"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/infrastructure/middlewares/timer"
@@ -265,10 +266,24 @@ func initTools(s *fiber.App) {
 }
 
 func initJWT(s *fiber.App) {
+	// Algo & key
+	algo := viper.GetString("JWT_ALGO")
+	var key []byte
+	if algo == jwtware.HS512 {
+		key = []byte(viper.GetString("JWT_SECRET"))
+	} else if algo == jwtware.ES384 {
+		keyPath := viper.GetString("JWT_PUBLIC_KEY")
+		data, _ := os.ReadFile(fmt.Sprintf("./keys/%s", keyPath))
+		publicKey, _ := pem.Decode(data)
+		key = publicKey.Bytes
+	} else {
+		// TODO: Manage error
+	}
+
 	s.Use(jwtware.New(jwtware.Config{
 		SigningKey: jwtware.SigningKey{
-			JWTAlg: viper.GetString("JWT_ALGO"),
-			Key:    []byte(viper.GetString("JWT_SECRET")),
+			JWTAlg: algo,
+			Key:    key,
 		},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.Status(fiber.StatusUnauthorized).JSON(utils.HTTPError{

@@ -30,8 +30,8 @@ type PasswordResets struct {
 
 // GenerateJWT returns a token
 func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string, time.Time, error) {
-	if algo != "HS512" {
-		return "", time.Now(), errors.New("unsupported JWT algo: must be HS512")
+	if algo != "HS512" && algo != "ES384" {
+		return "", time.Now(), errors.New("unsupported JWT algo: must be HS512 or ES384")
 	}
 
 	if len(secret) < 8 {
@@ -56,7 +56,14 @@ func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string,
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
 
+	//keyPath := viper.GetString("JWT_PRIVATE_KEY")
+	//data, _ := os.ReadFile(fmt.Sprintf("./keys/%s", keyPath))
+	//privateKey, _ := pem.Decode(data)
+	//key := privateKey.Bytes
+	//log.Printf("%v\n", privateKey.Type)
+
 	// Generate encoded token and send it as response.
+	//t, err := token.SignedString(key)
 	t, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", expiresAt, err

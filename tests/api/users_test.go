@@ -16,7 +16,7 @@ func TestUserCreation(t *testing.T) {
 	useCases := []tests.Test{
 		{
 			Description: "User creation",
-			Route:       "/api/v1/register",
+			Route:       "/api/v1/users",
 			Method:      "POST",
 			Body: strings.NewReader(tests.JsonToString(requests.UserCreation{
 				Username:  "test1@gmail.com",
@@ -33,7 +33,7 @@ func TestUserCreation(t *testing.T) {
 		},
 		{
 			Description: "User creation with invalid password",
-			Route:       "/api/v1/register",
+			Route:       "/api/v1/users",
 			Method:      "POST",
 			Body: strings.NewReader(tests.JsonToString(requests.UserCreation{
 				Username:  "test1@gmail.com",
@@ -52,7 +52,7 @@ func TestUserCreation(t *testing.T) {
 		},
 		{
 			Description: "User creation with invalid username",
-			Route:       "/api/v1/register",
+			Route:       "/api/v1/users",
 			Method:      "POST",
 			Body: strings.NewReader(tests.JsonToString(requests.UserCreation{
 				Username:  "test1",

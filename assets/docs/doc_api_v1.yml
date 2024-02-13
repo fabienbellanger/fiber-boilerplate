@@ -124,15 +124,37 @@ paths:
         - "Users"
       security:
         - bearerAuth: []
+      parameters:
+        - in: query
+          name: p
+          schema:
+            type: integer
+            default: 1
+          required: false
+          description: Page number
+          example: 1
+        - in: query
+          name: l
+          schema:
+            type: integer
+            maximum: 100
+          required: false
+          description: Limit of links per page
+          example: 10
+        - in: query
+          name: s
+          schema:
+            type: string
+          required: false
+          description: "Sort (Ex.: s=+lastname,-firstname) {+: ASC, -: DESC}"
+          example: +lastname,+created_at
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/GetUsersResponse'
         '400':
             $ref: "#/components/responses/BadRequest"
         '401':
@@ -271,7 +293,7 @@ paths:
           name: p
           schema:
             type: integer
-            default: 0
+            default: 1
           required: false
           description: Page number
           example: 1
@@ -296,7 +318,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaskResponse'
+                $ref: '#/components/schemas/GetTasksResponse'
         '400':
             $ref: "#/components/responses/BadRequest"
         '401':
@@ -552,7 +574,7 @@ components:
           type: string
       required:
         - name
-    TaskResponse:
+    GetTasksResponse:
       allOf:
         - $ref: "#/components/schemas/PaginateTotal"
         - type: object
@@ -561,5 +583,16 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Task"
+          required:
+            - data
+    GetUsersResponse:
+      allOf:
+        - $ref: "#/components/schemas/PaginateTotal"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/User"
           required:
             - data

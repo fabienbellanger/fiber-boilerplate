@@ -10,7 +10,7 @@ import (
 )
 
 type TaskService interface {
-	GetAll(req requests.Pagination) (responses.TaskGetAll, *utils.HTTPError)
+	GetAll(req requests.Pagination) (responses.TasksListPaginated, *utils.HTTPError)
 	Create(req requests.TaskCreation) (entities.Task, *utils.HTTPError)
 	GetAllStream() (*sql.Rows, *utils.HTTPError)
 	ScanTask(rows *sql.Rows, task *entities.Task) *utils.HTTPError
@@ -26,13 +26,13 @@ func NewTask(repo repositories.TaskRepository) TaskService {
 }
 
 // GetAll tasks
-func (ts taskService) GetAll(req requests.Pagination) (responses.TaskGetAll, *utils.HTTPError) {
+func (ts taskService) GetAll(req requests.Pagination) (responses.TasksListPaginated, *utils.HTTPError) {
 	tasks, total, err := ts.taskRepository.GetAll(req.Page, req.Limit, req.Sorts)
 	if err != nil {
-		return responses.TaskGetAll{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error during tasks list", err)
+		return responses.TasksListPaginated{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error during tasks list", err)
 	}
 
-	return responses.TaskGetAll{
+	return responses.TasksListPaginated{
 		Data:  tasks,
 		Total: total,
 	}, nil

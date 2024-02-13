@@ -35,7 +35,7 @@ func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string,
 	}
 
 	if len(secret) < 8 {
-		return "", time.Now(), errors.New("secret must have at least 8 caracters")
+		return "", time.Now(), errors.New("secret must have at least 8 characters")
 	}
 
 	// Create token

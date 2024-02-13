@@ -76,7 +76,9 @@ func (e HTTPError) Error() string {
 
 // NewError returns a fiber error and log the error.
 func NewError(c *fiber.Ctx, logger *zap.Logger, msg, details string, err error) *fiber.Error {
-	logger.Error(details, zap.String("description", msg), zap.Error(err), zap.String("requestId", fmt.Sprintf("%v", c.Locals("requestid"))))
+	if logger != nil {
+		logger.Error(details, zap.String("description", msg), zap.Error(err), zap.String("requestId", fmt.Sprintf("%v", c.Locals("requestid"))))
+	}
 
 	return fiber.NewError(fiber.StatusInternalServerError, msg)
 }

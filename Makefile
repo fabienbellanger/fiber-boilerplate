@@ -79,7 +79,7 @@ vet:
 	$(GO_VET) ./...
 
 ## serve: Serve API
-serve: format vet
+serve: format
 	$(GO_RUN) $(MAIN_PATH) run
 
 ## serve-race: Serve API with -race option
@@ -90,7 +90,7 @@ serve-race: format vet
 logs:
 	$(GO_RUN) $(MAIN_PATH) logs --server
 
-build: format vet
+build: format
 	$(GO_BUILD) -ldflags "-s -w" -o $(BINARY_NAME) -v $(MAIN_PATH)
 
 ## test: Run test

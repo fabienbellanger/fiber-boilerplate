@@ -6,6 +6,8 @@ import (
 )
 
 func TestWebRoutes(t *testing.T) {
+	Init("../.env")
+
 	useCases := []Test{
 		{
 			Description:  "Health Check route",

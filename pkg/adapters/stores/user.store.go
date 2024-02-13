@@ -35,13 +35,16 @@ func (u UserStore) Login(username, password string) (user entities.User, err err
 }
 
 // GetAll gets all users in database.
-func (u UserStore) GetAll() ([]entities.User, error) {
-	var users []entities.User
+func (u UserStore) GetAll(page, limit, sorts string) (users []entities.User, total int64, err error) {
+	// Total rows
+	u.db.Model(&users).Count(&total)
 
-	if response := u.db.Find(&users); response.Error != nil {
-		return users, response.Error
+	q := u.db.Scopes(db.Paginate(page, limit))
+	q.Scopes(db.Order(sorts))
+	if response := q.Find(&users); response.Error != nil {
+		return users, total, response.Error
 	}
-	return users, nil
+	return users, total, nil
 }
 
 // Create adds user in database.

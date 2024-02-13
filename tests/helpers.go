@@ -7,6 +7,7 @@ import (
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/stores"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/entities"
 	server "github.com/fabienbellanger/fiber-boilerplate/pkg/infrastructure/router"
+	"go.uber.org/zap"
 	"io"
 	"log"
 	"math/rand"
@@ -54,6 +55,8 @@ type Header struct {
 func Init(p string) TestDB {
 	viper.SetConfigFile(p)
 	viper.ReadInConfig()
+
+	viper.Set("APP_ENV", "test")
 
 	viper.Set("SERVER_MONITOR", false)
 	viper.Set("SERVER_PROMETHEUS", false)
@@ -154,7 +157,7 @@ func createUserAndAuthenticate(db *db.DB) (token string, err error) {
 // Execute runs all tests.
 func Execute(t *testing.T, db *db.DB, tests []Test, templatesPath string) {
 	// Set up the app as it is done in the main function
-	app := server.Setup(db, nil, templatesPath)
+	app := server.Setup(db, zap.NewNop(), templatesPath)
 
 	// Iterate through test single test cases
 	for _, test := range tests {

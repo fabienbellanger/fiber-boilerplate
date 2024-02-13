@@ -8,7 +8,7 @@ import (
 type UserRepository interface {
 	Login(username, password string) (entities.User, error)
 	Create(user *entities.User) error
-	GetAll() ([]entities.User, error)
+	GetAll(page, limit, sorts string) (users []entities.User, total int64, err error)
 	GetByID(id string) (entities.User, error)
 	GetByUsername(username string) (entities.User, error)
 	Delete(id string) error

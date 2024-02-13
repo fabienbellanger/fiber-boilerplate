@@ -94,7 +94,15 @@ func (u *User) create() fiber.Handler {
 // getAll lists all users.
 func (u *User) getAll() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		res, err := u.userUseCase.GetAll()
+		pagination := new(requests.Pagination)
+		if err := c.QueryParser(pagination); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(utils.HTTPError{
+				Code:    fiber.StatusBadRequest,
+				Message: "Bad Request",
+			})
+		}
+
+		res, err := u.userUseCase.GetAll(*pagination)
 		if err != nil {
 			if errors.Is(err, utils.HTTPError{}) && err.Err != nil {
 				if details, ok := err.Details.(string); ok {

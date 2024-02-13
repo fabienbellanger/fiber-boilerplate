@@ -22,7 +22,7 @@ import (
 type UserService interface {
 	Login(req requests.UserLogin) (responses.UserLogin, *utils.HTTPError)
 	Create(req requests.UserCreation) (entities.User, *utils.HTTPError)
-	GetAll() ([]entities.User, *utils.HTTPError)
+	GetAll(req requests.Pagination) (responses.UsersListPaginated, *utils.HTTPError)
 	GetByID(id requests.UserByID) (entities.User, *utils.HTTPError)
 	Delete(id requests.UserByID) *utils.HTTPError
 	Update(req requests.UserUpdate) (entities.User, *utils.HTTPError)
@@ -95,13 +95,16 @@ func (us userService) Create(req requests.UserCreation) (entities.User, *utils.H
 }
 
 // GetAll returns all users
-func (us userService) GetAll() ([]entities.User, *utils.HTTPError) {
-	users, err := us.userRepository.GetAll()
+func (us userService) GetAll(req requests.Pagination) (responses.UsersListPaginated, *utils.HTTPError) {
+	users, total, err := us.userRepository.GetAll(req.Page, req.Limit, req.Sorts)
 	if err != nil {
-		return []entities.User{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when getting all users", err)
+		return responses.UsersListPaginated{}, utils.NewHTTPError(utils.StatusInternalServerError, "Database error", "Error when getting all users", err)
 	}
 
-	return users, nil
+	return responses.UsersListPaginated{
+		Data:  users,
+		Total: total,
+	}, nil
 }
 
 // GetByID returns a user from its ID

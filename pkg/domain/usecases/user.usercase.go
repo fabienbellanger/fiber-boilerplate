@@ -11,7 +11,7 @@ import (
 type User interface {
 	Login(req requests.UserLogin) (responses.UserLogin, *utils.HTTPError)
 	Create(req requests.UserCreation) (entities.User, *utils.HTTPError)
-	GetAll() ([]entities.User, *utils.HTTPError)
+	GetAll(req requests.Pagination) (responses.UsersListPaginated, *utils.HTTPError)
 	GetByID(id requests.UserByID) (entities.User, *utils.HTTPError)
 	Delete(id requests.UserByID) *utils.HTTPError
 	Update(req requests.UserUpdate) (entities.User, *utils.HTTPError)
@@ -39,8 +39,8 @@ func (uc *userUseCase) Create(req requests.UserCreation) (entities.User, *utils.
 }
 
 // GetAll users
-func (uc *userUseCase) GetAll() ([]entities.User, *utils.HTTPError) {
-	return uc.userService.GetAll()
+func (uc *userUseCase) GetAll(req requests.Pagination) (responses.UsersListPaginated, *utils.HTTPError) {
+	return uc.userService.GetAll(req)
 }
 
 // GetByID user

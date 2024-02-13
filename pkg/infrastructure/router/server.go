@@ -176,8 +176,8 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 
 	// Favicon
 	// -------
-	if logger != nil {
-		// Not an unit test
+	println(viper.GetString("APP_ENV"))
+	if viper.GetString("APP_ENV") != "test" {
 		// TODO: Add a parameter in Setup to specify if it is an test app or not
 		s.Use(favicon.New(favicon.Config{
 			File: "favicon.png",

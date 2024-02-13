@@ -10,7 +10,7 @@ import (
 )
 
 type Task interface {
-	GetAll(req requests.Pagination) (responses.TaskGetAll, *utils.HTTPError)
+	GetAll(req requests.Pagination) (responses.TasksListPaginated, *utils.HTTPError)
 	Create(req requests.TaskCreation) (entities.Task, *utils.HTTPError)
 	GetAllStream() (*sql.Rows, *utils.HTTPError)
 	ScanTask(rows *sql.Rows, task *entities.Task) *utils.HTTPError
@@ -26,7 +26,7 @@ func NewTask(taskService services.TaskService) Task {
 }
 
 // GetAll tasks
-func (uc *taskUseCase) GetAll(req requests.Pagination) (responses.TaskGetAll, *utils.HTTPError) {
+func (uc *taskUseCase) GetAll(req requests.Pagination) (responses.TasksListPaginated, *utils.HTTPError) {
 	return uc.taskService.GetAll(req)
 }
 

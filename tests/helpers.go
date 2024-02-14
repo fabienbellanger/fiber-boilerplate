@@ -80,7 +80,6 @@ type TestDB struct {
 
 // newTestDB returns a TestDB instance.
 func newTestDB() (TestDB, error) {
-	// rand.Seed(time.Now().UnixNano())
 	rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
 	dbName := viper.GetString("DB_DATABASE") + "__" + fmt.Sprintf("%08d", rand.Int63n(1e8))
 

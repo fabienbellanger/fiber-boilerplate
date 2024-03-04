@@ -35,7 +35,7 @@ func TestGenerateJWT(t *testing.T) {
 				user:     User{},
 				lifetime: lifetime,
 				algo:     "",
-				secret:   "mysecret",
+				secret:   "my-secret",
 			},
 			wanted: result{
 				token:     "",
@@ -63,7 +63,7 @@ func TestGenerateJWT(t *testing.T) {
 				user:     User{},
 				lifetime: lifetime,
 				algo:     "HS512",
-				secret:   "mysecret",
+				secret:   "my-secret",
 			},
 			wanted: result{
 				token:     "",

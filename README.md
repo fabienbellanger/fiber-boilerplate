@@ -182,11 +182,8 @@ rm keys/private.ec.key
 
 ## TODO
 
-- [x] Utiliser Zap
-- [x] Add OpenAPI documentation [RapiDoc](https://rapidocweb.com/examples.html)
-- [x] Validation des données avec github.com/go-playground/validator
-- [x] Si la connexion à la base de données est coupée, cela retourne une 401 au lieu d'une 500.
-- [x] Supprimer Pkger (plus maintenu)
+- [ ] Add scope
+- [ ] Use JWT with private/public key
 - [ ] **Attention** : Le middleware websocket de Fiber génère une data race avec le hub ! Voir si cela sera corrigé à l'avenir (lever une issue sur Github ?)
 - [ ] Add Docker support
   - [ ] Try OpenTelemetry [middleware](https://github.com/gofiber/contrib/tree/main/otelfiber)

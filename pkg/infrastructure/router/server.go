@@ -1,7 +1,6 @@
 package router
 
 import (
-	"errors"
 	"fmt"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/db"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/infrastructure/middlewares/timer"
@@ -184,9 +183,7 @@ func initMiddlewares(s *fiber.App, logger *zap.Logger) {
 
 	// Favicon
 	// -------
-	println(viper.GetString("APP_ENV"))
 	if viper.GetString("APP_ENV") != "test" {
-		// TODO: Add a parameter in Setup to specify if it is an test app or not
 		s.Use(favicon.New(favicon.Config{
 			File: "favicon.png",
 		}))
@@ -274,19 +271,10 @@ func initTools(s *fiber.App) {
 }
 
 func initJWT(s *fiber.App) (err error) {
-	// Algo & key
 	algo := viper.GetString("JWT_ALGO")
-	var key interface{}
-	if algo == jwtware.HS512 {
-		key = []byte(viper.GetString("JWT_SECRET"))
-	} else if algo == jwtware.ES384 {
-		keyPath := viper.GetString("JWT_PUBLIC_KEY_PATH")
-		key, err = utils.LoadECDSAKeyFromFile(keyPath, false)
-		if err != nil {
-			return err
-		}
-	} else {
-		return errors.New("unsupported JWT algo: must be HS512 or ES384")
+	key, err := utils.GetKeyFromAlgo(algo, viper.GetString("JWT_SECRET"), viper.GetString("JWT_PUBLIC_KEY_PATH"))
+	if err != nil {
+		return err
 	}
 
 	s.Use(jwtware.New(jwtware.Config{

@@ -1,10 +1,8 @@
 package entities
 
 import (
-	"errors"
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/spf13/viper"
-	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -33,32 +31,10 @@ type PasswordResets struct {
 
 // GenerateJWT returns a token
 func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string, time.Time, error) {
-	if algo != "HS512" && algo != "ES384" {
-		return "", time.Now(), errors.New("unsupported JWT algo: must be HS512 or ES384")
-	}
-
-	if len(secret) < 8 {
-		return "", time.Now(), errors.New("secret must have at least 8 characters")
-	}
-
-	// Create token
-	var token *jwt.Token
-	var key interface{}
-	var err error
-	if algo == "HS512" {
-		token = jwt.New(jwt.SigningMethodHS512)
-
-		key = []byte(secret)
-	} else if algo == "ES384" {
-		token = jwt.New(jwt.SigningMethodES384)
-
-		keyPath := viper.GetString("JWT_PRIVATE_KEY_PATH")
-		key, err = utils.LoadECDSAKeyFromFile(keyPath, true)
-		if err != nil {
-			return "", time.Now(), err
-		}
-	} else {
-		return "", time.Now(), errors.New("unsupported JWT algo: must be HS512 or ES384")
+	// Create token and key
+	token, key, err := utils.GetTokenAndKeyFromAlgo(algo, secret, viper.GetString("JWT_PRIVATE_KEY_PATH"))
+	if err != nil {
+		return "", time.Now(), err
 	}
 
 	// Expiration time
@@ -76,10 +52,9 @@ func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string,
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
 
-	// Generate encoded token and send it as response.
+	// Generate encoded token and send it as response
 	t, err := token.SignedString(key)
 	if err != nil {
-		log.Printf("Error: %v\n", err)
 		return "", expiresAt, err
 	}
 

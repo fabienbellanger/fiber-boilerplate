@@ -2,6 +2,9 @@ package entities
 
 import (
 	"errors"
+	"github.com/fabienbellanger/fiber-boilerplate/utils"
+	"github.com/spf13/viper"
+	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -39,7 +42,24 @@ func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string,
 	}
 
 	// Create token
-	token := jwt.New(jwt.SigningMethodHS512)
+	var token *jwt.Token
+	var key interface{}
+	var err error
+	if algo == "HS512" {
+		token = jwt.New(jwt.SigningMethodHS512)
+
+		key = []byte(secret)
+	} else if algo == "ES384" {
+		token = jwt.New(jwt.SigningMethodES384)
+
+		keyPath := viper.GetString("JWT_PRIVATE_KEY_PATH")
+		key, err = utils.LoadECDSAKeyFromFile(keyPath, true)
+		if err != nil {
+			return "", time.Now(), err
+		}
+	} else {
+		return "", time.Now(), errors.New("unsupported JWT algo: must be HS512 or ES384")
+	}
 
 	// Expiration time
 	now := time.Now()
@@ -56,16 +76,10 @@ func (u *User) GenerateJWT(lifetime time.Duration, algo, secret string) (string,
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
 
-	//keyPath := viper.GetString("JWT_PRIVATE_KEY")
-	//data, _ := os.ReadFile(fmt.Sprintf("./keys/%s", keyPath))
-	//privateKey, _ := pem.Decode(data)
-	//key := privateKey.Bytes
-	//log.Printf("%v\n", privateKey.Type)
-
 	// Generate encoded token and send it as response.
-	//t, err := token.SignedString(key)
-	t, err := token.SignedString([]byte(secret))
+	t, err := token.SignedString(key)
 	if err != nil {
+		log.Printf("Error: %v\n", err)
 		return "", expiresAt, err
 	}
 

@@ -41,5 +41,8 @@ func startServer() {
 
 	// Start server
 	// ------------
-	server.Run(db, logger, "./templates")
+	err = server.Run(db, logger, "./templates")
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

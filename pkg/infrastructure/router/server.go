@@ -1,7 +1,7 @@
 package router
 
 import (
-	"encoding/pem"
+	"errors"
 	"fmt"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/adapters/db"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/infrastructure/middlewares/timer"
@@ -30,8 +30,11 @@ import (
 )
 
 // Run starts HTTP server.
-func Run(db *db.DB, logger *zap.Logger, templatesPath string) {
-	app := Setup(db, logger, templatesPath)
+func Run(db *db.DB, logger *zap.Logger, templatesPath string) error {
+	app, err := Setup(db, logger, templatesPath)
+	if err != nil {
+		return err
+	}
 
 	// Close any connections on interrupt signal
 	// -----------------------------------------
@@ -44,15 +47,17 @@ func Run(db *db.DB, logger *zap.Logger, templatesPath string) {
 
 	// Run fiber server
 	// ----------------
-	err := app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
+	err = app.Listen(fmt.Sprintf("%s:%s", viper.GetString("APP_ADDR"), viper.GetString("APP_PORT")))
 	if err != nil {
 		fmt.Printf("error when running the server: %v\n", err)
-		app.Shutdown()
+		return app.Shutdown()
 	}
+
+	return nil
 }
 
 // Setup returns a Fiber App instance
-func Setup(db *db.DB, logger *zap.Logger, templatesPath string) *fiber.App {
+func Setup(db *db.DB, logger *zap.Logger, templatesPath string) (*fiber.App, error) {
 	app := fiber.New(initConfig(logger, templatesPath))
 
 	initMiddlewares(app, logger)
@@ -70,7 +75,10 @@ func Setup(db *db.DB, logger *zap.Logger, templatesPath string) *fiber.App {
 
 	// Protected routes
 	// ----------------
-	initJWT(app)
+	err := initJWT(app)
+	if err != nil {
+		return nil, err
+	}
 	registerProtectedAPIRoutes(api, db, logger)
 
 	// Custom 404 (after all routes but not available because of JWT)
@@ -82,7 +90,7 @@ func Setup(db *db.DB, logger *zap.Logger, templatesPath string) *fiber.App {
 		})
 	})
 
-	return app
+	return app, nil
 }
 
 func initConfig(logger *zap.Logger, templatesPath string) fiber.Config {
@@ -265,19 +273,20 @@ func initTools(s *fiber.App) {
 	}
 }
 
-func initJWT(s *fiber.App) {
+func initJWT(s *fiber.App) (err error) {
 	// Algo & key
 	algo := viper.GetString("JWT_ALGO")
-	var key []byte
+	var key interface{}
 	if algo == jwtware.HS512 {
 		key = []byte(viper.GetString("JWT_SECRET"))
 	} else if algo == jwtware.ES384 {
-		keyPath := viper.GetString("JWT_PUBLIC_KEY")
-		data, _ := os.ReadFile(fmt.Sprintf("./keys/%s", keyPath))
-		publicKey, _ := pem.Decode(data)
-		key = publicKey.Bytes
+		keyPath := viper.GetString("JWT_PUBLIC_KEY_PATH")
+		key, err = utils.LoadECDSAKeyFromFile(keyPath, false)
+		if err != nil {
+			return err
+		}
 	} else {
-		// TODO: Manage error
+		return errors.New("unsupported JWT algo: must be HS512 or ES384")
 	}
 
 	s.Use(jwtware.New(jwtware.Config{
@@ -292,4 +301,6 @@ func initJWT(s *fiber.App) {
 			})
 		},
 	}))
+
+	return nil
 }

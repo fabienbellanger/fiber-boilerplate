@@ -182,8 +182,7 @@ rm keys/private.ec.key
 
 ## TODO
 
-- [ ] Add scope
-- [ ] Use JWT with private/public key
+- [ ] Add scope to JWT
 - [ ] **Attention** : Le middleware websocket de Fiber génère une data race avec le hub ! Voir si cela sera corrigé à l'avenir (lever une issue sur Github ?)
 - [ ] Add Docker support
   - [ ] Try OpenTelemetry [middleware](https://github.com/gofiber/contrib/tree/main/otelfiber)

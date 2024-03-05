@@ -58,6 +58,9 @@ func Init(p string) TestDB {
 
 	viper.Set("APP_ENV", "test")
 
+	viper.Set("JWT_ALGO", "HS512")
+	viper.Set("JWT_SECRET", "mySecretForTest")
+
 	viper.Set("SERVER_MONITOR", false)
 	viper.Set("SERVER_PROMETHEUS", false)
 	viper.Set("SERVER_PPROF", false)
@@ -156,7 +159,7 @@ func createUserAndAuthenticate(db *db.DB) (token string, err error) {
 // Execute runs all tests.
 func Execute(t *testing.T, db *db.DB, tests []Test, templatesPath string) {
 	// Set up the app as it is done in the main function
-	app := server.Setup(db, zap.NewNop(), templatesPath)
+	app, _ := server.Setup(db, zap.NewNop(), templatesPath)
 
 	// Iterate through test single test cases
 	for _, test := range tests {

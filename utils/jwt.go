@@ -6,7 +6,6 @@ import (
 	"errors"
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 	"os"
 )
 
@@ -73,9 +72,8 @@ func GetKeyFromAlgo(algo, secret, keyPath string) (interface{}, error) {
 	var err error
 
 	if algo == jwtware.HS512 {
-		key = []byte(viper.GetString("JWT_SECRET"))
+		key = []byte(secret)
 	} else if algo == jwtware.ES384 {
-		keyPath := viper.GetString("JWT_PUBLIC_KEY_PATH")
 		key, err = LoadECDSAKeyFromFile(keyPath, false)
 		if err != nil {
 			return nil, err

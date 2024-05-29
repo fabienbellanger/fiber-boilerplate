@@ -23,7 +23,7 @@ func NewPassword(value string) (Password, error) {
 		return Password{}, err
 	}
 
-	return Password{Value: value}, nil
+	return p, nil
 }
 
 // Validate checks if a struct is valid and returns an array of errors

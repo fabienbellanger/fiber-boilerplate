@@ -75,15 +75,15 @@ format:
 	$(GO_FMT) ./...
 
 ## vet: Run go vet
-vet:
+vet: format
 	$(GO_VET) ./...
 
 ## serve: Serve API
-serve: format
+serve:
 	$(GO_RUN) $(MAIN_PATH) run
 
 ## serve-race: Serve API with -race option
-serve-race: format vet
+serve-race:
 	$(GO_RUN) run -race $(MAIN_PATH)
 
 ## logs: Display server logs

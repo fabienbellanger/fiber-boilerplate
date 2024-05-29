@@ -14,14 +14,14 @@ func (e *Email) String() string {
 
 // NewEmail creates a new email
 func NewEmail(value string) (Email, error) {
-	p := Email{Value: value}
+	e := Email{Value: value}
 
-	err := p.Validate()
+	err := e.Validate()
 	if err != nil {
 		return Email{}, err
 	}
 
-	return Email{Value: value}, nil
+	return e, nil
 }
 
 // Validate checks if a struct is valid and returns an array of errors

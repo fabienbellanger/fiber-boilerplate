@@ -120,7 +120,19 @@ func New(config *DatabaseConfig) (*DB, error) {
 
 // MakeMigrations runs GORM migrations.
 func (db *DB) MakeMigrations() error {
-	return db.AutoMigrate(entitiesList...)
+	// Auto migrations
+	if err := db.AutoMigrate(entitiesList...); err != nil {
+		return err
+	}
+
+	// Custom migrations
+	for _, m := range migrations {
+		if err := m(db); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // getGormLogLevel returns the log level for GORM.

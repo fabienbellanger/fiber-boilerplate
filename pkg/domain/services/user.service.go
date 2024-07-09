@@ -6,6 +6,9 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"html/template"
+	"time"
+
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/entities"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/repositories"
 	"github.com/fabienbellanger/fiber-boilerplate/pkg/domain/requests"
@@ -15,8 +18,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
-	"html/template"
-	"time"
 )
 
 type UserService interface {
@@ -69,7 +70,7 @@ func (us userService) Login(req requests.UserLogin) (responses.UserLogin, *utils
 	return responses.UserLogin{
 		User:      user,
 		Token:     token,
-		ExpiresAt: expiresAt.Format("2006-01-02T15:04:05.000Z"),
+		ExpiresAt: expiresAt.Format(time.RFC3339),
 	}, nil
 }
 

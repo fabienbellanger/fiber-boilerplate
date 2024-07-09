@@ -1,9 +1,10 @@
 package entities
 
 import (
+	"time"
+
 	"github.com/fabienbellanger/fiber-boilerplate/utils"
 	"github.com/spf13/viper"
-	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"

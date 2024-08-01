@@ -1,10 +1,10 @@
 package db
 
 import (
+	"errors"
 	"os"
 	"path"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm/logger"
@@ -38,30 +38,132 @@ func TestGetGormLogOutput(t *testing.T) {
 }
 
 func TestDsn(t *testing.T) {
-	c := DatabaseConfig{
-		Driver:          "mysql",
-		Host:            "localhost",
-		Username:        "root",
-		Password:        "root",
-		Port:            3306,
-		Database:        "fiber",
-		Charset:         "utf8mb4",
-		Collation:       "utf8mb4_general_ci",
-		Location:        "UTC",
-		MaxIdleConns:    10,
-		MaxOpenConns:    10,
-		ConnMaxLifetime: time.Second,
-		SlowThreshold:   200 * time.Millisecond,
+	type result struct {
+		dsn string
+		err error
 	}
-	expected := "root:root@tcp(localhost:3306)/fiber?parseTime=True&charset=utf8mb4&collation=utf8mb4_general_ci&loc=UTC"
-	wanted, err := c.dsn()
-	assert.Equal(t, expected, wanted)
-	assert.Nil(t, err)
 
-	c.Host = ""
-	_, err = c.dsn()
-	assert.NotNil(t, err)
-	assert.EqualError(t, err, "error in database configuration")
+	tests := []struct {
+		name   string
+		args   DatabaseConfig
+		wanted result
+	}{
+		{
+			name: "Simple valid DSN",
+			args: DatabaseConfig{
+				Driver:   "mysql",
+				Username: "root",
+				Password: "root",
+				Database: "test",
+				Host:     "localhost",
+				Port:     3306,
+			},
+			wanted: result{
+				dsn: "root:root@tcp(localhost:3306)/test?parseTime=True",
+				err: nil,
+			},
+		},
+		{
+			name: "Complet valid DSN",
+			args: DatabaseConfig{
+				Driver:    "mysql",
+				Username:  "root",
+				Password:  "root",
+				Database:  "test",
+				Host:      "localhost",
+				Port:      3306,
+				Charset:   "utf8mb4",
+				Collation: "utf8mb4_general_ci",
+				Location:  "Local",
+			},
+			wanted: result{
+				dsn: "root:root@tcp(localhost:3306)/test?parseTime=True&charset=utf8mb4&collation=utf8mb4_general_ci&loc=Local",
+				err: nil,
+			},
+		},
+		{
+			name: "Invalid DSN (no username)",
+			args: DatabaseConfig{
+				Driver:   "mysql",
+				Password: "root",
+				Database: "test",
+				Port:     3306,
+				Host:     "localhost",
+			},
+			wanted: result{
+				dsn: "",
+				err: errors.New("error in database configuration"),
+			},
+		},
+		{
+			name: "Invalid DSN (no password)",
+			args: DatabaseConfig{
+				Driver:   "mysql",
+				Username: "root",
+				Database: "test",
+				Port:     3306,
+				Host:     "localhost",
+			},
+			wanted: result{
+				dsn: "",
+				err: errors.New("error in database configuration"),
+			},
+		},
+		{
+			name: "Invalid DSN (no database)",
+			args: DatabaseConfig{
+				Driver:   "mysql",
+				Username: "root",
+				Password: "root",
+				Port:     3306,
+				Host:     "localhost",
+			},
+			wanted: result{
+				dsn: "",
+				err: errors.New("error in database configuration"),
+			},
+		},
+		{
+			name: "Invalid DSN (no port)",
+			args: DatabaseConfig{
+				Driver:   "mysql",
+				Username: "root",
+				Password: "root",
+				Database: "test",
+				Host:     "localhost",
+			},
+			wanted: result{
+				dsn: "",
+				err: errors.New("error in database configuration"),
+			},
+		},
+		{
+			name: "Invalid DSN (no host)",
+			args: DatabaseConfig{
+				Driver:   "mysql",
+				Username: "root",
+				Password: "root",
+				Database: "test",
+				Port:     3306,
+			},
+			wanted: result{
+				dsn: "",
+				err: errors.New("error in database configuration"),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			dsn, err := tt.args.dsn()
+			got := result{dsn, err}
+
+			if got.err != nil {
+				assert.Equal(t, got.dsn, tt.wanted.dsn)
+			}
+			assert.Equal(t, got.err, tt.wanted.err)
+		})
+	}
 }
 
 func TestPaginateValues(t *testing.T) {
